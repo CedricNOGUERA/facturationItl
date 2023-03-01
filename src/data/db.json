@@ -1,0 +1,42 @@
+{
+    "invoices": [
+        {
+            "id": "654-qsd-654",
+            "invoiceNum": "20230224/001",
+            "status": "paid",
+            "customer": [
+                {
+                    "id": "147",
+                    "avatar": "avatar-6",
+                    "name": "SAGES",
+                    "phone": "87 789 852",
+                    "email": "sages@lwane.com",
+                    "address": "BP 427",
+                    "postalCode": "98 713 Papeete"
+                }
+            ],
+            "detailInvoice": [
+                {
+                    "id": "654",
+                    "designation": "bannière",
+                    "detailDesignation": "truc de bannière",
+                    "price": 3500,
+                    "qty": 2,
+                    "tvaCode": 13
+                },
+                {
+                    "id": "654",
+                    "designation": "bannière",
+                    "detailDesignation": "truc de bannière",
+
+                    "price": 4500,
+                    "qty": 1,
+                    "tvaCode": 13
+                }
+            ],
+            "amount": 11500,
+            "created_at" : "1456325876",
+            "updated_at" : "1456325876"
+        }
+    ]
+}
