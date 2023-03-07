@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
@@ -47,55 +48,19 @@ const SideBar = () => {
               <div className="collapse menu-dropdown" id="sidebarApps">
                 <ul className="nav nav-sm flex-column">
                   <li className="nav-item">
-                    <a
-                      href="#sidebarInvoices"
+                    <Link
+                      to="/"
                       className="nav-link"
-                      data-bs-toggle="collapse"
-                      role="button"
-                      aria-expanded="false"
-                      aria-controls="sidebarInvoices"
-                      data-key="t-invoices"
+                      // data-bs-toggle="collapse"
+                      // role="button"
+                      // aria-expanded="false"
+                      // aria-controls="sidebarInvoices"
+                      // data-key="t-invoices"
                     >
                       {" "}
-                      Invoices
-                    </a>
-                    <div
-                      className="collapse menu-dropdown"
-                      id="sidebarInvoices"
-                    >
-                      <ul className="nav nav-sm flex-column">
-                        <li className="nav-item">
-                          <a
-                            href="/invoices-list"
-                            className="nav-link"
-                            data-key="t-list-view"
-                          >
-                            {" "}
-                            List View{" "}
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a
-                            href="/details"
-                            className="nav-link"
-                            data-key="t-details"
-                          >
-                            {" "}
-                            Details{" "}
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a
-                            href="/create-invoice"
-                            className="nav-link"
-                            data-key="t-create-invoice"
-                          >
-                            {" "}
-                            Create Invoice{" "}
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                      Liste de factures
+                    </Link>
+                   
                   </li>
                 </ul>
               </div>

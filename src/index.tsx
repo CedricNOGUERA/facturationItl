@@ -11,56 +11,62 @@ import List from './pages/List';
 import DashBoard from './pages/DashBoard';
 import Update from './pages/Update';
 import Create2 from './pages/Create2';
+import PageTitle from './components/layout/PageTitle';
 
 
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element:<App/>,
+    path: '/',
+    element: <App />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: (
-        <DashBoard />
+          <>
+            <PageTitle title='Listes des factures' />
+            <DashBoard />
+          </>
         ),
       },
       {
-        path: ":id",
+        path: ':id',
         element: (
-        <Detail />
+          <>
+            <PageTitle title='Détails' />
+            <Detail />
+          </>
         ),
       },
       {
-        path: "create-invoice",
+        path: 'create-invoice',
         element: (
+          <>
+          <PageTitle title='Création de facture' />
         <Create />
-        ),
-      },
-      // {
-      //   path: "create-invoice",
-      //   element: (
-      //   <Create2 />
-      //   ),
-      // },
-      {
-        path: "invoices-list",
-        element: (
-        <List />
-        ),
+        </>
+        )
+        ,
       },
       {
-        path: "update-invoice/:id",
-        element: (
-        <Update />
-        ),
-      }
+        path: 'invoices-list',
+        element: <List />,
+      },
+      {
+        path: 'update-invoice/:id',
+        element:(
+          <>
+          <PageTitle title='Modification de facture' />
+          <Update />
+          </>
+          ),
+      },
     ],
   },
   {
-    path: "/connexion",
-    element:<Auth/>,
-  }
+    path: '/connexion',
+    element: <Auth />,
+  },
 ])
 
 

@@ -13,6 +13,8 @@ import { supabase } from '../../utils/supabaseClient'
 const Layout = () => {
     const isLogged = userAuthStore((states: any) => states.isLogged)
     const [invoicesData, setInvoicesData] = React.useState<any>([]);
+  const [invoicesData2, setInvoicesData2] = React.useState<any>([]);
+
 
 
     React.useEffect(() => {
@@ -24,8 +26,8 @@ const Layout = () => {
 
     const getInvoices = async () => {
       let { data: invoices, error } = await supabase
-        .from("invoices")
-        .select("*");
+        .from("invoices2")
+        .select("*, detailBill(*)");
 
       if (invoices) {
         setInvoicesData(invoices);
@@ -36,7 +38,7 @@ const Layout = () => {
     };
 
 
-    console.log(isLogged)
+    console.log(invoicesData)
 
 
   return (
@@ -48,8 +50,8 @@ const Layout = () => {
       <div className="main-content">
         <div className="page-content">
           <div className="container-fluid">
-            <PageTitle />
-            <Outlet context={[invoicesData, setInvoicesData]} />
+            
+            <Outlet context={[invoicesData, setInvoicesData, invoicesData2, setInvoicesData2]} />
           </div>
         </div>
         <Footer />

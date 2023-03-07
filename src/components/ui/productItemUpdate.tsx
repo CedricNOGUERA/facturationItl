@@ -1,20 +1,8 @@
 import React from 'react'
 
-const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
-
-
-  const {
-    setAmountProd,
-    productList,
-    setProductList,
-    handleDeleteProduct,
-    handleChangeProduct,
-    substQty,
-    addQty,
-    register,
-  } = productItemProps
-
-
+const ProductItemUpdate = ({ productItemProps, prod, indx, test, setTest }: any) => {
+  const { productList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
+    productItemProps
 
   return (
     <tr id={prod?.id} key={prod.id} className='product'>
@@ -27,9 +15,9 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
             type='text'
             className='form-control bg-light border-0'
             id={`productName-${prod?.id}`}
-            placeholder='Nom du produit ou du service'
-            value={prod.name}
-            onChange={(e) => handleChangeProduct(e, indx, 'name')}
+            placeholder='nom du produit ou du service'
+            value={prod.designation}
+            onChange={(e) => handleChangeProduct(e, indx, 'designation')}
             required
           />
           <div className='invalid-feedback'>Saisissez le nom du produit</div>
@@ -39,8 +27,8 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           id={`productDetails-${prod?.id}`}
           rows={2}
           placeholder='Details'
-          value={prod.detail}
-          onChange={(e) => handleChangeProduct(e, indx, 'detail')}
+          value={prod.detailDesignation}
+          onChange={(e) => handleChangeProduct(e, indx, 'detailDesignation')}
         ></textarea>
       </td>
       <td>
@@ -48,21 +36,18 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           className='form-control bg-light border-0'
           data-choices
           data-choices-search-false
-          id='choices-payment-currency'
+          id='choices-payment-status'
           value={prod.tva}
           onChange={(e) => handleChangeProduct(e, indx, 'tva')}
-          required
         >
           <option value=''>Tva</option>
-          <option value='0.13'>13%</option>
-          <option value='0.16'>16%</option>
+          <option value={0.13}>13%</option>
+          <option value={0.16}>16%</option>
         </select>
-
-        <div className='invalid-feedback'>Saisissez un prix</div>
       </td>
+      <div className='invalid-feedback'>Sélectionnez une Tva</div>
       <td>
         <input
-          {...register(`price${prod?.id}`)}
           type='number'
           className='form-control product-price bg-light border-0'
           id={`productRate-${prod?.id}`}
@@ -83,7 +68,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
             –
           </button>
           <input
-            {...register(`quantity${prod?.id}`)}
             type='number'
             className='product-quantity'
             id={`product-qty-${prod?.id}`}
@@ -110,7 +94,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
       <td className='text-end'>
         <div>
           <input
-            {...register(`prodAmount${prod?.id}`)}
             type='text'
             className='form-control bg-light border-0 product-line-price text-end'
             id='productPrice-1'
@@ -136,4 +119,4 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
   )
 }
 
-export default ProductItem
+export default ProductItemUpdate

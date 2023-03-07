@@ -7,11 +7,11 @@ const Footer = () => {
       <div className="row">
         <div className="col-sm-6">
           <script>document.write(new Date().getFullYear())</script> ©
-          Velzon.
+          iTahiti Lab.
         </div>
         <div className="col-sm-6">
           <div className="text-sm-end d-none d-sm-block">
-            Design & Develop by Themesbrand
+            Développé avec passion  par iTL
           </div>
         </div>
       </div>
