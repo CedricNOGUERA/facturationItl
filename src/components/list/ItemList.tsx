@@ -21,7 +21,7 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
         </div>
       </th>
       <td className='id' onClick={() => navigate(`/${bill.id}`)}>
-        #{bill.id?.slice(0, 8)}
+        #{bill.invoiceNum}
       </td>
       <td className='customer_name' onClick={() => navigate(`/${bill.id}`)}>
         <div className='d-flex align-items-center'>
@@ -46,8 +46,9 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
       </td>
 
       <td className='date' onClick={() => navigate(`/${bill.id}`)}>
-        {bill.created_at.slice(8, 10)}/{bill.created_at.slice(5, 7)}/{bill.created_at.slice(0, 4)} - {' '}
-        <small className='text-muted'>9:58 PM</small>
+        {/* {bill.created_at.slice(8, 10)}/{bill.created_at.slice(5, 7)}/{bill.created_at.slice(0, 4)} */}
+       {bill?.createdAt}
+        {/* <small className='text-muted'>9:58 PM</small> */}
       </td>
       <td className='invoice_amount text-end' onClick={() => navigate(`/${bill.id}`)}>
         {new Intl.NumberFormat().format(bill.amount_ttc)}

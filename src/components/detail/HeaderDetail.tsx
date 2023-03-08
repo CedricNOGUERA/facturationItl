@@ -1,6 +1,12 @@
 import React from 'react'
 
-const HeaderDetail = ({filteredInvoice}: any) => {
+interface headerDetailProps{
+  filteredInvoice: any
+}
+
+
+
+const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice}) => {
   return (
     <>
       <div className='col-lg-12'>
@@ -54,17 +60,21 @@ const HeaderDetail = ({filteredInvoice}: any) => {
       <div className='col-lg-12'>
         <div className='card-body p-4 '>
           <div className='row g-3'>
+            <div className='col-12 text-center'>
+              <h2 className="teko">FACTURE</h2>
+            </div>
             <div className='col-8'>
               <h6 className='text-muted text-uppercase fw-semibold mb-3 fs-13'>
                 A l'attention de
               </h6>
               <p className='fw-medium mb-2' id='billing-name'>
-                {filteredInvoice?.customer_info.name}
+              <i className="ri-user-line text-muted"></i> : {filteredInvoice?.customer_info.name}
               </p>
               <p className='mb-1' id='billing-address-line-1'>
-                {filteredInvoice?.customer_info.address}
+              <i className="ri-home-2-line text-muted"></i> : {filteredInvoice?.customer_info.address}
               </p>
             </div>
+
             <div className='col-4'>
               <p className='fw-medium mb-2' id='shipping-name'>
                 <span className=' text-muted'>
@@ -96,10 +106,7 @@ const HeaderDetail = ({filteredInvoice}: any) => {
             <div className='col-lg-4 col-sm-4 col-4'>
               <p className='text-muted mb-2 text-uppercase fw-semibold fs-13'>Date</p>
               <h5 className='fs-15 mb-0'>
-                <span id='invoice-date'>{filteredInvoice?.created_at.slice(0, 10)}</span>{' '}
-                <small className='text-muted' id='invoice-time'>
-                  {filteredInvoice?.created_at.slice(12, 20)}PM
-                </small>
+                <span id='invoice-date'>{filteredInvoice?.createdAt}</span>{' '}
               </h5>
             </div>
             <div className='col-lg-4 col-sm-4 col-4 '>

@@ -1,9 +1,31 @@
 import React from 'react'
 
+import { DatePicker } from 'antd';
+import type { DatePickerProps } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+
+/** Manually entering any of the following formats will perform date parsing */
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+
+
+
 const HeaderCreate = ({headerProps}: any) => {
   
     const {nameCustomer, setNameCustomer, emailCustomer, setEmailCustomer, avatarCustomer, setAvatarCustomer, addressCustomer, setAddressCustomer, phoneCustomer, setPhoneCustomer, invoiceNum, setInvoiceNum, invoiceCreatedAt, setInvoiceCreatedAt, status, setStatus} = headerProps
   
+
+
+    const dateNow = (new Date().getDate().toString().length === 1 ? "0" + new Date().getDate() : new Date().getDate()) +"/"+  (new Date().getMonth().toString().length === 1 ? "0" + (new Date().getMonth()+1 ): new Date().getMonth()+1) +"/"+ new Date().getFullYear()
+     
+
+    const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+      setInvoiceCreatedAt(dateString)
+    };
+  
+   
     return (
     <>
       <div className='card-body border-bottom border-bottom-dashed p-4'>
@@ -18,7 +40,7 @@ const HeaderCreate = ({headerProps}: any) => {
               <label htmlFor='profile-img-file-input' className='d-block' tabIndex={0}>
                 <span
                   className='overflow-hidden border border-dashed d-flex align-items-center justify-content-center rounded'
-                  style={{ height: '60px', width: '256px' }}
+                  style={{ height: '50px', width: '256px' }}
                 >
                   <img
                     src='assets/images/logo-dark.png'
@@ -61,6 +83,9 @@ const HeaderCreate = ({headerProps}: any) => {
 
       <div className='card-body p-4 '>
         <div className='row'>
+        <div className='col-12 text-center'>
+              <h3>FACTURE</h3>
+            </div>
           <div className='col-lg-4 col-sm-6'>
             <div>
               <label htmlFor='billingName' className='text-muted text-uppercase fw-semibold'>
@@ -97,14 +122,14 @@ const HeaderCreate = ({headerProps}: any) => {
           <div className='col-lg-2 col-sm-0'></div>
           <div className='col-lg-4 col-sm-6'>
             <div>
-              <label htmlFor='billingName' className='text-muted text-uppercase fw-semibold'>
+              <label htmlFor='billingEmail' className='text-muted text-uppercase fw-semibold'>
                 <i className='ri-mail-line'></i>
               </label>
             </div>
             <div className='mb-2'>
               <input
                 type='text'
-                id='billingName'
+                id='billingEmail'
                 className='form-control bg-light border-0'
                 placeholder='Email'
                 value={emailCustomer}
@@ -130,7 +155,7 @@ const HeaderCreate = ({headerProps}: any) => {
             <div className='mb-2'>
               <input
                 type='text'
-                id='billingName'
+                id='billingAvatar'
                 className='form-control bg-light border-0'
                 placeholder='Avatar'
                 value={avatarCustomer}
@@ -152,23 +177,17 @@ const HeaderCreate = ({headerProps}: any) => {
               placeholder='N° facture'
               value={invoiceNum}
               onChange={(e: any) => setInvoiceNum(e.currentTarget.value)}
+              required
             />
           </div>
 
           <div className='col-lg-4 col-sm-6'>
             <div>
               <label htmlFor='date-field'>Date</label>
-
-              <input
-                type='text'
-                className='form-control bg-light border-0'
-                id='date-field'
-                placeholder='Entrer le nom'
-                data-time='true'
-                value={invoiceCreatedAt}
-                onChange={(e) => setInvoiceCreatedAt(e.currentTarget.value)}
-                required
+              <DatePicker className='form-control bg-light border-0' defaultValue={dayjs(dateNow , dateFormatList[0])} format={dateFormatList}
+              onChange={onChange}
               />
+              
             </div>
           </div>
 

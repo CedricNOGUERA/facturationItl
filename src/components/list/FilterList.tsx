@@ -1,5 +1,15 @@
 import React from 'react'
 
+import type { DatePickerProps } from 'antd';
+import { DatePicker, Space } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+/** Manually entering any of the following formats will perform date parsing */
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+
+
 interface PropsFilterList {
   filterListProps: any
 }
@@ -14,6 +24,16 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
     dateFilter,
     setDateFilter,
   } = filterListProps
+
+
+  const dateNow = (new Date().getDate().toString().length === 1 ? "0" + new Date().getDate() : new Date().getDate()) +"/"+  (new Date().getMonth().toString().length === 1 ? "0" + (new Date().getMonth()+1 ): new Date().getMonth()+1) +"/"+ new Date().getFullYear()
+     
+
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    setDateFilter(dateString)
+    invoiceSearch()
+    
+  };
 
   return (
     <div className='card-body bg-soft-light border border-dashed border-start-0 border-end-0'>
@@ -36,16 +56,11 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
           </div>
 
           <div className='col-xxl-3 col-sm-4'>
-            <input
-              type='text'
-              className='form-control bg-light border-light'
-              id='datepicker-range'
-              placeholder='Selectionnez une date'
-              value={dateFilter}
-              onChange={(e) => {
-                setDateFilter(e.currentTarget.value)
-                invoiceSearch()
-              }}
+            <DatePicker
+              className='form-control'
+              defaultValue={dayjs(dateNow, dateFormatList[0])}
+              format={dateFormatList}
+              onChange={onChange}
             />
           </div>
 
@@ -61,7 +76,7 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
                 onChange={(e) => setStatusFilter(e.currentTarget.value)}
               >
                 <option value=''>Status</option>
-                
+
                 <option value='Unpaid'>Impayé</option>
                 <option value='Paid'>Payé</option>
                 <option value='Cancel'>Annulé</option>

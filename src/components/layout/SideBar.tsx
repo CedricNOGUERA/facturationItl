@@ -58,7 +58,22 @@ const SideBar = () => {
                       // data-key="t-invoices"
                     >
                       {" "}
-                      Liste de factures
+                      Liste des devis
+                    </Link>
+                   
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      to="/"
+                      className="nav-link"
+                      // data-bs-toggle="collapse"
+                      // role="button"
+                      // aria-expanded="false"
+                      // aria-controls="sidebarInvoices"
+                      // data-key="t-invoices"
+                    >
+                      {" "}
+                      Liste des factures
                     </Link>
                    
                   </li>

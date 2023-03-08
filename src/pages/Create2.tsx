@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useOutletContext } from "react-router-dom";
-import ProductItem from "../components/ui/ProductItem";
+import ProductItem from "../components/create/ProductItem";
 import { supabase } from "../utils/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 

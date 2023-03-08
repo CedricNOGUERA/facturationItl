@@ -1,13 +1,11 @@
 import React from "react";
-import {  Link, useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { supabase } from "../utils/supabaseClient";
-import { RightCircleOutlined, LeftCircleOutlined } from '@ant-design/icons';
 import HeaderList from "../components/list/HeaderList";
 import DeleteModal from "../components/list/DeleteModal";
 import FilterList from "../components/list/FilterList";
 import ItemList from "../components/list/ItemList";
 import { Spinner } from "react-bootstrap";
-import { start } from "repl";
 import TopTable from "../components/list/TopTable";
 
 const List: React.FC = () => {
@@ -16,16 +14,14 @@ const List: React.FC = () => {
   
   const [invoicesData2, setInvoicesData2] = useOutletContext<any>();
 
-
-  // const [invoicesData2, setInvoicesData2] = React.useState<any>([]);
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [sort, setSort] = React.useState<string>("id");
-  const [asc, setAsc] = React.useState<boolean>(true);
+  const [sort, setSort] = React.useState<string>("createdAt");
+  const [asc, setAsc] = React.useState<boolean>(false);
   const [startPagination, setStartPagination] = React.useState<number>(0);
-  const [endPagination, setEndPagination] = React.useState<number>(5);
+  const [endPagination, setEndPagination] = React.useState<number>(3);
   
   
   const [isErrorSearch, setIsErrorSearch] = React.useState<string>("none");
@@ -34,19 +30,13 @@ const List: React.FC = () => {
   const [dateFilter, setDateFilter] = React.useState<string>('');
 
 
-
-
   React.useEffect(() => {
-      
     getInvoices2()
-   
   }, []);
 
 
   React.useEffect(() => {
-      
     getInvoices2()
-   
   }, [startPagination]);
 
 
@@ -56,7 +46,6 @@ const List: React.FC = () => {
     if(searchTerm === ""){
       getInvoices2()
       setFilteredInvoice([])
-
     }
     invoiceSearch()
 
@@ -75,7 +64,6 @@ const List: React.FC = () => {
       .select("*, detailBill(*)")
       .range(startPagination, endPagination)
       .order(sort, { ascending: asc });
-      // .order('customer_info', { ascending: true });
 
     if (invoices) {
       setInvoicesData2(invoices)
@@ -89,15 +77,21 @@ const List: React.FC = () => {
   };
 
   const nextPagination = () => {
-    setStartPagination(startPagination + 2)
-    setEndPagination(endPagination + 2)
+    setStartPagination(startPagination + 4)
+    setEndPagination(endPagination + 4)
     getInvoices2()
   }
 
   const previousPagination = () => {
     if(startPagination > 0)
-    setStartPagination(startPagination - 2)
-    setEndPagination(endPagination - 2)
+    setStartPagination(startPagination - 4)
+    setEndPagination(endPagination - 4)
+    getInvoices2()
+  }
+
+  const pagination = (st: any, end: any) => {
+    setStartPagination(st)
+    setEndPagination(end)
     getInvoices2()
   }
 
@@ -106,25 +100,22 @@ const List: React.FC = () => {
   }
 
   const invoiceSearch = () => {
+    const escapedSearchOrder = escapeRegExp(searchTerm)
 
-const escapedSearchOrder = escapeRegExp(searchTerm);
-
-if (escapedSearchOrder.length > 2) {
-  setFilteredInvoice(
-    invoicesData2.filter((bill: any) => {
-      return (
-        bill.name_customer?.match(new RegExp(escapedSearchOrder, 'i')) ||
-        bill?.email_customer?.match(new RegExp(searchTerm, 'i'))
+    if (escapedSearchOrder.length > 2) {
+      setFilteredInvoice(
+        invoicesData2.filter((bill: any) => {
+          return (
+            bill.name_customer?.match(new RegExp(escapedSearchOrder, 'i')) ||
+            bill?.email_customer?.match(new RegExp(escapedSearchOrder, 'i'))
+          )
+        })
       )
-    })
-  )
-}
-  return undefined;
-
+    }
+    return undefined
   }
 
-  console.log(invoicesData2)
-  console.log(filteredInvoice)
+
 
 const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, statusFilter, setStatusFilter, dateFilter, setDateFilter}
 const topTableProps = {setAsc, setSort, getInvoices2, asc}
@@ -150,7 +141,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                     ) : filteredInvoice.length > 0 ? (
                       filteredInvoice?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={bill.id} bill={bill} />
+                          <ItemList key={Math.random()} bill={bill} />
                         ) : null
                       )
                     ) : filteredInvoice.length === 0 && searchTerm.length > 2 ? (
@@ -176,7 +167,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                     ) : (
                       invoicesData2?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={bill.id} bill={bill} />
+                          <ItemList key={Math.random()} bill={bill} />
                         ) : null
                       )
                     )}
@@ -192,12 +183,16 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                     Précédent
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
-                    <li>
-                      <span className='page-item pagination-prev disabled m-auto'>1</span>
+                      {Array.from({ length: 
+                    ((invoicesData2.length / 4)+1)
+                    })?.map((list: any, indx: any) => (
+
+                        <li key={Math.random()} onClick={() => pagination(indx*4, (indx*4)+3)} >
+                      <span className='page-item pagination-prev disabled m-auto'>{indx+1}</span>
                     </li>
-                    <li>
-                      <span className='page-item pagination-prev disabled m-auto'>2</span>
-                    </li>
+                      ))}
+                 
+
                   </ul>
                   <span className='page-item pagination-next' onClick={nextPagination}>
                     Suivant

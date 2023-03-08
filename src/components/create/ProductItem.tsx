@@ -26,7 +26,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           <input
             type='text'
             className='form-control bg-light border-0'
-            id={`productName-${prod?.id}`}
             placeholder='Nom du produit ou du service'
             value={prod.name}
             onChange={(e) => handleChangeProduct(e, indx, 'name')}
@@ -36,7 +35,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
         </div>
         <textarea
           className='form-control bg-light border-0'
-          id={`productDetails-${prod?.id}`}
           rows={2}
           placeholder='Details'
           value={prod.detail}
@@ -48,7 +46,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           className='form-control bg-light border-0'
           data-choices
           data-choices-search-false
-          id='choices-payment-currency'
           value={prod.tva}
           onChange={(e) => handleChangeProduct(e, indx, 'tva')}
           required
@@ -65,7 +62,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           {...register(`price${prod?.id}`)}
           type='number'
           className='form-control product-price bg-light border-0'
-          id={`productRate-${prod?.id}`}
           placeholder='0.00'
           value={prod.price}
           onChange={(e) => handleChangeProduct(e, indx, 'price')}
@@ -86,7 +82,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
             {...register(`quantity${prod?.id}`)}
             type='number'
             className='product-quantity'
-            id={`product-qty-${prod?.id}`}
             value={prod.qty}
             onChange={(e) => handleChangeProduct(e, indx, 'qty')}
             required
@@ -101,7 +96,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           <input
             type='number'
             className='form-control bg-light border-0 product-line-price text-end'
-            id={`product-qty-${prod?.id}`}
             value={prod.price * prod.qty * prod.tva}
             readOnly
           />
@@ -113,7 +107,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
             {...register(`prodAmount${prod?.id}`)}
             type='text'
             className='form-control bg-light border-0 product-line-price text-end'
-            id='productPrice-1'
             placeholder='0'
             value={prod.price * prod.qty}
             readOnly
@@ -122,14 +115,14 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
       </td>
       <td className='product-removal'>
         {productList.length > 0 && (
-          <div
+          <button
             onClick={() => {
               productList.length > 1 && handleDeleteProduct(prod.id)
             }}
             className='btn btn-success diseable'
           >
             Supprimer
-          </div>
+          </button>
         )}
       </td>
     </tr>

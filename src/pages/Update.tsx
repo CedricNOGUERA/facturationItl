@@ -1,10 +1,25 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import ProductItemUpdate from '../components/ui/productItemUpdate'
+import ProductItemUpdate from '../components/update/productItemUpdate'
 import { supabase } from '../utils/supabaseClient'
 import { SmileOutlined, CheckCircleTwoTone } from '@ant-design/icons';
-import { Button, notification } from 'antd';
+import { Button, notification, DatePicker, Space } from 'antd';
+import type { DatePickerProps } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+
+
+
+
+/** Manually entering any of the following formats will perform date parsing */
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+
+
+
+
 
 const Update = () => {
 
@@ -28,6 +43,7 @@ const Update = () => {
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
 
   const [htAmount, setHtAmount] = React.useState<any>(0)
+  // const [totalTva_13, setTotalTva_13] = React.useState<any>(0)
 
   const params = useParams()
 
@@ -59,6 +75,8 @@ const Update = () => {
     )
   }, [productList])
 
+  
+   
   const handleAddProduct = () => {
     const newTab = [
       ...productList,
@@ -95,6 +113,8 @@ const Update = () => {
     const { data, error } = await supabase
       .from('invoices2')
       .update({
+        invoiceNum: invoiceNum ? invoiceNum : filteredInvoice[0]?.invoiceNum,
+        createdAt: invoiceCreatedAt ? invoiceCreatedAt : filteredInvoice[0]?.createdAt,
         status: status ? status : filteredInvoice[0]?.status,
         customer_info: {
           name: nameCustomer ? nameCustomer : filteredInvoice[0]?.customer_info.name,
@@ -149,15 +169,16 @@ const Update = () => {
     }
   }
 
-  const totalTva_13 = filteredInvoice[0]?.detailBill
-    ?.filter((bill: any) => bill.tva == 0.13)
+  const totalTva_13 = productList
+    ?.filter((bill: any) => bill.tva === 0.13)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-  const totalTva_16 = filteredInvoice[0]?.detailBill
-    ?.filter((bill: any) => bill.tva == 0.16)
+  const totalTva_16 = productList
+    ?.filter((bill: any) => bill.tva === 0.16)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
 
-  console.log(totalTva_13)
+  console.log(totalTva_16)
   console.log(filteredInvoice[0]?.detailBill)
+  console.log(productList)
 
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
@@ -173,6 +194,10 @@ const Update = () => {
       setProductList(newProduits)
     }
   }
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    // console.log(date, dateString);
+    setInvoiceCreatedAt(dateString)
+  };
 
   const productItemProps = {
     productList,
@@ -182,7 +207,7 @@ const Update = () => {
     substQty,
     addQty,
   }
-
+console.log(productList?.length)
   return (
     <div className='row justify-content-center'>
       {contextHolder}
@@ -191,7 +216,7 @@ const Update = () => {
           <form
             onSubmit={handleUpdateInvoice}
             className='needs-validation'
-            noValidate
+            // noValidate
             id='invoice_form'
           >
             <div className='card-body border-bottom border-bottom-dashed p-4'>
@@ -247,7 +272,7 @@ const Update = () => {
                 </div>
               </div>
             </div>
-          
+
             <div className='card-body p-4'>
               <div className='row'>
                 <div className='col-lg-4 col-sm-6'>
@@ -278,7 +303,7 @@ const Update = () => {
                     <input
                       type='text'
                       className='form-control bg-light border-0'
-                      id='billingName'
+                      id='billingEmail'
                       placeholder={
                         filteredInvoice[0]?.customer_info.email
                           ? filteredInvoice[0]?.customer_info.email
@@ -293,7 +318,7 @@ const Update = () => {
                     <input
                       type='text'
                       className='form-control bg-light border-0'
-                      id='billingName'
+                      id='billingAvatar'
                       placeholder={
                         filteredInvoice[0]?.customer_info.avatar
                           ? filteredInvoice[0]?.customer_info.avatar
@@ -376,13 +401,11 @@ const Update = () => {
                 <div className='col-lg-4 col-sm-6'>
                   <div>
                     <label htmlFor='date-field'>Date</label>
-                    <input
-                      type='text'
+                    <DatePicker
                       className='form-control bg-light border-0'
-                      id='date-field'
-                      data-provider='flatpickr'
-                      data-time='true'
-                      placeholder={filteredInvoice[0]?.created_at.slice(0, 10)}
+                      defaultValue={dayjs(filteredInvoice[0]?.createdAt, dateFormatList[0])}
+                      format={dateFormatList}
+                      onChange={onChange}
                     />
                   </div>
                 </div>
@@ -403,9 +426,10 @@ const Update = () => {
                           ? filteredInvoice[0]?.status
                           : 'Sélectionner un status'}
                       </option>
-                      <option value='Paid'>Payé</option>
-                      <option value='Unpaid'>Impayé</option>
+                      <option value='Paid'>Payée</option>
+                      <option value='Unpaid'>Impayée</option>
                       <option value='Refund'>Remboursement</option>
+                      <option value='Cancel'>Annulée</option>
                     </select>
                   </div>
                 </div>
@@ -452,11 +476,6 @@ const Update = () => {
                     ))}
                   </tbody>
                   <tbody>
-                    <tr id='newForm' style={{ display: 'none' }}>
-                      <td className='d-none' colSpan={5}>
-                        <p>Add New Form</p>
-                      </td>
-                    </tr>
                     <tr>
                       <td colSpan={5}>
                         <span
@@ -492,7 +511,7 @@ const Update = () => {
                                   <input
                                     type='text'
                                     className='form-control bg-light border-0 text-end'
-                                    id='cart-tax'
+                                    id='tax13'
                                     placeholder={`${totalTva_13}`}
                                     readOnly
                                   />
@@ -506,7 +525,7 @@ const Update = () => {
                                   <input
                                     type='text'
                                     className='form-control bg-light border-0 text-end'
-                                    id='cart-tax'
+                                    id='tax16'
                                     placeholder={`${totalTva_16}`}
                                     readOnly
                                   />
@@ -520,15 +539,13 @@ const Update = () => {
                                 <input
                                   type='text'
                                   className='form-control bg-light border-0 text-end'
-                                  id='cart-tax'
+                                  id='ht'
                                   placeholder={`${htAmount * 0.01}`}
                                   readOnly
                                 />
                               </td>
                             </tr>
-                            <tr>
-                            
-                            </tr>
+                            <tr></tr>
                             <tr className='border-top border-top-dashed'>
                               <th scope='row'>Total</th>
                               <td>
@@ -562,14 +579,9 @@ const Update = () => {
                   id='exampleFormControlTextarea1'
                   placeholder='Notes'
                   rows={3}
-                  required
-                >
-                  Tous les comptes doivent être payés dans les 45 jours suivant la réception de
-                  facture. A régler par chèque ou carte bancaire ou paiement direct en ligne.
-                  Si le compte n'est pas payé dans les 45 jours les détails des crédits fournis
-                  comme confirmation de les travaux entrepris seront facturés au tarif convenu
-                  Noté ci-dessus.
-                </textarea>
+                  defaultValue="Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours les détails des crédits fournis comme confirmation de les travaux entrepris seront facturés au tarif convenu Noté ci-dessus."
+                  readOnly
+                ></textarea>
               </div>
               <div className='hstack gap-2 justify-content-end d-print-none mt-4'>
                 <button type='submit' className='btn btn-success'>

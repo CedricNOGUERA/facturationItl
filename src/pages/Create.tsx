@@ -1,13 +1,13 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import ProductItem from '../components/ui/ProductItem'
+import ProductItem from '../components/create/ProductItem'
 import { supabase } from '../utils/supabaseClient'
 import { v4 as uuidv4 } from 'uuid'
 import Header from '../components/create/HeaderCreate'
 import BottomTableCreate from '../components/create/BottomTableCreate'
 import ButtonTableCreate from '../components/create/ButtonTableCreate'
-import { CheckCircleTwoTone } from '@ant-design/icons';
-import { notification } from 'antd';
+import { CheckCircleTwoTone } from '@ant-design/icons'
+import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 const Create = () => {
@@ -38,7 +38,7 @@ const Create = () => {
 
   const navigate = useNavigate()
 
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification()
 
   const openNotification = () => {
     api.open({
@@ -46,7 +46,7 @@ const Create = () => {
       description: 'Votre facture est enregistrée.',
       icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
     })
-  };
+  }
 
   const amountHT = productList.reduce(
     (acc: any, current: any) => acc + current.price * current.qty,
@@ -89,6 +89,7 @@ const Create = () => {
       {
         id: invoiceId,
         invoiceNum: invoiceNum,
+        createdAt: invoiceCreatedAt,
         status: status,
         name_customer: nameCustomer,
         email_customer: emailCustomer,
@@ -102,7 +103,9 @@ const Create = () => {
         },
 
         amount_ht: amountHT,
-        amount_ttc: parseInt((amountHT + totalTva_13 + totalTva_16  + amountHT * 0.01).toFixed(2)),
+        amount_ttc: parseInt(
+          (amountHT + totalTva_13 + totalTva_16 + amountHT * 0.01).toFixed(2)
+        ),
       },
     ])
 
@@ -119,6 +122,7 @@ const Create = () => {
             amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
             amount_ht: prod.qty * prod.price,
             invoice_id: invoiceId,
+            tva: prod.tva,
           },
         ])
       })
@@ -134,15 +138,11 @@ const Create = () => {
         setPhoneCustomer('')
         setAvatarCustomer('')
         setAddressCustomer('')
-    openNotification()
+        openNotification()
 
-    setTimeout(() => {
-      navigate('/')
-    }
-    , 2500)
-    
-
-
+        setTimeout(() => {
+          navigate('/')
+        }, 2500)
       } catch (error) {
         console.log(error)
       }
@@ -150,12 +150,11 @@ const Create = () => {
   }
 
   const totalTva_13 = productList
-  ?.filter((bill: any) => bill.tva == 0.13)
-  ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-const totalTva_16 = productList
-  ?.filter((bill: any) => bill.tva == 0.16)
-  ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-
+    ?.filter((bill: any) => bill.tva == 0.13)
+    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
+  const totalTva_16 = productList
+    ?.filter((bill: any) => bill.tva == 0.16)
+    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
 
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
@@ -171,7 +170,24 @@ const totalTva_16 = productList
     }
   }
 
-  const headerProps = {nameCustomer, setNameCustomer, emailCustomer, setEmailCustomer, avatarCustomer, setAvatarCustomer, addressCustomer, setAddressCustomer, phoneCustomer, setPhoneCustomer, invoiceNum, setInvoiceNum, invoiceCreatedAt, setInvoiceCreatedAt, status, setStatus}
+  const headerProps = {
+    nameCustomer,
+    setNameCustomer,
+    emailCustomer,
+    setEmailCustomer,
+    avatarCustomer,
+    setAvatarCustomer,
+    addressCustomer,
+    setAddressCustomer,
+    phoneCustomer,
+    setPhoneCustomer,
+    invoiceNum,
+    setInvoiceNum,
+    invoiceCreatedAt,
+    setInvoiceCreatedAt,
+    status,
+    setStatus,
+  }
 
   const productItemProps = {
     handleSubmit,
@@ -184,20 +200,17 @@ const totalTva_16 = productList
     substQty,
     addQty,
   }
-  const bottomTableProps = {handleAddProduct, amountHT, totalTva_13, totalTva_16 }
-
+  const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
+  const test = () => {
+    alert('hello')
+  }
 
   return (
     <div className='row justify-content-center'>
       {contextHolder}
       <div className='col-xxl-9'>
         <div className='card'>
-          <form
-            onSubmit={createInvoice}
-            className='needs-validation'
-            noValidate
-            id='invoice_form'
-          >
+          <form onSubmit={createInvoice} className='needs-validation' id='invoice_form'>
             <Header headerProps={headerProps} />
             <div className='card-body p-4'>
               <div className='table-responsive'>
@@ -234,12 +247,13 @@ const totalTva_16 = productList
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItem
                         productItemProps={productItemProps}
+                        key={prod.id}
                         prod={prod}
                         indx={indx}
                       />
                     ))}
                   </tbody>
-                <BottomTableCreate bottomTableProps={bottomTableProps} />
+                  <BottomTableCreate bottomTableProps={bottomTableProps} />
                 </table>
               </div>
               <div className='mt-4'>
@@ -254,16 +268,12 @@ const totalTva_16 = productList
                   id='exampleFormControlTextarea1'
                   placeholder='Notes'
                   rows={3}
-                  required
+                  defaultValue="Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours les détails des crédits fournis comme confirmation de les travaux entrepris seront facturés au tarif convenu Noté ci-dessus."
+                  readOnly
                 >
-                  Tous les comptes doivent être payés dans les 45 jours suivant la réception de
-                  facture. A régler par chèque ou carte bancaire ou paiement direct en ligne.
-                  Si le compte n'est pas payé dans les 45 jours les détails des crédits fournis
-                  comme confirmation de les travaux entrepris seront facturés au tarif convenu
-                  Noté ci-dessus.
                 </textarea>
               </div>
-             <ButtonTableCreate />
+              <ButtonTableCreate />
             </div>
           </form>
         </div>

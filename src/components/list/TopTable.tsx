@@ -22,11 +22,11 @@ const TopTable = ({topTableProps}: any) => {
                         data-sort='invoice_id'
                         onClick={() => {
                           setAsc(!asc)
-                          setSort('id')
+                          setSort('invoiceNum')
                           getInvoices2()
                         }}
                       >
-                        ID
+                        N° Facture
                       </th>
                       <th
                         className='sort text-uppercase'

@@ -19,26 +19,24 @@ const Layout = () => {
 
     React.useEffect(() => {
       
-      getInvoices()
+      // getInvoices()
      
     }, []);
 
 
-    const getInvoices = async () => {
-      let { data: invoices, error } = await supabase
-        .from("invoices2")
-        .select("*, detailBill(*)");
+    // const getInvoices = async () => {
+    //   let { data: invoices, error } = await supabase
+    //     .from("invoices2")
+    //     .select("*, detailBill(*)");
 
-      if (invoices) {
-        setInvoicesData(invoices);
-      }
-      if (error) {
-        console.log(error);
-      }
-    };
+    //   if (invoices) {
+    //     setInvoicesData(invoices);
+    //   }
+    //   if (error) {
+    //     console.log(error);
+    //   }
+    // };
 
-
-    console.log(invoicesData)
 
 
   return (
