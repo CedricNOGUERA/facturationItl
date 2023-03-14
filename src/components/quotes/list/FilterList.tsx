@@ -20,6 +20,15 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
   } = filterListProps
 
 
+  // const dateNow = (new Date().getDate().toString().length === 1 ? "0" + new Date().getDate() : new Date().getDate()) +"/"+  (new Date().getMonth().toString().length === 1 ? "0" + (new Date().getMonth()+1 ): new Date().getMonth()+1) +"/"+ new Date().getFullYear()
+     
+
+  // const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  //   setDateFilter(dateString)
+  //   // invoiceSearchByDate()
+    
+  // };
+
   return (
     <div className='card-body bg-soft-light border border-dashed border-start-0 border-end-0'>
       <span className='text-muted p-2 rounded '>
@@ -82,10 +91,10 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
               >
                 <option value=''>Status</option>
 
-                <option value=''>Sélectionner un Status</option>
-                <option value='Payée'>Payée</option>
-                <option value='Impayée'>Impayée</option>
-                <option value='Remboursement'>Remboursement</option>
+                <option value='Unpaid'>Impayé</option>
+                <option value='Paid'>Payé</option>
+                <option value='Cancel'>Annulé</option>
+                <option value='Refund'>Remboursé</option>
               </select>
             </div>
           </div>

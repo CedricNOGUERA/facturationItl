@@ -1,18 +1,15 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import ProductItem from '../components/create/ProductItem'
-import { supabase } from '../utils/supabaseClient'
+import ProductItem from '../../components/create/ProductItem'
+import { supabase } from '../../utils/supabaseClient'
 import { v4 as uuidv4 } from 'uuid'
-import Header from '../components/create/HeaderCreate'
-import BottomTableCreate from '../components/create/BottomTableCreate'
-import ButtonTableCreate from '../components/create/ButtonTableCreate'
+import Header from '../../components/create/HeaderCreate'
+import BottomTableCreate from '../../components/create/BottomTableCreate'
+import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 const Create = () => {
-  const { register, handleSubmit } = useForm()
-  const [data, setData] = React.useState('')
 
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
   const [invoiceCreatedAt, setInvoiceCreatedAt] = React.useState<any>('')
@@ -23,6 +20,7 @@ const Create = () => {
   const [phoneCustomer, setPhoneCustomer] = React.useState<string>('')
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
+  const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
 
   const [productList, setProductList] = React.useState([
     {
@@ -73,7 +71,6 @@ const Create = () => {
     newProduits[indx][key] = e.target.value
     setProductList(newProduits)
   }
-
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
 
@@ -108,6 +105,9 @@ const Create = () => {
         ),
       },
     ])
+    if(dataz){
+      console.log(dataz)
+    }
 
     if (errorz) {
       console.log(errorz)
@@ -150,10 +150,10 @@ const Create = () => {
   }
 
   const totalTva_13 = productList
-    ?.filter((bill: any) => bill.tva == 0.13)
+    ?.filter((bill: any) => bill.tva === 0.13)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
   const totalTva_16 = productList
-    ?.filter((bill: any) => bill.tva == 0.16)
+    ?.filter((bill: any) => bill.tva === 0.16)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
 
   const addQty = (qty: any, indx: any, key: any) => {
@@ -190,21 +190,13 @@ const Create = () => {
   }
 
   const productItemProps = {
-    handleSubmit,
-    setData,
     productList,
-    setProductList,
     handleDeleteProduct,
-    register,
     handleChangeProduct,
     substQty,
     addQty,
   }
   const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
-  const test = () => {
-    alert('hello')
-  }
-
   return (
     <div className='row justify-content-center'>
       {contextHolder}
@@ -267,9 +259,10 @@ const Create = () => {
                   className='form-control alert alert-info'
                   id='exampleFormControlTextarea1'
                   placeholder='Notes'
-                  rows={3}
-                  defaultValue="Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours les détails des crédits fournis comme confirmation de les travaux entrepris seront facturés au tarif convenu Noté ci-dessus."
-                  readOnly
+                  rows={2}
+                  value={noteInvoice}
+                  onChange={(e) => setNoteInvoice(e.currentTarget.value)}
+                  
                 >
                 </textarea>
               </div>

@@ -1,18 +1,11 @@
 import React from 'react'
-import Input from '../ui/Input'
 
-const BottomTableCreate = ({bottomTableProps}: any) => {
- 
-    const {handleAddProduct, amountHT, totalTva_13, totalTva_16 } = bottomTableProps
-    
- 
-    return (
+const BottomTableUpdate = ({bottomTableProps}: any) => {
+
+    const {handleAddProduct, htAmount, totalTva_13, totalTva_16} = bottomTableProps
+
+  return (
     <tbody>
-    <tr id='newForm' style={{ display: 'none' }}>
-      <td className='d-none' colSpan={5}>
-        <p>Add New Form</p>
-      </td>
-    </tr>
     <tr>
       <td colSpan={5}>
         <span
@@ -30,14 +23,13 @@ const BottomTableCreate = ({bottomTableProps}: any) => {
         <table className='table table-borderless table-sm table-nowrap align-middle mb-0'>
           <tbody>
             <tr>
-              <th scope='row'>Sous-Total</th>
+              <th scope='row'>Total HT</th>
               <td style={{ width: '150px' }}>
-         
                 <input
                   type='text'
                   className='form-control bg-light border-0 text-end'
-                  placeholder='$0.00'
-                  value={new Intl.NumberFormat().format(amountHT.toFixed(2))}
+                  id='cart-subtotal'
+                  value={new Intl.NumberFormat().format(htAmount)}
                   readOnly
                 />
               </td>
@@ -49,8 +41,8 @@ const BottomTableCreate = ({bottomTableProps}: any) => {
                   <input
                     type='text'
                     className='form-control bg-light border-0 text-end'
-                    placeholder="0.00"
-                    value={new Intl.NumberFormat().format(totalTva_13)}
+                    id='tax13'
+                    value={`${new Intl.NumberFormat().format(totalTva_13)}`}
                     readOnly
                   />
                 </td>
@@ -63,34 +55,37 @@ const BottomTableCreate = ({bottomTableProps}: any) => {
                   <input
                     type='text'
                     className='form-control bg-light border-0 text-end'
-                    placeholder="0.00"
-                    value={totalTva_16}
+                    id='tax16'
+                    value={`${new Intl.NumberFormat().format(totalTva_16)}`}
                     readOnly
                   />
                 </td>
               </tr>
             )}
+
             <tr>
               <th scope='row'>CPS (1%)</th>
               <td>
                 <input
                   type='text'
                   className='form-control bg-light border-0 text-end'
-                  placeholder='$0.00'
-                  value={new Intl.NumberFormat().format((amountHT * 0.01))}
+                  id='ht'
+                  value={`${new Intl.NumberFormat().format(htAmount * 0.01)}`}
                   readOnly
                 />
               </td>
             </tr>
-
+            <tr></tr>
             <tr className='border-top border-top-dashed'>
               <th scope='row'>Total</th>
               <td>
                 <input
                   type='text'
                   className='form-control bg-light border-0 text-end'
-                  placeholder='$0.00'
-                  value={new Intl.NumberFormat().format((amountHT + totalTva_13 + totalTva_16  + amountHT * 0.01).toFixed(2))}
+                  id='cart-total'
+                  value={`${new Intl.NumberFormat().format(
+                    htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01
+                  )}`}
                   readOnly
                 />
               </td>
@@ -103,4 +98,4 @@ const BottomTableCreate = ({bottomTableProps}: any) => {
   )
 }
 
-export default BottomTableCreate
+export default BottomTableUpdate

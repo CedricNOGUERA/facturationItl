@@ -1,36 +1,16 @@
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import ProductItemUpdate from '../components/update/productItemUpdate'
-import { supabase } from '../utils/supabaseClient'
-import { SmileOutlined, CheckCircleTwoTone } from '@ant-design/icons';
-import { Button, notification, DatePicker, Space } from 'antd';
-import type { DatePickerProps } from 'antd';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import ProductItem from '../../components/create/ProductItem'
+import { supabase } from '../../utils/supabaseClient'
+import { v4 as uuidv4 } from 'uuid'
+import Header from '../../components/create/HeaderCreate'
+import BottomTableCreate from '../../components/create/BottomTableCreate'
+import ButtonTableCreate from '../../components/create/ButtonTableCreate'
+import { CheckCircleTwoTone } from '@ant-design/icons'
+import { notification } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
+import ProductItemUpdate from '../../components/update/productItemUpdate'
 
-dayjs.extend(customParseFormat);
-
-
-
-
-/** Manually entering any of the following formats will perform date parsing */
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
-
-
-
-
-
-const Update = () => {
-
-  const navigate = useNavigate()
-
-
-  const { register, handleSubmit } = useForm()
-  const [data, setData] = React.useState('')
-  const [qty, setQty] = React.useState(0)
-  const [price, setPrice] = React.useState(0)
-  const [invoicesData, setInvoicesData] = useOutletContext<any>()
+const Update2 = () => {
 
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
   const [invoiceCreatedAt, setInvoiceCreatedAt] = React.useState<any>('')
@@ -41,33 +21,42 @@ const Update = () => {
   const [phoneCustomer, setPhoneCustomer] = React.useState<string>('')
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
+  const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
+  const [date, setDate] = React.useState<string>('')
 
+
+  const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
   const [htAmount, setHtAmount] = React.useState<any>(0)
-  // const [totalTva_13, setTotalTva_13] = React.useState<any>(0)
 
   const params = useParams()
 
-  const filteredInvoice = invoicesData?.filter((bill: any) => params.id === bill.id)
 
-  const [productList, setProductList] = React.useState(filteredInvoice[0]?.detailBill)
+  const [productList, setProductList] = React.useState([
+    {
+      id: 1,
+      name: '',
+      detail: '',
+      tva: 0,
+      price: 0,
+      qty: 1,
+      amount: 0,
+    },
+  ])
+  const [initProductList, setInitProductList] = React.useState<any>([])
 
-  const [api, contextHolder] = notification.useNotification();
 
-  const openNotification = () => {
-    api.open({
-      message: 'Félicitation',
-      description: 'Votre facture est modifiée.',
-      icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
-      // duration: 2.2,
-      className: 'custom-class',
-      style: {
-        width: 270,
-        backgroundColor: "#f5f5f5",
-       
-      },
-    })
-  };
+  const navigate = useNavigate()
 
+  const [api, contextHolder] = notification.useNotification()
+
+  React.useEffect(() => {
+    getInvoiceById()
+    setDate(filteredInvoice?.createdAt)
+  }, [])
+
+  React.useEffect(() => {
+    setProductList(filteredInvoice?.detailBill)
+  }, [filteredInvoice])
 
   React.useEffect(() => {
     setHtAmount(
@@ -75,62 +64,89 @@ const Update = () => {
     )
   }, [productList])
 
+// console.log(filteredInvoice)
   
-   
+  const openNotification = () => {
+    api.open({
+      message: 'Félicitation',
+      description: 'Votre facture est enregistrée.',
+      icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
+    })
+  }
+
+  const amountHT = productList?.reduce(
+    (acc: any, current: any) => acc + current.price * current.qty,
+    0
+  )
+
+
+  const getInvoiceById = async () => {
+    let { data: invoices2, error } = await supabase
+      .from('invoices2')
+      .select('*, detailBill(*)')
+      .eq('id', params.id)
+      .single()
+      
+      if (invoices2) {
+        setFilteredInvoice(invoices2)
+        setInitProductList(invoices2.detailBill)
+      }
+    if (error) {
+      console.log(error)
+    }
+  }
+
   const handleAddProduct = () => {
     const newTab = [
       ...productList,
       {
-        id: productList.length + 1,
+        id: Math.random(),
         name: '',
-        price: null,
-        qty: null,
-        amount: null,
+        detail: '',
+        tva: 0,
+        price: 0,
+        qty: 1,
+        amount: 0,
       },
     ]
-
     setProductList(newTab)
   }
-
   const handleChangeProduct = (e: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
     newProduits[indx][key] = e.target.value
     setProductList(newProduits)
-    setHtAmount(
-      productList?.reduce((acc: any, current: any) => acc + current.price * current.qty, 0)
-    )
   }
-
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
 
     setProductList(newList)
   }
 
+  
   const handleUpdateInvoice = async (e: any) => {
     e.preventDefault()
 
     const { data, error } = await supabase
       .from('invoices2')
       .update({
-        invoiceNum: invoiceNum ? invoiceNum : filteredInvoice[0]?.invoiceNum,
-        createdAt: invoiceCreatedAt ? invoiceCreatedAt : filteredInvoice[0]?.createdAt,
-        status: status ? status : filteredInvoice[0]?.status,
+        invoiceNum: invoiceNum ? invoiceNum : filteredInvoice?.invoiceNum,
+        createdAt: invoiceCreatedAt ? invoiceCreatedAt : filteredInvoice?.createdAt,
+        status: status ? status : filteredInvoice?.status,
         customer_info: {
-          name: nameCustomer ? nameCustomer : filteredInvoice[0]?.customer_info.name,
-          email: emailCustomer ? emailCustomer : filteredInvoice[0]?.customer_info.email,
-          phone: phoneCustomer ? phoneCustomer : filteredInvoice[0]?.customer_info.phone,
-          avatar: avatarCustomer ? avatarCustomer : filteredInvoice[0]?.customer_info.avatar,
-          address: addressCustomer
-            ? addressCustomer
-            : filteredInvoice[0]?.customer_info.address,
+          name: nameCustomer ? nameCustomer : filteredInvoice?.customer_info.name,
+          email: emailCustomer ? emailCustomer : filteredInvoice?.customer_info.email,
+          phone: phoneCustomer ? phoneCustomer : filteredInvoice?.customer_info.phone,
+          avatar: avatarCustomer ? avatarCustomer : filteredInvoice?.customer_info.avatar,
+          address: addressCustomer ? addressCustomer : filteredInvoice?.customer_info.address,
         },
-        amount_ht: htAmount ? htAmount : filteredInvoice[0]?.customer_info.amount_ht,
+        amount_ht: htAmount ? htAmount : filteredInvoice?.customer_info.amount_ht,
         amount_ttc: htAmount
           ? parseInt((htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01).toFixed(2))
-          : filteredInvoice[0]?.customer_info.amount_ht,
+          : filteredInvoice?.customer_info.amount_ht,
       })
       .eq('id', params?.id)
+
+
 
     const promises = productList?.map((prod: any, indx: any) => {
       return supabase
@@ -141,13 +157,14 @@ const Update = () => {
           qty: prod.qty,
           price: prod.price,
           tva: parseFloat(prod.tva),
-          amount_ttc: parseInt((prod.qty * prod.price * (1 + parseFloat(prod.tva) + 0.01)).toFixed(2)),
+          amount_ttc: parseInt(
+            (prod.qty * prod.price * (1 + parseFloat(prod.tva) + 0.01)).toFixed(2)
+          ),
           amount_ht: prod.qty * prod.price,
         })
         .eq('id', prod.id)
+    })
 
-      })
-      
     try {
       await Promise.all(promises)
       console.log(promises)
@@ -161,30 +178,69 @@ const Update = () => {
       setAvatarCustomer('')
       setAddressCustomer('')
       setTimeout(() => {
-
         navigate('/')
       }, 2500)
     } catch (error) {
       console.log(error)
     }
+
+    if(productList?.length - initProductList?.length > 0){
+      const newData = productList?.slice(initProductList?.length,productList?.length)
+
+      console.log(newData)
+
+      const promises = newData?.map((prod: any, indx: any) => {
+        return supabase.from('detailBill').insert([
+          {
+            designation: prod.designation,
+            detailDesignation: prod.detailDesignation,
+            qty: prod.qty,
+            price: prod.price,
+            amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
+            amount_ht: prod.qty * prod.price,
+            invoice_id: filteredInvoice.id,
+            tva: prod.tva,
+          },
+        ])
+      })
+
+      try {
+        await Promise.all(promises)
+        console.log('good aussi')
+        setInvoiceNum('')
+        setInvoiceCreatedAt('')
+        setStatus('')
+        setNameCustomer('')
+        setEmailCustomer('')
+        setPhoneCustomer('')
+        setAvatarCustomer('')
+        setAddressCustomer('')
+        openNotification()
+
+        setTimeout(() => {
+          navigate('/')
+        }, 2500)
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+
+
   }
 
+
   const totalTva_13 = productList
-    ?.filter((bill: any) => bill.tva === 0.13)
+    ?.filter((bill: any) => Number(bill.tva) === 0.13)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
   const totalTva_16 = productList
-    ?.filter((bill: any) => bill.tva === 0.16)
+    ?.filter((bill: any) => Number(bill.tva) === 0.16)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-
-  console.log(totalTva_16)
-  console.log(filteredInvoice[0]?.detailBill)
-  console.log(productList)
 
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
     newProduits[indx][key] = qty + 1
     setProductList(newProduits)
-    openNotification()
   }
 
   const substQty = (qty: any, indx: any, key: any) => {
@@ -194,31 +250,43 @@ const Update = () => {
       setProductList(newProduits)
     }
   }
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    // console.log(date, dateString);
-    setInvoiceCreatedAt(dateString)
-  };
+
+  const headerProps = {
+    nameCustomer,
+    setNameCustomer,
+    emailCustomer,
+    setEmailCustomer,
+    avatarCustomer,
+    setAvatarCustomer,
+    addressCustomer,
+    setAddressCustomer,
+    phoneCustomer,
+    setPhoneCustomer,
+    invoiceNum,
+    setInvoiceNum,
+    invoiceCreatedAt,
+    setInvoiceCreatedAt,
+    status,
+    setStatus,
+  }
 
   const productItemProps = {
     productList,
-    setProductList,
     handleDeleteProduct,
     handleChangeProduct,
     substQty,
     addQty,
   }
-console.log(productList?.length)
+  const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
   return (
     <div className='row justify-content-center'>
       {contextHolder}
       <div className='col-xxl-9'>
         <div className='card'>
-          <form
-            onSubmit={handleUpdateInvoice}
-            className='needs-validation'
-            // noValidate
-            id='invoice_form'
-          >
+          <form 
+          onSubmit={handleUpdateInvoice}
+           className='needs-validation' id='invoice_form'>
+            {/* <Header headerProps={headerProps} /> */}
             <div className='card-body border-bottom border-bottom-dashed p-4'>
               <div className='row'>
                 <div className='col-lg-4'>
@@ -237,11 +305,6 @@ console.log(productList?.length)
                           src='../assets/images/logo-dark.png'
                           className='card-logo card-logo-dark user-profile-image img-fluid'
                           alt='logo dark'
-                        />
-                        <img
-                          src='../assets/images/logo-light.png'
-                          className='card-logo card-logo-light user-profile-image img-fluid'
-                          alt='logo light'
                         />
                       </span>
                     </label>
@@ -290,9 +353,7 @@ console.log(productList?.length)
                       className='form-control bg-light border-0'
                       id='billingName'
                       placeholder={
-                        filteredInvoice[0]?.customer_info.name
-                          ? filteredInvoice[0]?.customer_info.name
-                          : 'Nom'
+                        filteredInvoice?.name_customer ? filteredInvoice?.name_customer : 'Nom'
                       }
                       value={nameCustomer}
                       onChange={(e) => setNameCustomer(e.currentTarget.value)}
@@ -305,8 +366,8 @@ console.log(productList?.length)
                       className='form-control bg-light border-0'
                       id='billingEmail'
                       placeholder={
-                        filteredInvoice[0]?.customer_info.email
-                          ? filteredInvoice[0]?.customer_info.email
+                        filteredInvoice?.email_customer
+                          ? filteredInvoice?.email_customer
                           : 'Email'
                       }
                       value={emailCustomer}
@@ -320,8 +381,8 @@ console.log(productList?.length)
                       className='form-control bg-light border-0'
                       id='billingAvatar'
                       placeholder={
-                        filteredInvoice[0]?.customer_info.avatar
-                          ? filteredInvoice[0]?.customer_info.avatar
+                        filteredInvoice?.customer_info?.avatar
+                          ? filteredInvoice?.customer_info?.avatar
                           : 'Avatar'
                       }
                       value={avatarCustomer}
@@ -344,13 +405,12 @@ console.log(productList?.length)
                       </div>
                       <div className='mb-2'>
                         <textarea
-                          {...register('address')}
                           className='form-control bg-light border-0'
                           id='billingAddress'
                           rows={3}
                           placeholder={
-                            filteredInvoice[0]?.customer_info.address
-                              ? filteredInvoice[0]?.customer_info.address
+                            filteredInvoice?.customer_info?.address
+                              ? filteredInvoice?.customer_info?.address
                               : 'Adresse'
                           }
                           value={addressCustomer}
@@ -360,14 +420,13 @@ console.log(productList?.length)
                       </div>
                       <div className='mb-2'>
                         <input
-                          {...register('phone')}
                           type='text'
                           className='form-control bg-light border-0'
                           data-plugin='cleave-phone'
                           id='billingPhoneno'
                           placeholder={
-                            filteredInvoice[0]?.customer_info.phone
-                              ? filteredInvoice[0]?.customer_info.phone
+                            filteredInvoice?.customer_info?.phone
+                              ? filteredInvoice?.customer_info?.phone
                               : 'Téléphone'
                           }
                           value={phoneCustomer}
@@ -389,9 +448,7 @@ console.log(productList?.length)
                     className='form-control bg-light border-0 text-muted'
                     id='invoicenoInput'
                     placeholder={
-                      filteredInvoice[0]?.invoiceNum
-                        ? filteredInvoice[0]?.invoiceNum
-                        : 'N° facture'
+                      filteredInvoice?.invoiceNum ? filteredInvoice?.invoiceNum : 'N° facture'
                     }
                     value={invoiceNum}
                     onChange={(e) => setInvoiceNum(e.currentTarget.value)}
@@ -399,15 +456,25 @@ console.log(productList?.length)
                 </div>
 
                 <div className='col-lg-4 col-sm-6'>
-                  <div>
-                    <label htmlFor='date-field'>Date</label>
-                    <DatePicker
-                      className='form-control bg-light border-0'
-                      defaultValue={dayjs(filteredInvoice[0]?.createdAt, dateFormatList[0])}
-                      format={dateFormatList}
-                      onChange={onChange}
-                    />
-                  </div>
+                  <label htmlFor='date-field'>Date</label>
+                  <input
+                    type='text'
+                    className='form-control search bg-light border-light'
+                    placeholder={
+                      filteredInvoice?.createdAt ? filteredInvoice?.createdAt : 'Entrez une date'
+                    }
+                    value={date}
+                    onChange={(e) => {
+                      setDate(e.currentTarget.value)
+                    }}
+                  />
+                  <button
+                    className='btn btn-link position-absolute end-0 top-50 text-decoration-none text-muted password-addon'
+                    type='button'
+                    id='password-addon'
+                  >
+                    <i className='ri-calendar-event-line align-middle'></i>
+                  </button>
                 </div>
 
                 <div className='col-lg-4 col-sm-6'>
@@ -422,8 +489,8 @@ console.log(productList?.length)
                       onChange={(e) => setStatus(e.currentTarget.value)}
                     >
                       <option value=''>
-                        {filteredInvoice[0]?.status
-                          ? filteredInvoice[0]?.status
+                        {filteredInvoice?.status
+                          ? filteredInvoice?.status
                           : 'Sélectionner un status'}
                       </option>
                       <option value='Paid'>Payée</option>
@@ -445,7 +512,7 @@ console.log(productList?.length)
                       </th>
                       <th scope='col'>Désignations</th>
                       <th scope='col' style={{ width: '80px' }}>
-                        <div className='d-flex currency-select input-light align-items-center'>
+                        <div className='d-flex currency-select input-light align-items-center '>
                           Tva
                         </div>
                       </th>
@@ -470,6 +537,7 @@ console.log(productList?.length)
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItemUpdate
                         productItemProps={productItemProps}
+                        key={prod.id}
                         prod={prod}
                         indx={indx}
                       />
@@ -499,7 +567,7 @@ console.log(productList?.length)
                                   type='text'
                                   className='form-control bg-light border-0 text-end'
                                   id='cart-subtotal'
-                                  placeholder={htAmount}
+                                  value={new Intl.NumberFormat().format(htAmount)}
                                   readOnly
                                 />
                               </td>
@@ -512,7 +580,7 @@ console.log(productList?.length)
                                     type='text'
                                     className='form-control bg-light border-0 text-end'
                                     id='tax13'
-                                    placeholder={`${totalTva_13}`}
+                                    value={`${new Intl.NumberFormat().format(totalTva_13)}`}
                                     readOnly
                                   />
                                 </td>
@@ -526,7 +594,7 @@ console.log(productList?.length)
                                     type='text'
                                     className='form-control bg-light border-0 text-end'
                                     id='tax16'
-                                    placeholder={`${totalTva_16}`}
+                                    value={`${new Intl.NumberFormat().format(totalTva_16)}`}
                                     readOnly
                                   />
                                 </td>
@@ -540,7 +608,7 @@ console.log(productList?.length)
                                   type='text'
                                   className='form-control bg-light border-0 text-end'
                                   id='ht'
-                                  placeholder={`${htAmount * 0.01}`}
+                                  value={`${new Intl.NumberFormat().format(htAmount * 0.01)}`}
                                   readOnly
                                 />
                               </td>
@@ -553,8 +621,8 @@ console.log(productList?.length)
                                   type='text'
                                   className='form-control bg-light border-0 text-end'
                                   id='cart-total'
-                                  placeholder={`${
-                                    htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01
+                                  value={`${
+                                    new Intl.NumberFormat().format(htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01)
                                   }`}
                                   readOnly
                                 />
@@ -565,6 +633,7 @@ console.log(productList?.length)
                       </td>
                     </tr>
                   </tbody>
+                  {/* <BottomTableCreate bottomTableProps={bottomTableProps} /> */}
                 </table>
               </div>
               <div className='mt-4'>
@@ -578,22 +647,14 @@ console.log(productList?.length)
                   className='form-control alert alert-info'
                   id='exampleFormControlTextarea1'
                   placeholder='Notes'
-                  rows={3}
-                  defaultValue="Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours les détails des crédits fournis comme confirmation de les travaux entrepris seront facturés au tarif convenu Noté ci-dessus."
-                  readOnly
-                ></textarea>
+                  rows={2}
+                  value={noteInvoice}
+                  onChange={(e) => setNoteInvoice(e.currentTarget.value)}
+                  
+                >
+                </textarea>
               </div>
-              <div className='hstack gap-2 justify-content-end d-print-none mt-4'>
-                <button type='submit' className='btn btn-success'>
-                  <i className='ri-save-3-line align-bottom me-1'></i> Modifier
-                </button>
-                <a href='/' className='btn btn-primary'>
-                  <i className='ri-download-2-line align-bottom me-1'></i> Télécharger
-                </a>
-                <a href='/' className='btn btn-danger'>
-                  <i className='ri-send-plane-fill align-bottom me-1'></i> Envoyer
-                </a>
-              </div>
+              <ButtonTableCreate />
             </div>
           </form>
         </div>
@@ -602,4 +663,4 @@ console.log(productList?.length)
   )
 }
 
-export default Update
+export default Update2

@@ -1,32 +1,55 @@
 import React from 'react'
 
-import { DatePicker } from 'antd';
-import type { DatePickerProps } from 'antd';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DatePicker } from 'antd'
+import type { DatePickerProps } from 'antd'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import Input from '../ui/Input'
+import TextArea from '../ui/TextArea'
 
-dayjs.extend(customParseFormat);
-
+dayjs.extend(customParseFormat)
 /** Manually entering any of the following formats will perform date parsing */
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
 
+const HeaderCreate = ({ headerProps }: any) => {
+  const {
+    nameCustomer,
+    setNameCustomer,
+    emailCustomer,
+    setEmailCustomer,
+    avatarCustomer,
+    setAvatarCustomer,
+    addressCustomer,
+    setAddressCustomer,
+    phoneCustomer,
+    setPhoneCustomer,
+    invoiceNum,
+    setInvoiceNum,
+    setInvoiceCreatedAt,
+    status,
+    setStatus,
+  } = headerProps
 
+  const dateNow =
+    (new Date().getDate().toString().length === 1
+      ? '0' + new Date().getDate()
+      : new Date().getDate()) +
+    '/' +
+    (new Date().getMonth().toString().length === 1
+      ? '0' + (new Date().getMonth() + 1)
+      : new Date().getMonth() + 1) +
+    '/' +
+    new Date().getFullYear()
 
-const HeaderCreate = ({headerProps}: any) => {
-  
-    const {nameCustomer, setNameCustomer, emailCustomer, setEmailCustomer, avatarCustomer, setAvatarCustomer, addressCustomer, setAddressCustomer, phoneCustomer, setPhoneCustomer, invoiceNum, setInvoiceNum, invoiceCreatedAt, setInvoiceCreatedAt, status, setStatus} = headerProps
-  
+  React.useEffect(() => {
+    setInvoiceCreatedAt(dateNow)
+  }, [])
 
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    setInvoiceCreatedAt(dateString)
+  }
 
-    const dateNow = (new Date().getDate().toString().length === 1 ? "0" + new Date().getDate() : new Date().getDate()) +"/"+  (new Date().getMonth().toString().length === 1 ? "0" + (new Date().getMonth()+1 ): new Date().getMonth()+1) +"/"+ new Date().getFullYear()
-     
-
-    const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-      setInvoiceCreatedAt(dateString)
-    };
-  
-   
-    return (
+  return (
     <>
       <div className='card-body border-bottom border-bottom-dashed p-4'>
         <div className='row'>
@@ -46,11 +69,6 @@ const HeaderCreate = ({headerProps}: any) => {
                     src='assets/images/logo-dark.png'
                     className='card-logo card-logo-dark user-profile-image img-fluid'
                     alt='logo dark'
-                  />
-                  <img
-                    src='assets/images/logo-light.png'
-                    className='card-logo card-logo-light user-profile-image img-fluid'
-                    alt='logo light'
                   />
                 </span>
               </label>
@@ -83,85 +101,70 @@ const HeaderCreate = ({headerProps}: any) => {
 
       <div className='card-body p-4 '>
         <div className='row'>
-        <div className='col-12 text-center'>
-              <h3>FACTURE</h3>
-            </div>
-          <div className='col-lg-4 col-sm-6'>
+          <div className='col-12 text-center'>
+            <h3>FACTURE</h3>
+          </div>
+          <div className='col-lg-5 col-md-6 col-sm-6'>
             <div>
               <label htmlFor='billingName' className='text-muted text-uppercase fw-semibold'>
                 A l'attention de :
               </label>
             </div>
             <div className='mb-2'>
-              <input
+              <Input
                 type='text'
-                id='billingName'
-                className='form-control bg-light border-0'
                 placeholder='Nom'
-                value={nameCustomer}
-                onChange={(e: any) => setNameCustomer(e.currentTarget.value)}
-                required
+                data={nameCustomer}
+                setData={setNameCustomer}
+                required={true}
               />
-              <div className='invalid-feedback'>Saisissez un nom</div>
             </div>
             <div className='mb-2'>
-              <textarea
-                className='form-control bg-light border-0'
-                id='billingAddress'
-                rows={3}
-                placeholder='Adresse'
-                value={addressCustomer}
-                onChange={(e: any) => setAddressCustomer(e.currentTarget.value)}
-                required
-              ></textarea>
+              <TextArea
+                placeholder={'Adresse'}
+                data={addressCustomer}
+                setData={setAddressCustomer}
+                required={true}
+              />
               <div className='invalid-feedback'>Saisissez une adresse</div>
             </div>
-           
-           
           </div>
-          <div className='col-lg-2 col-sm-0'></div>
-          <div className='col-lg-4 col-sm-6'>
+          <div className='col-lg-2 d-lg-block d-md-none d-sm-none'></div>
+          <div className='col-lg-5 col-md-6 col-sm-6'>
             <div>
               <label htmlFor='billingEmail' className='text-muted text-uppercase fw-semibold'>
                 <i className='ri-mail-line'></i>
               </label>
             </div>
             <div className='mb-2'>
-              <input
+              <Input
                 type='text'
-                id='billingEmail'
-                className='form-control bg-light border-0'
                 placeholder='Email'
-                value={emailCustomer}
-                onChange={(e: any) => setEmailCustomer(e.currentTarget.value)}
-                required
+                data={emailCustomer}
+                setData={setEmailCustomer}
+                required={true}
               />
-              <div className='invalid-feedback'>Saisissez un email</div>
             </div>
-           
+
             <div className='mb-2'>
-              <input
+              <Input
                 type='text'
-                className='form-control bg-light border-0'
-                data-plugin='cleave-phone'
-                id='billingPhoneno'
                 placeholder='Téléphone'
-                value={phoneCustomer}
-                onChange={(e: any) => setPhoneCustomer(e.currentTarget.value)}
-                required
+                data={phoneCustomer}
+                setData={setPhoneCustomer}
+                required={true}
               />
+
               <div className='invalid-feedback'>Saisissez un n° de téléphone</div>
             </div>
             <div className='mb-2'>
-              <input
+              <Input
                 type='text'
-                id='billingAvatar'
-                className='form-control bg-light border-0'
                 placeholder='Avatar'
-                value={avatarCustomer}
-                onChange={(e: any) => setAvatarCustomer(e.currentTarget.value)}
+                data={avatarCustomer}
+                setData={setAvatarCustomer}
+                required={false}
               />
-              <div className='invalid-feedback'>Saisissez un nom</div>
             </div>
           </div>
         </div>
@@ -170,24 +173,24 @@ const HeaderCreate = ({headerProps}: any) => {
         <div className='row g-3'>
           <div className='col-lg-4 col-sm-6'>
             <label htmlFor='invoicenoInput'>N° Facture</label>
-            <input
+            <Input
               type='text'
-              className='form-control bg-light border-0 text-muted'
-              id='invoicenoInput'
               placeholder='N° facture'
-              value={invoiceNum}
-              onChange={(e: any) => setInvoiceNum(e.currentTarget.value)}
-              required
+              data={invoiceNum}
+              setData={setInvoiceNum}
+              required={true}
             />
           </div>
 
           <div className='col-lg-4 col-sm-6'>
             <div>
               <label htmlFor='date-field'>Date</label>
-              <DatePicker className='form-control bg-light border-0' defaultValue={dayjs(dateNow , dateFormatList[0])} format={dateFormatList}
-              onChange={onChange}
+              <DatePicker
+                className='form-control bg-light border-0'
+                defaultValue={dayjs(dateNow, dateFormatList[0])}
+                format={dateFormatList}
+                onChange={onChange}
               />
-              
             </div>
           </div>
 
@@ -204,9 +207,9 @@ const HeaderCreate = ({headerProps}: any) => {
                 onChange={(e: any) => setStatus(e.currentTarget.value)}
               >
                 <option value=''>Sélectionner un Status</option>
-                <option value='Paid'>Payé</option>
-                <option value='Unpaid'>Impayé</option>
-                <option value='Refund'>Remboursement</option>
+                <option value='Payée'>Payée</option>
+                <option value='Impayée'>Impayée</option>
+                <option value='Remboursement'>Remboursement</option>
               </select>
             </div>
           </div>

@@ -13,7 +13,8 @@ import { supabase } from '../../utils/supabaseClient'
 const Layout = () => {
     const isLogged = userAuthStore((states: any) => states.isLogged)
     const [invoicesData, setInvoicesData] = React.useState<any>([]);
-  const [invoicesData2, setInvoicesData2] = React.useState<any>([]);
+    const [quotesData, setQuotesData] = React.useState<any>([]);
+  // const [invoicesData2, setInvoicesData2] = React.useState<any>([]);
 
 
 
@@ -49,7 +50,7 @@ const Layout = () => {
         <div className="page-content">
           <div className="container-fluid">
             
-            <Outlet context={[invoicesData, setInvoicesData, invoicesData2, setInvoicesData2]} />
+            <Outlet context={[invoicesData, setInvoicesData, quotesData, setQuotesData]} />
           </div>
         </div>
         <Footer />

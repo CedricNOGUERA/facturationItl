@@ -1,15 +1,14 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-import { useOutletContext, useParams } from 'react-router-dom'
-import BottomTable from '../components/detail/BottomTableDetail'
-import ButtonTable from '../components/detail/ButtonTableDetail'
-import HeaderDetail from '../components/detail/HeaderDetail'
-import ProductItemDetail from '../components/detail/ProductItemDetail'
-import { supabase } from '../utils/supabaseClient'
+import { useParams } from 'react-router-dom'
+import BottomTable from '../../components/detail/BottomTableDetail'
+import ButtonTable from '../../components/detail/ButtonTableDetail'
+import HeaderDetail from '../../components/detail/HeaderDetail'
+import ProductItemDetail from '../../components/detail/ProductItemDetail'
+import { supabase } from '../../utils/supabaseClient'
 
 const Detail = () => {
-  const [invoicesData] = useOutletContext<any>()
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
   const componentRef: any = useRef();
 
@@ -32,7 +31,9 @@ const Detail = () => {
 
     if (invoices2) {
       setFilteredInvoice(invoices2)
-      console.log(invoices2)
+    }
+    if(error){
+      console.log(error)
     }
   }
 
@@ -49,7 +50,7 @@ const Detail = () => {
     ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
 
   return (
-    <div className='row justify-content-center pt-0 '>
+    <div className='row justify-content-center'>
       <div className='col-xxl-9 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
@@ -57,7 +58,7 @@ const Detail = () => {
             <div className='col-lg-12'>
               <div className='card-body px-4'>
                 <div className='table-responsive'>
-                  <table className='table table-borderless text-center table-nowrap align-middle mb-0' >
+                  <table className='table  table-striped table-borderless text-center table-nowrap align-middle mb-0' >
                     <thead>
                       <tr className='table-active'>
                         <th scope='col' style={{ width: '50px' }}>
@@ -75,7 +76,7 @@ const Detail = () => {
                     </thead>
                     <tbody id='products-list'>
                       {filteredInvoice?.detailBill?.map((prod: any, indx: any) => (
-                        <ProductItemDetail prod={prod} indx={indx} />
+                        <ProductItemDetail key={prod.id} prod={prod} indx={indx} />
                       ))}
                     </tbody>
                   </table>

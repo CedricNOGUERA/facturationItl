@@ -19,12 +19,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice}) => {
                 alt='logo dark'
                 height='50'
               />
-              <img
-                src='assets/images/logo-light.png'
-                className='card-logo card-logo-light'
-                alt='logo light'
-                height='50'
-              />
+              
               <div className=' mt-4'>
                 <p className='text-muted mb-1' id='address-details'>
                   Immeuble Mananui, Auae, Faa'a

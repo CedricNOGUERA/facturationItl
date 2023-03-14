@@ -4,35 +4,35 @@ import { supabase } from '../../utils/supabaseClient'
 
 const ResumeInvoices = () => {
   const [globalData, setGlobalData] = React.useState<any>([])
-  const [invoicesData] = useOutletContext<any>()
+  const [quotesData] = useOutletContext<any>()
 
   React.useEffect(() => {
     getInvoices()
-  }, [invoicesData])
+  }, [quotesData])
 
-  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Payée')
+  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Paid')
 
   const paidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Payée')
+    ?.filter((bill: any) => bill.status === 'Paid')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Impayée')
+  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Unpaid')
 
   const unpaidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Impayée')
+    ?.filter((bill: any) => bill.status === 'Unpaid')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Annulée')
+  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Cancel')
 
   const cancelInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Annulée')
+    ?.filter((bill: any) => bill.status === 'Cancel')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
   const getInvoices = async () => {
-    let { data: invoices, error } = await supabase.from('invoices2').select('*, detailBill(*)')
+    let { data: quotes, error } = await supabase.from('quotes').select('*')
 
-    if (invoices) {
-      setGlobalData(invoices)
+    if (quotes) {
+      setGlobalData(quotes)
     }
     if (error) {
       console.log(error)
@@ -60,6 +60,8 @@ const ResumeInvoices = () => {
     },
   ]
 
+console.log(globalData)
+
   return (
     <div className='row'>
       <div className='col-xl-3 col-md-6'>
@@ -67,7 +69,7 @@ const ResumeInvoices = () => {
           <div className='card-body'>
             <div className='d-flex align-items-center'>
               <div className='flex-grow-1'>
-                <p className='text-uppercase fw-semibold text-muted mb-0'>Total facture</p>
+                <p className='text-uppercase fw-semibold text-muted mb-0'>Total devis</p>
               </div>
               <div className='flex-shrink-0'>
                 <h5 className='text-success fs-14 mb-0'>
@@ -89,7 +91,7 @@ const ResumeInvoices = () => {
                   </span>
                 </h4>
                 <span className='badge bg-warning me-1'>{globalData.length}</span>{' '}
-                <span className='text-muted'>Factures envoyées</span>
+                <span className='text-muted'>Devis envoyées</span>
               </div>
               <div className='avatar-sm flex-shrink-0'>
                 <span className='avatar-title bg-light rounded fs-3'>

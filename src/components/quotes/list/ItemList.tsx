@@ -75,7 +75,7 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
               >
                 <Link to={`/${bill.id}`}>
                   <i className='ri-eye-fill align-bottom me-2 text-muted'></i>
-                  Détail
+                  View
                 </Link>
               </button>
             </li>
@@ -85,9 +85,9 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
                 data-id='25000351'
                 // onClick={() => navigate(`/update-invoice/${bill.id}`)}
               >
-                <Link to={`/${bill.id}/update-invoice`}>
+                <Link to={`/update-invoice/${bill.id}`}>
                   <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
-                Modifier
+                Edit
                   
                 </Link>
                 
@@ -102,7 +102,7 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
                 href='#deleteOrder'
               >
                 <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>
-                Supprimer
+                Delete
               </a>
             </li>
           </ul>

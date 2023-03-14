@@ -1,20 +1,10 @@
 import React from 'react'
+import Input from '../ui/Input'
+import InputItem from '../ui/InputItem'
 
-const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
-
-
-  const {
-    setAmountProd,
-    productList,
-    setProductList,
-    handleDeleteProduct,
-    handleChangeProduct,
-    substQty,
-    addQty,
-    register,
-  } = productItemProps
-
-
+const ProductItem = ({ productItemProps, prod, indx }: any) => {
+  const { productList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
+    productItemProps
 
   return (
     <tr id={prod?.id} key={prod.id} className='product'>
@@ -23,16 +13,18 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
       </th>
       <td className='text-start'>
         <div className='mb-2'>
-          <input
+          <InputItem
             type='text'
-            className='form-control bg-light border-0'
             placeholder='Nom du produit ou du service'
-            value={prod.name}
-            onChange={(e) => handleChangeProduct(e, indx, 'name')}
-            required
+            data={prod.name}
+            setData={handleChangeProduct}
+            indx={indx}
+            inputName='name'
+            required={true}
           />
           <div className='invalid-feedback'>Saisissez le nom du produit</div>
         </div>
+
         <textarea
           className='form-control bg-light border-0'
           rows={2}
@@ -51,21 +43,21 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
           required
         >
           <option value=''>Tva</option>
-          <option value='0.13'>13%</option>
-          <option value='0.16'>16%</option>
+          <option value={0.13}>13%</option>
+          <option value={0.16}>16%</option>
         </select>
 
         <div className='invalid-feedback'>Saisissez un prix</div>
       </td>
       <td>
-        <input
-          {...register(`price${prod?.id}`)}
-          type='number'
-          className='form-control product-price bg-light border-0'
+        <InputItem
+          type='text'
           placeholder='0.00'
-          value={prod.price}
-          onChange={(e) => handleChangeProduct(e, indx, 'price')}
-          required
+          data={prod.price}
+          setData={handleChangeProduct}
+          indx={indx}
+          inputName='price'
+          required={true}
         />
         <div className='invalid-feedback'>Saisissez un prix</div>
       </td>
@@ -79,7 +71,6 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
             –
           </button>
           <input
-            {...register(`quantity${prod?.id}`)}
             type='number'
             className='product-quantity'
             value={prod.qty}
@@ -93,24 +84,17 @@ const ProductItem = ({ productItemProps, prod, indx, test, setTest }: any) => {
       </td>
       <td>
         <div className='text-end'>
-          <input
-            type='number'
-            className='form-control bg-light border-0 product-line-price text-end'
-            value={prod.price * prod.qty * prod.tva}
-            readOnly
+          <Input
+            type='text'
+            placeholder='0'
+            data={prod.price * prod.qty * prod.tva}
+            readOnly={true}
           />
         </div>
       </td>
       <td className='text-end'>
         <div>
-          <input
-            {...register(`prodAmount${prod?.id}`)}
-            type='text'
-            className='form-control bg-light border-0 product-line-price text-end'
-            placeholder='0'
-            value={prod.price * prod.qty}
-            readOnly
-          />
+          <Input type='text' placeholder='0' data={prod.price * prod.qty} readOnly={true} />
         </div>
       </td>
       <td className='product-removal'>

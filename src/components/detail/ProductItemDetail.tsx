@@ -16,10 +16,10 @@ const ProductItemDetail: React.FC<productItemDetailProps> = ({ prod, indx }) => 
         <p className='text-muted mb-0'>{prod.detailDesignation}</p>
       </td>
       <td>{prod.tva * 100} %</td>
-      <td>{prod.price}</td>
+      <td>{new Intl.NumberFormat().format(prod.price)}</td>
       <td>{prod.qty}</td>
-      <td>{prod.price * prod.tva}</td>
-      <td className='text-end'>{prod.price * prod.qty}</td>
+      <td>{new Intl.NumberFormat().format(prod.price * prod.tva)}</td>
+      <td className='text-end'>{new Intl.NumberFormat().format(prod.price * prod.qty)}</td>
     </tr>
   )
 }
