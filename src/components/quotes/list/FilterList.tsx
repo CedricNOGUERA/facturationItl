@@ -53,12 +53,6 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
           </div>
 
           <div className='col-xxl-3 col-sm-6'>
-            {/* <DatePicker
-              className='form-control'
-              defaultValue={dayjs(dateNow, dateFormatList[0])}
-              format={dateFormatList}
-              onChange={onChange}
-            /> */}
             <input
               type='text'
               className='form-control search bg-light border-light'
@@ -91,10 +85,10 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
               >
                 <option value=''>Status</option>
 
-                <option value='Unpaid'>Impayé</option>
-                <option value='Paid'>Payé</option>
-                <option value='Cancel'>Annulé</option>
-                <option value='Refund'>Remboursé</option>
+                <option value='Impayé'>Impayé</option>
+                <option value='Payé'>Payé</option>
+                <option value='Annulé'>Annulé</option>
+                <option value='Remboursé'>Remboursé</option>
               </select>
             </div>
           </div>
