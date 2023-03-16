@@ -1,7 +1,6 @@
 import React from 'react';
-import './App.css';
+// import './App.css';
 import Layout from './components/layout/Layout';
-import Detail from './pages/invoices/Detail';
 
 
 

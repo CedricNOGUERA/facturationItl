@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 interface ItemListProps {
     bill: any
+    setDeleteInvoiceId: Dispatch<SetStateAction<string>>
 }
 
-const ItemList: React.FC<ItemListProps> = ({ bill }) => {
+const ItemList: React.FC<ItemListProps> = ({bill, setDeleteInvoiceId}) => {
+
+
   const navigate = useNavigate()
 
   return (
@@ -83,7 +86,6 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
               <button
                 className='dropdown-item'
                 data-id='25000351'
-                // onClick={() => navigate(`/update-invoice/${bill.id}`)}
               >
                 <Link to={`/${bill.id}/update-invoice`}>
                   <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
@@ -95,14 +97,14 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
             </li>
            
             <li className='dropdown-divider'></li>
-            <li>
+            <li onClick={() => setDeleteInvoiceId(bill.id)}>
               <a
                 className='dropdown-item remove-item-btn'
                 data-bs-toggle='modal'
                 href='#deleteOrder'
               >
-                <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>
-                Supprimer
+                <i className='ri-close-line align-bottom me-2 text-muted fs-5 m-auto'></i>
+                Annuler
               </a>
             </li>
           </ul>

@@ -11,7 +11,7 @@ dayjs.extend(customParseFormat)
 /** Manually entering any of the following formats will perform date parsing */
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY']
 
-const HeaderCreate = ({ headerProps }: any) => {
+const HeaderCreate = ({ headerProps, title }: any) => {
   const {
     nameCustomer,
     setNameCustomer,
@@ -102,7 +102,7 @@ const HeaderCreate = ({ headerProps }: any) => {
       <div className='card-body p-4 '>
         <div className='row'>
           <div className='col-12 text-center'>
-            <h3>FACTURE</h3>
+            <h3 className='text-uppercase teko fs-2' >{title}</h3>
           </div>
           <div className='col-lg-5 col-md-6 col-sm-6'>
             <div>

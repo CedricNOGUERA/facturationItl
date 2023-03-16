@@ -21,10 +21,14 @@ const List: React.FC = () => {
   const [sort, setSort] = React.useState<string>("createdAt");
   const [asc, setAsc] = React.useState<boolean>(false);
   const [startPagination, setStartPagination] = React.useState<number>(0);
-  const [endPagination, setEndPagination] = React.useState<number>(3);
+  const [endPagination, setEndPagination] = React.useState<number>(9);
   
   const [statusFilter, setStatusFilter] = React.useState<string>('');
   const [dateFilter, setDateFilter] = React.useState<string>('');
+  
+  const [deleteInvoiceId, setDeleteInvoiceId] = React.useState<string>('');
+  
+
 
 
   React.useEffect(() => {
@@ -93,15 +97,15 @@ const List: React.FC = () => {
   };
 
   const nextPagination = () => {
-    setStartPagination(startPagination + 4)
-    setEndPagination(endPagination + 4)
+    setStartPagination(startPagination + 10)
+    setEndPagination(endPagination + 10)
     // getInvoices2()
   }
 
   const previousPagination = () => {
     if(startPagination > 1)
-    setStartPagination(startPagination - 4)
-    setEndPagination(endPagination - 4)
+    setStartPagination(startPagination - 10)
+    setEndPagination(endPagination - 10)
     // getInvoices2()
   }
 
@@ -147,11 +151,38 @@ const List: React.FC = () => {
   }
 
 
+  const handleCanelInvoice = async(id: any) => {
+
+    const { data, error } = await supabase
+  .from('invoices2')
+  .update({ status: 'Annulée' })
+  .eq('id', id)
+
+  
+  if(!error){
+    console.log('Facture annuléeeeee')
+    getInvoices2()
+  }
+
+
+
+  if(data){
+    console.log('Facture annulée')
+  }
+
+  if(error){
+    console.log(error)
+  }
+
+
+  }
+
+
 
 const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, invoiceSearchByDate, statusFilter, setStatusFilter, dateFilter, setDateFilter}
 const topTableProps = {setAsc, setSort, getInvoices2, asc}
 
-
+console.log(deleteInvoiceId)
 
   return (
     <div className='row'>
@@ -174,7 +205,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                     ) : filteredInvoice.length > 0 ? (
                       filteredInvoice?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={Math.random()} bill={bill} />
+                          <ItemList key={Math.random()} bill={bill} setDeleteInvoiceId={setDeleteInvoiceId}  />
                         ) : null
                       )
                       ) : (filteredInvoice.length === 0 && searchTerm.length > 2) || (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
@@ -200,7 +231,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                       ) : (
                         invoicesData?.map((bill: any) =>
                           !statusFilter || statusFilter === bill.status ? (
-                            <ItemList key={Math.random()} bill={bill} />
+                            <ItemList key={Math.random()} bill={bill} setDeleteInvoiceId={setDeleteInvoiceId} />
                           ) : null
                         )
                       )}
@@ -217,10 +248,10 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
                       {Array.from({ length: 
-                    ((invoicesData.length / 4)+1)
+                    ((invoicesData.length / 10)+1)
                     })?.map((list: any, indx: any) => (
 
-                        <li key={Math.random()} onClick={() => pagination(indx*4, (indx*4)+3)} >
+                        <li key={Math.random()} onClick={() => pagination(indx*10, (indx*10)+9)} >
                       <span className='page-item pagination-prev disabled m-auto'>{indx+1}</span>
                     </li>
                       ))}
@@ -241,7 +272,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
               aria-labelledby='deleteOrderLabel'
               aria-hidden='true'
             >
-              <DeleteModal />
+              <DeleteModal deleteInvoiceId={deleteInvoiceId} handleCanelInvoice={handleCanelInvoice} />
             </div>
           </div>
         </div>

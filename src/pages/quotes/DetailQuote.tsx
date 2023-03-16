@@ -8,7 +8,7 @@ import HeaderDetail from '../../components/detail/HeaderDetail'
 import ProductItemDetail from '../../components/detail/ProductItemDetail'
 import { supabase } from '../../utils/supabaseClient'
 
-const Detail = () => {
+const DetailQuote = () => {
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
   const componentRef: any = useRef();
 
@@ -23,29 +23,29 @@ const Detail = () => {
   });
 
   const getInvoiceById = async () => {
-    let { data: invoices2, error } = await supabase
-      .from('invoices2')
-      .select('*, detailBill(*)')
+    let { data: quotes, error } = await supabase
+      .from('quotes')
+      .select('*, detailQuote(*)')
       .eq('id', params.id)
       .single()
 
-    if (invoices2) {
-      setFilteredInvoice(invoices2)
+    if (quotes) {
+      setFilteredInvoice(quotes)
     }
     if(error){
       console.log(error)
     }
   }
 
-  const htAmount = filteredInvoice?.detailBill?.reduce(
+  const htAmount = filteredInvoice?.detailQuote?.reduce(
     (acc: any, current: any) => acc + current.price * current.qty,
     0
   )
 
-  const totalTva_13 = filteredInvoice?.detailBill
+  const totalTva_13 = filteredInvoice?.detailQuote
     ?.filter((bill: any) => bill.tva === 0.13)
     ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
-  const totalTva_16 = filteredInvoice?.detailBill
+  const totalTva_16 = filteredInvoice?.detailQuote
     ?.filter((bill: any) => bill.tva === 0.16)
     ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
 
@@ -54,7 +54,7 @@ const Detail = () => {
       <div className='col-xxl-9 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
-            <HeaderDetail filteredInvoice={filteredInvoice} title='FACTURE' />
+            <HeaderDetail filteredInvoice={filteredInvoice} title='DEVIS' />
             <div className='col-lg-12'>
               <div className='card-body px-4'>
                 <div className='table-responsive'>
@@ -75,7 +75,7 @@ const Detail = () => {
                       </tr>
                     </thead>
                     <tbody id='products-list'>
-                      {filteredInvoice?.detailBill?.map((prod: any, indx: any) => (
+                      {filteredInvoice?.detailQuote?.map((prod: any, indx: any) => (
                         <ProductItemDetail key={prod.id} prod={prod} indx={indx} />
                       ))}
                     </tbody>
@@ -96,4 +96,4 @@ const Detail = () => {
   )
 }
 
-export default Detail
+export default DetailQuote

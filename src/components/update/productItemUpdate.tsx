@@ -3,7 +3,7 @@ import React from 'react'
 const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
   const { productList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
     productItemProps
-
+console.log(prod)
   return (
     <tr id={prod?.id} key={prod?.id} className='product'>
       <th scope='row' className='product-id'>

@@ -1,6 +1,11 @@
     import React from 'react'
 
-    const deleteModal = () => {
+    interface DeleteInvoiceIdProps {
+        deleteInvoiceId: string
+        handleCanelInvoice: any
+    }
+
+    const deleteModal: React.FC<DeleteInvoiceIdProps> = ({deleteInvoiceId, handleCanelInvoice}) => {
     return (
         <div className='modal-dialog modal-dialog-centered'>
         <div className='modal-content'>
@@ -19,8 +24,8 @@
                 >
                     <i className='ri-close-line me-1 align-middle'></i> Fermer
                 </button>
-                <button className='btn btn-danger' id='delete-record'>
-                    Oui, supprimer
+                <button className='btn btn-danger' id='delete-record' onClick={() => handleCanelInvoice(deleteInvoiceId)} data-bs-dismiss='modal'>
+                    Oui, supprime
                 </button>
                 </div>
             </div>

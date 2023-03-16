@@ -9,7 +9,7 @@ import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
-const Create = () => {
+const CreateQuote = () => {
 
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
   const [invoiceCreatedAt, setInvoiceCreatedAt] = React.useState<any>('')
@@ -41,7 +41,7 @@ const Create = () => {
   const openNotification = () => {
     api.open({
       message: 'Félicitation',
-      description: 'Votre facture est enregistrée.',
+      description: 'Votre devis est enregistré.',
       icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
     })
   }
@@ -82,7 +82,7 @@ const Create = () => {
 
     e.preventDefault()
 
-    const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
+    const { data: dataz, error: errorz } = await supabase.from('quotes').insert([
       {
         id: invoiceId,
         invoiceNum: invoiceNum,
@@ -113,7 +113,7 @@ const Create = () => {
       console.log(errorz)
     } else {
       const promises = productList?.map((prod: any, indx: any) => {
-        return supabase.from('detailBill').insert([
+        return supabase.from('detailQuote').insert([
           {
             designation: prod.name,
             detailDesignation: prod.detail,
@@ -150,10 +150,10 @@ const Create = () => {
   }
 
   const totalTva_13 = productList
-    ?.filter((bill: any) => bill.tva === 0.13)
+    ?.filter((bill: any) => Number(bill.tva) === 0.13)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
   const totalTva_16 = productList
-    ?.filter((bill: any) => bill.tva === 0.16)
+    ?.filter((bill: any) => Number(bill.tva) === 0.16)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
 
   const addQty = (qty: any, indx: any, key: any) => {
@@ -203,9 +203,9 @@ const Create = () => {
       <div className='col-xxl-9'>
         <div className='card'>
           <form onSubmit={createInvoice} className='needs-validation' id='invoice_form'>
-            <Header headerProps={headerProps} title={'Facture'}/>
+            <Header headerProps={headerProps} title={'Devis'} />
             <div className='card-body p-4'>
-              <div className='table-responsive'>
+              <div className='table-responsive mb-5'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
                   <thead className='align-middle'>
                     <tr className='table-active'>
@@ -248,8 +248,9 @@ const Create = () => {
                   <BottomTableCreate bottomTableProps={bottomTableProps} />
                 </table>
               </div>
-              <div className='mt-4'>
-                <label
+              <div className='my-4'>
+                 <p></p>
+                {/* <label
                   htmlFor='exampleFormControlTextarea1'
                   className='form-label text-muted text-uppercase fw-semibold'
                 >
@@ -264,7 +265,7 @@ const Create = () => {
                   onChange={(e) => setNoteInvoice(e.currentTarget.value)}
                   
                 >
-                </textarea>
+                </textarea> */}
               </div>
               <ButtonTableCreate />
             </div>
@@ -275,4 +276,4 @@ const Create = () => {
   )
 }
 
-export default Create
+export default CreateQuote

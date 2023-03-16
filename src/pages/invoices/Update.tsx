@@ -155,7 +155,6 @@ const Update = () => {
 
     try {
       await Promise.all(promises)
-      console.log(promises)
       openNotification()
       setInvoiceNum('')
       setInvoiceCreatedAt('')
@@ -267,7 +266,7 @@ const Update = () => {
       <div className='col-xxl-9'>
         <div className='card'>
           <form onSubmit={handleUpdateInvoice} className='needs-validation' id='invoice_form'>
-            <HeaderUpdate headerUpdateProps={headerUpdateProps} />
+            <HeaderUpdate headerUpdateProps={headerUpdateProps} title='FACTURE' />
             <div className='card-body p-4'>
               <div className='table-responsive'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>

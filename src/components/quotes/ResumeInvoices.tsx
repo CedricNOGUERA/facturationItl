@@ -10,22 +10,22 @@ const ResumeInvoices = () => {
     getInvoices()
   }, [quotesData])
 
-  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Paid')
+  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Payée')
 
   const paidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Paid')
+    ?.filter((bill: any) => bill.status === 'Payée')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Unpaid')
+  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Impayée')
 
   const unpaidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Unpaid')
+    ?.filter((bill: any) => bill.status === 'Impayée')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Cancel')
+  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Annulée')
 
   const cancelInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Cancel')
+    ?.filter((bill: any) => bill.status === 'Annulée')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
   const getInvoices = async () => {
@@ -60,7 +60,6 @@ const ResumeInvoices = () => {
     },
   ]
 
-console.log(globalData)
 
   return (
     <div className='row'>

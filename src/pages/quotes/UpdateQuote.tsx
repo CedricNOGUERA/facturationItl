@@ -1,16 +1,14 @@
 import React from 'react'
-import ProductItem from '../../components/create/ProductItem'
 import { supabase } from '../../utils/supabaseClient'
-import { v4 as uuidv4 } from 'uuid'
-import Header from '../../components/create/HeaderCreate'
-import BottomTableCreate from '../../components/create/BottomTableCreate'
 import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import ProductItemUpdate from '../../components/update/productItemUpdate'
+import HeaderUpdate from '../../components/update/HeaderUpdate'
+import BottomTableUpdate from '../../components/update/BottomTableUpdate'
 
-const Create = () => {
-
+const UpdateQuote = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
   const [invoiceCreatedAt, setInvoiceCreatedAt] = React.useState<any>('')
   const [status, setStatus] = React.useState<string>('')
@@ -20,7 +18,15 @@ const Create = () => {
   const [phoneCustomer, setPhoneCustomer] = React.useState<string>('')
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
-  const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
+  const [noteInvoice, setNoteInvoice] = React.useState<string>(
+    "Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé."
+  )
+  const [date, setDate] = React.useState<string>('')
+
+  const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
+  const [htAmount, setHtAmount] = React.useState<any>(0)
+
+  const params = useParams()
 
   const [productList, setProductList] = React.useState([
     {
@@ -33,10 +39,28 @@ const Create = () => {
       amount: 0,
     },
   ])
+  const [initProductList, setInitProductList] = React.useState<any>([])
 
   const navigate = useNavigate()
 
   const [api, contextHolder] = notification.useNotification()
+
+  React.useEffect(() => {
+    getInvoiceById()
+  }, [])
+
+  React.useEffect(() => {
+    setProductList(filteredInvoice?.detailQuote)
+    setDate(filteredInvoice?.createdAt)
+  }, [filteredInvoice])
+
+  React.useEffect(() => {
+    setHtAmount(
+      productList?.reduce((acc: any, current: any) => acc + current.price * current.qty, 0)
+    )
+  }, [productList])
+
+  // console.log(filteredInvoice)
 
   const openNotification = () => {
     api.open({
@@ -46,10 +70,23 @@ const Create = () => {
     })
   }
 
-  const amountHT = productList.reduce(
-    (acc: any, current: any) => acc + current.price * current.qty,
-    0
-  )
+
+  const getInvoiceById = async () => {
+    let { data: quotes, error } = await supabase
+      .from('quotes')
+      .select('*, detailQuote(*)')
+      .eq('id', params.id)
+      .single()
+
+    if (quotes) {
+      setFilteredInvoice(quotes)
+      setInitProductList(quotes.detailQuote)
+    }
+    if (error) {
+      console.log(error)
+    }
+  }
+  console.log(filteredInvoice)
 
   const handleAddProduct = () => {
     const newTab = [
@@ -77,51 +114,79 @@ const Create = () => {
     setProductList(newList)
   }
 
-  const createInvoice = async (e: any) => {
-    const invoiceId: any = uuidv4()
-
+  const handleUpdateInvoice = async (e: any) => {
     e.preventDefault()
 
-    const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
-      {
-        id: invoiceId,
-        invoiceNum: invoiceNum,
-        createdAt: invoiceCreatedAt,
-        status: status,
-        name_customer: nameCustomer,
-        email_customer: emailCustomer,
+    const { data, error } = await supabase
+      .from('quote')
+      .update({
+        invoiceNum: invoiceNum ? invoiceNum : filteredInvoice?.invoiceNum,
+        createdAt: invoiceCreatedAt ? invoiceCreatedAt : filteredInvoice?.createdAt,
+        status: status ? status : filteredInvoice?.status,
         customer_info: {
-          id: Math.random(),
-          name: nameCustomer,
-          email: emailCustomer,
-          phone: phoneCustomer,
-          avatar: avatarCustomer,
-          address: addressCustomer,
+          name: nameCustomer ? nameCustomer : filteredInvoice?.customer_info.name,
+          email: emailCustomer ? emailCustomer : filteredInvoice?.customer_info.email,
+          phone: phoneCustomer ? phoneCustomer : filteredInvoice?.customer_info.phone,
+          avatar: avatarCustomer ? avatarCustomer : filteredInvoice?.customer_info.avatar,
+          address: addressCustomer ? addressCustomer : filteredInvoice?.customer_info.address,
         },
+        amount_ht: htAmount ? htAmount : filteredInvoice?.customer_info.amount_ht,
+        amount_ttc: htAmount
+          ? parseInt((htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01).toFixed(2))
+          : filteredInvoice?.customer_info.amount_ht,
+      })
+      .eq('id', params?.id)
 
-        amount_ht: amountHT,
-        amount_ttc: parseInt(
-          (amountHT + totalTva_13 + totalTva_16 + amountHT * 0.01).toFixed(2)
-        ),
-      },
-    ])
-    if(dataz){
-      console.log(dataz)
+    const promises = productList?.map((prod: any, indx: any) => {
+      return supabase
+        .from('detailQuote')
+        .update({
+          designation: prod.designation,
+          detailDesignation: prod.detailDesignation,
+          qty: prod.qty,
+          price: prod.price,
+          tva: parseFloat(prod.tva),
+          amount_ttc: parseInt(
+            (prod.qty * prod.price * (1 + parseFloat(prod.tva) + 0.01)).toFixed(2)
+          ),
+          amount_ht: prod.qty * prod.price,
+        })
+        .eq('id', prod.id)
+    })
+
+    try {
+      await Promise.all(promises)
+      openNotification()
+      setInvoiceNum('')
+      setInvoiceCreatedAt('')
+      setStatus('')
+      setNameCustomer('')
+      setEmailCustomer('')
+      setPhoneCustomer('')
+      setAvatarCustomer('')
+      setAddressCustomer('')
+      setTimeout(() => {
+        navigate('/')
+      }, 2500)
+    } catch (error) {
+      console.log(error)
     }
 
-    if (errorz) {
-      console.log(errorz)
-    } else {
-      const promises = productList?.map((prod: any, indx: any) => {
-        return supabase.from('detailBill').insert([
+    if (productList?.length - initProductList?.length > 0) {
+      const newData = productList?.slice(initProductList?.length, productList?.length)
+
+      console.log(newData)
+
+      const promises = newData?.map((prod: any, indx: any) => {
+        return supabase.from('detailQuote').insert([
           {
-            designation: prod.name,
-            detailDesignation: prod.detail,
+            designation: prod.designation,
+            detailDesignation: prod.detailDesignation,
             qty: prod.qty,
             price: prod.price,
             amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
             amount_ht: prod.qty * prod.price,
-            invoice_id: invoiceId,
+            invoice_id: filteredInvoice.id,
             tva: prod.tva,
           },
         ])
@@ -138,8 +203,6 @@ const Create = () => {
         setPhoneCustomer('')
         setAvatarCustomer('')
         setAddressCustomer('')
-        openNotification()
-
         setTimeout(() => {
           navigate('/')
         }, 2500)
@@ -150,10 +213,10 @@ const Create = () => {
   }
 
   const totalTva_13 = productList
-    ?.filter((bill: any) => bill.tva === 0.13)
+    ?.filter((bill: any) => Number(bill.tva) === 0.13)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
   const totalTva_16 = productList
-    ?.filter((bill: any) => bill.tva === 0.16)
+    ?.filter((bill: any) => Number(bill.tva) === 0.16)
     ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
 
   const addQty = (qty: any, indx: any, key: any) => {
@@ -170,7 +233,7 @@ const Create = () => {
     }
   }
 
-  const headerProps = {
+  const headerUpdateProps = {
     nameCustomer,
     setNameCustomer,
     emailCustomer,
@@ -182,11 +245,11 @@ const Create = () => {
     phoneCustomer,
     setPhoneCustomer,
     invoiceNum,
-    setInvoiceNum,
-    invoiceCreatedAt,
-    setInvoiceCreatedAt,
     status,
     setStatus,
+    filteredInvoice,
+    date,
+    setDate,
   }
 
   const productItemProps = {
@@ -196,14 +259,15 @@ const Create = () => {
     substQty,
     addQty,
   }
-  const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
+  const bottomTableProps = { handleAddProduct, htAmount, totalTva_13, totalTva_16 }
+
   return (
     <div className='row justify-content-center'>
       {contextHolder}
       <div className='col-xxl-9'>
         <div className='card'>
-          <form onSubmit={createInvoice} className='needs-validation' id='invoice_form'>
-            <Header headerProps={headerProps} title={'Facture'}/>
+          <form onSubmit={handleUpdateInvoice} className='needs-validation' id='invoice_form'>
+            <HeaderUpdate headerUpdateProps={headerUpdateProps} title='DEVIS' />
             <div className='card-body p-4'>
               <div className='table-responsive'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
@@ -237,7 +301,7 @@ const Create = () => {
                   </thead>
                   <tbody id='newlink'>
                     {productList?.map((prod: any, indx: any) => (
-                      <ProductItem
+                      <ProductItemUpdate
                         productItemProps={productItemProps}
                         key={prod.id}
                         prod={prod}
@@ -245,7 +309,8 @@ const Create = () => {
                       />
                     ))}
                   </tbody>
-                  <BottomTableCreate bottomTableProps={bottomTableProps} />
+                 
+                  <BottomTableUpdate bottomTableProps={bottomTableProps} />
                 </table>
               </div>
               <div className='mt-4'>
@@ -262,9 +327,7 @@ const Create = () => {
                   rows={2}
                   value={noteInvoice}
                   onChange={(e) => setNoteInvoice(e.currentTarget.value)}
-                  
-                >
-                </textarea>
+                ></textarea>
               </div>
               <ButtonTableCreate />
             </div>
@@ -275,4 +338,5 @@ const Create = () => {
   )
 }
 
-export default Create
+
+export default UpdateQuote

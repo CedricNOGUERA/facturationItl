@@ -8,7 +8,7 @@ const HeaderList: React.FC = () => {
       <h5 className="card-title mb-0 flex-grow-1 fs-17">Liste des devis</h5>
       <div className="flex-shrink-0">
 
-        <Link to="/create-invoice" className="btn btn-danger">
+        <Link to="/create-devis" className="btn btn-danger">
           <i className="ri-add-line align-bottom me-1"></i> Créer un devis
         </Link>
       </div>

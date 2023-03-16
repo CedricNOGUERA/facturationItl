@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 
 interface ItemListProps {
     bill: any
+    setDeleteInvoiceId: any
 }
 
-const ItemList: React.FC<ItemListProps> = ({ bill }) => {
+const ItemListQuote: React.FC<ItemListProps> = ({ bill, setDeleteInvoiceId }) => {
   const navigate = useNavigate()
 
   return (
@@ -20,10 +21,10 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
           />
         </div>
       </th>
-      <td className='id' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='id' onClick={() => navigate(`/${bill.id}/quote`)}>
         #{bill.invoiceNum}
       </td>
-      <td className='customer_name' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='customer_name' onClick={() => navigate(`/${bill.id}/quote`)}>
         <div className='d-flex align-items-center'>
           {bill?.customer_info?.avatar === '' ? (
             <div className='flex-shrink-0 avatar-xs me-2'>
@@ -41,20 +42,18 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
           {bill.customer_info?.name}
         </div>
       </td>
-      <td className='email' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='email' onClick={() => navigate(`/${bill.id}/quote`)}>
         {bill.customer_info.email}
       </td>
 
-      <td className='date' onClick={() => navigate(`/${bill.id}`)}>
-        {/* {bill.created_at.slice(8, 10)}/{bill.created_at.slice(5, 7)}/{bill.created_at.slice(0, 4)} */}
+      <td className='date' onClick={() => navigate(`/${bill.id}/quote`)}>
        {bill?.createdAt}
-        {/* <small className='text-muted'>9:58 PM</small> */}
       </td>
-      <td className='invoice_amount text-end' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='invoice_amount text-end' onClick={() => navigate(`/${bill.id}/quote`)}>
         {new Intl.NumberFormat().format(bill.amount_ttc)}
 
       </td>
-      <td className='status' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='status' onClick={() => navigate(`/${bill.id}/quote`)}>
         <span className='badge badge-soft-success text-uppercase'>{bill.status}</span>
       </td>
       <td>
@@ -73,9 +72,9 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
                 className='dropdown-item'
                 data-id='25000352'
               >
-                <Link to={`/${bill.id}`}>
+                <Link to={`/${bill.id}/quote`}>
                   <i className='ri-eye-fill align-bottom me-2 text-muted'></i>
-                  View
+                  Detail
                 </Link>
               </button>
             </li>
@@ -83,11 +82,10 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
               <button
                 className='dropdown-item'
                 data-id='25000351'
-                // onClick={() => navigate(`/update-invoice/${bill.id}`)}
               >
-                <Link to={`/update-invoice/${bill.id}`}>
+                <Link to={`/${bill.id}/update-devis`}>
                   <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
-                Edit
+                Modifier
                   
                 </Link>
                 
@@ -102,7 +100,7 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
                 href='#deleteOrder'
               >
                 <i className='ri-delete-bin-fill align-bottom me-2 text-muted'></i>
-                Delete
+                Annuler
               </a>
             </li>
           </ul>
@@ -112,4 +110,4 @@ const ItemList: React.FC<ItemListProps> = ({ bill }) => {
   )
 }
 
-export default ItemList
+export default ItemListQuote

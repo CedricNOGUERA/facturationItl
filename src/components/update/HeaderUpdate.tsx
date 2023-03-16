@@ -1,6 +1,6 @@
 import React from 'react'
 
-const HeaderUpdate = ({ headerUpdateProps }: any) => {
+const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
   const {
     nameCustomer,
     setNameCustomer,
@@ -72,6 +72,9 @@ const HeaderUpdate = ({ headerUpdateProps }: any) => {
       </div>
       <div className='card-body p-4'>
         <div className='row'>
+          <div className='col-12 text-center'>
+            <h3 className='text-uppercase teko fs-2'>{title}</h3>
+          </div>
           <div className='col-lg-4 col-sm-6'>
             <div>
               <label htmlFor='billingName' className='text-muted text-uppercase fw-semibold'>
@@ -220,10 +223,10 @@ const HeaderUpdate = ({ headerUpdateProps }: any) => {
                     ? filteredInvoice?.status
                     : 'Sélectionner un status'}
                 </option>
-                <option value='Paid'>Payée</option>
-                <option value='Unpaid'>Impayée</option>
-                <option value='Refund'>Remboursement</option>
-                <option value='Cancel'>Annulée</option>
+                <option value='Payée'>Payée</option>
+                <option value='Impayée'>Impayée</option>
+                <option value='Remboursée'>Remboursée</option>
+                <option value='Annulée'>Annulée</option>
               </select>
             </div>
           </div>

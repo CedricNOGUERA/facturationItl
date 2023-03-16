@@ -2,11 +2,12 @@ import React from 'react'
 
 interface headerDetailProps{
   filteredInvoice: any
+  title: string
 }
 
 
 
-const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice}) => {
+const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title}) => {
   return (
     <>
       <div className='col-lg-12'>
@@ -56,7 +57,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice}) => {
         <div className='card-body p-4 '>
           <div className='row g-3'>
             <div className='col-12 text-center'>
-              <h2 className="teko">FACTURE</h2>
+              <h2 className="teko">{title}</h2>
             </div>
             <div className='col-8'>
               <h6 className='text-muted text-uppercase fw-semibold mb-3 fs-13'>
