@@ -1,4 +1,3 @@
-import React from 'react'
 
 const TopTable = ({ topTableProps }: any) => {
   const { setAsc, setSort, getInvoices2, asc } = topTableProps

@@ -2,7 +2,7 @@ import React from 'react'
 
 const TopTable = ({topTableProps}: any) => {
 
-    const {setAsc, setSort, getInvoices2, asc} = topTableProps
+    const {setAsc, setSort, getQuotes, asc} = topTableProps
 
   return (
     <thead className='text-muted'>
@@ -23,7 +23,7 @@ const TopTable = ({topTableProps}: any) => {
                         onClick={() => {
                           setAsc(!asc)
                           setSort('quoteNum')
-                          getInvoices2()
+                          getQuotes()
                         }}
                       >
                         N° Devis
@@ -34,7 +34,7 @@ const TopTable = ({topTableProps}: any) => {
                         onClick={() => {
                           setAsc(!asc)
                           setSort('name_customer')
-                          getInvoices2()
+                          getQuotes()
                         }}
                       >
                         Client
@@ -45,7 +45,7 @@ const TopTable = ({topTableProps}: any) => {
                         onClick={() => {
                           setAsc(!asc)
                           setSort('email_customer')
-                          getInvoices2()
+                          getQuotes()
                         }}
                       >
                         Email
@@ -57,7 +57,7 @@ const TopTable = ({topTableProps}: any) => {
                         onClick={() => {
                           setAsc(!asc)
                           setSort('created_at')
-                          getInvoices2()
+                          getQuotes()
                         }}
                       >
                         Date
@@ -68,7 +68,7 @@ const TopTable = ({topTableProps}: any) => {
                         onClick={() => {
                           setAsc(!asc)
                           setSort('amount_ttc')
-                          getInvoices2()
+                          getQuotes()
                         }}
                       >
                         Montant
@@ -79,7 +79,7 @@ const TopTable = ({topTableProps}: any) => {
                         onClick={() => {
                           setAsc(!asc)
                           setSort('status')
-                          getInvoices2()
+                          getQuotes()
                         }}
                       >
                         Status

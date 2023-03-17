@@ -3,13 +3,17 @@ import { Link, useNavigate } from 'react-router-dom'
 
 interface ItemListProps {
     bill: any
-    setDeleteInvoiceId: Dispatch<SetStateAction<string>>
+    setDocId: Dispatch<SetStateAction<string>>
+    title: string
+    _getDocById: any
+    setSelectedData: Dispatch<SetStateAction<string>>
 }
 
-const ItemList: React.FC<ItemListProps> = ({bill, setDeleteInvoiceId}) => {
+const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSelectedData, title}) => {
 
 
   const navigate = useNavigate()
+  const linkItem = title === 'DEVIS' ? 'devis' : 'invoice'
 
   return (
     <tr>
@@ -23,10 +27,10 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDeleteInvoiceId}) => {
           />
         </div>
       </th>
-      <td className='id' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='id' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         #{bill.invoiceNum}
       </td>
-      <td className='customer_name' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='customer_name' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         <div className='d-flex align-items-center'>
           {bill?.customer_info?.avatar === '' ? (
             <div className='flex-shrink-0 avatar-xs me-2'>
@@ -44,20 +48,17 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDeleteInvoiceId}) => {
           {bill.customer_info?.name}
         </div>
       </td>
-      <td className='email' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='email' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         {bill.customer_info.email}
       </td>
 
-      <td className='date' onClick={() => navigate(`/${bill.id}`)}>
-        {/* {bill.created_at.slice(8, 10)}/{bill.created_at.slice(5, 7)}/{bill.created_at.slice(0, 4)} */}
-       {bill?.createdAt}
-        {/* <small className='text-muted'>9:58 PM</small> */}
+      <td className='date' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
+        {bill?.createdAt}
       </td>
-      <td className='invoice_amount text-end' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='invoice_amount text-end' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         {new Intl.NumberFormat().format(bill.amount_ttc)}
-
       </td>
-      <td className='status' onClick={() => navigate(`/${bill.id}`)}>
+      <td className='status' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         <span className='badge badge-soft-success text-uppercase'>{bill.status}</span>
       </td>
       <td>
@@ -72,38 +73,43 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDeleteInvoiceId}) => {
           </button>
           <ul className='dropdown-menu dropdown-menu-end'>
             <li>
-              <button
-                className='dropdown-item'
-                data-id='25000352'
-              >
-                <Link to={`/${bill.id}`}>
+              <button className='dropdown-item' data-id='25000352'>
+                <Link to={`/${bill.id}/${linkItem}`}>
                   <i className='ri-eye-fill align-bottom me-2 text-muted'></i>
                   Détail
                 </Link>
               </button>
             </li>
             <li>
-              <button
-                className='dropdown-item'
-                data-id='25000351'
-              >
-                <Link to={`/${bill.id}/update-invoice`}>
+              <button className='dropdown-item' data-id='25000351'>
+                <Link to={`/${bill.id}/update-${linkItem}`}>
                   <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
-                Modifier
-                  
+                  Modifier
                 </Link>
-                
               </button>
             </li>
-           
-            <li className='dropdown-divider'></li>
-            <li onClick={() => setDeleteInvoiceId(bill.id)}>
+            <li className='dropdown-divider' ></li>
+            {title === 'DEVIS' && (
+              <li onClick={() => {
+                _getDocById(bill.id, setSelectedData)
+                setDocId(bill.id)}}>
+                <a
+                className='dropdown-item remove-item-btn'
+                data-bs-toggle='modal'
+                href='#validate'
+              >
+                    <i className='ri-check-line align-bottom me-2 text-success fs-5'></i>
+                    Valider
+                </a>
+              </li>
+            )}
+            <li onClick={() => setDocId(bill.id)}>
               <a
                 className='dropdown-item remove-item-btn'
                 data-bs-toggle='modal'
                 href='#deleteOrder'
               >
-                <i className='ri-close-line align-bottom me-2 text-muted fs-5 m-auto'></i>
+                <i className='ri-close-line align-bottom me-2 text-danger fs-5 m-auto'></i>
                 Annuler
               </a>
             </li>

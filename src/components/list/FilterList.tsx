@@ -5,9 +5,10 @@ import React from 'react'
 
 interface PropsFilterList {
   filterListProps: any
+  title: string
 }
 
-const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
+const FilterList: React.FC<PropsFilterList> = ({ filterListProps, title }) => {
   const {
     searchTerm,
     setSearchTerm,
@@ -44,12 +45,7 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
           </div>
 
           <div className='col-xxl-3 col-sm-6'>
-            {/* <DatePicker
-              className='form-control'
-              defaultValue={dayjs(dateNow, dateFormatList[0])}
-              format={dateFormatList}
-              onChange={onChange}
-            /> */}
+          
             <input
               type='text'
               className='form-control search bg-light border-light'
@@ -82,19 +78,23 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps }) => {
               >
                 <option value=''>Status</option>
 
-                <option value=''>Sélectionner un Status</option>
-                <option value='Payée'>Payée</option>
-                <option value='Impayée'>Impayée</option>
-                <option value='Remboursement'>Remboursement</option>
+                {title === 'DEVIS' ? (
+                  <>
+                    <option value='En cours'>En cours</option>
+                    <option value='Validé'>Validé</option>
+                    <option value='Annulé'>Annulé</option>
+                  </>
+                ) : (
+                  <>
+                    <option value='Payée'>Payée</option>
+                    <option value='Impayée'>Impayée</option>
+                    <option value='Annulé'>Annulée</option>
+                  </>
+                )}
               </select>
             </div>
           </div>
 
-          {/* <div className='col-xxl-1 col-sm-4'>
-            <button type='button' className='btn btn-primary w-100'>
-              <i className='ri-equalizer-fill me-1 align-bottom'></i> Filtres
-            </button>
-          </div> */}
         </div>
       </form>
     </div>

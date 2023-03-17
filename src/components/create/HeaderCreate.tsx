@@ -23,9 +23,9 @@ const HeaderCreate = ({ headerProps, title }: any) => {
     setAddressCustomer,
     phoneCustomer,
     setPhoneCustomer,
-    invoiceNum,
-    setInvoiceNum,
-    setInvoiceCreatedAt,
+    docNum,
+    setDocNum,
+    setDocCreatedAt,
     status,
     setStatus,
   } = headerProps
@@ -42,11 +42,11 @@ const HeaderCreate = ({ headerProps, title }: any) => {
     new Date().getFullYear()
 
   React.useEffect(() => {
-    setInvoiceCreatedAt(dateNow)
+    setDocCreatedAt(dateNow)
   }, [])
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    setInvoiceCreatedAt(dateString)
+    setDocCreatedAt(dateString)
   }
 
   return (
@@ -102,7 +102,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
       <div className='card-body p-4 '>
         <div className='row'>
           <div className='col-12 text-center'>
-            <h3 className='text-uppercase teko fs-2' >{title}</h3>
+            <h3 className='text-uppercase teko fs-2'>{title}</h3>
           </div>
           <div className='col-lg-5 col-md-6 col-sm-6'>
             <div>
@@ -176,8 +176,8 @@ const HeaderCreate = ({ headerProps, title }: any) => {
             <Input
               type='text'
               placeholder='N° facture'
-              data={invoiceNum}
-              setData={setInvoiceNum}
+              data={docNum}
+              setData={setDocNum}
               required={true}
             />
           </div>
@@ -207,9 +207,19 @@ const HeaderCreate = ({ headerProps, title }: any) => {
                 onChange={(e: any) => setStatus(e.currentTarget.value)}
               >
                 <option value=''>Sélectionner un Status</option>
-                <option value='Payée'>Payée</option>
-                <option value='Impayée'>Impayée</option>
-                <option value='Remboursement'>Remboursement</option>
+                {title === 'DEVIS' ? (
+                  <>
+                    <option value='En cours'>En cours</option>
+                    <option value='Validé'>Validé</option>
+                    <option value='Annulé'>Annulé</option>
+                  </>
+                ) : (
+                  <>
+                    <option value='Payée'>Payée</option>
+                    <option value='Impayée'>Impayée</option>
+                    <option value='Remboursement'>Remboursement</option>
+                  </>
+                )}
               </select>
             </div>
           </div>

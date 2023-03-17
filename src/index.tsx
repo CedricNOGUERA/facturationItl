@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: ':id',
+        path: ':id/invoice',
         element: (
           <>
             <PageTitle title='Factures' breadcrumb='Détails' />
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: '/:id/update-invoice',
+        path: ':id/update-invoice',
         element:(
           <>
           <PageTitle title='Factures' breadcrumb='Modification de facture' />
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
       },
       ///////////////////devis //////////////////////////
       {
-        path: ':id/quote',
+        path: ':id/devis',
         element: (
           <>
             <PageTitle title='Devis' breadcrumb='Détails' />
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
         path: 'create-devis',
         element: (
           <>
-          <PageTitle title='Factures' breadcrumb='Création de devis' />
+          <PageTitle title='Devis' breadcrumb='Création de devis' />
         <CreateQuote />
         </>
         )
@@ -106,6 +106,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  //////////////// Public Pages ///////////////////////
   {
     path: '/connexion',
     element: <Auth />,
@@ -120,19 +122,15 @@ const router = createBrowserRouter([
 
 
 
-// const root = ReactDOM.createRoot(
-//   document.getElementById('root') as HTMLElement
-// );
-// root.render(
-//   <React.StrictMode>
-//     <RouterProvider router={router} />
-//   </React.StrictMode>
-// );
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
+
 
 reportWebVitals();
 

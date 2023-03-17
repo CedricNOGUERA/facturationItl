@@ -19,8 +19,10 @@
     "lottie-web": "^5.10.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
+    "react-countup": "^6.4.2",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.2",
+    "react-qr-code": "^2.0.11",
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-to-print": "^2.14.12",
@@ -54,5 +56,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.26"
   }
 }

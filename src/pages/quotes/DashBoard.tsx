@@ -1,5 +1,5 @@
 import React from "react";
-import ResumeInvoices from "../../components/quotes/ResumeInvoices";
+import ResumeInvoices from "../../components/quotes/ResumeQuote";
 import List from "./List";
 
 const DashBoard = () => {

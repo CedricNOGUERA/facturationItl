@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import ProductItemUpdate from '../../components/update/productItemUpdate'
 import HeaderUpdate from '../../components/update/HeaderUpdate'
 import BottomTableUpdate from '../../components/update/BottomTableUpdate'
+import TableHeader from '../../components/ui/TableHeader'
 
 const Update = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
@@ -65,7 +66,7 @@ const Update = () => {
   const openNotification = () => {
     api.open({
       message: 'Félicitation',
-      description: 'Votre facture est enregistrée.',
+      description: 'Votre facture est modifiée.',
       icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
     })
   }
@@ -270,34 +271,8 @@ const Update = () => {
             <div className='card-body p-4'>
               <div className='table-responsive'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
-                  <thead className='align-middle'>
-                    <tr className='table-active'>
-                      <th scope='col' style={{ width: '50px' }}>
-                        #
-                      </th>
-                      <th scope='col'>Désignations</th>
-                      <th scope='col' style={{ width: '80px' }}>
-                        <div className='d-flex currency-select input-light align-items-center '>
-                          Tva
-                        </div>
-                      </th>
-                      <th scope='col' style={{ width: '120px' }}>
-                        <div className='d-flex currency-select input-light align-items-center'>
-                          Prix
-                        </div>
-                      </th>
-                      <th scope='col' style={{ width: '105px' }}>
-                        Quantité
-                      </th>
-                      <th scope='col' style={{ width: '105px' }}>
-                        Montant Tva
-                      </th>
-                      <th scope='col' className='text-end' style={{ width: '150px' }}>
-                        Montant HT
-                      </th>
-                      <th scope='col' className='text-end' style={{ width: '105px' }}></th>
-                    </tr>
-                  </thead>
+                <TableHeader />
+                 
                   <tbody id='newlink'>
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItemUpdate

@@ -1,60 +1,52 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-
 import { useParams } from 'react-router-dom'
 import BottomTable from '../../components/detail/BottomTableDetail'
 import ButtonTable from '../../components/detail/ButtonTableDetail'
 import HeaderDetail from '../../components/detail/HeaderDetail'
 import ProductItemDetail from '../../components/detail/ProductItemDetail'
-import { supabase } from '../../utils/supabaseClient'
+import { _getQuoteById } from '../../utils/quotes/function';
+import { _getTotalTva, _htAmount } from '../../utils/function';
+import { Button, Modal } from 'react-bootstrap';
+import QrCode from '../../components/ui/QrCode';
 
 const DetailQuote = () => {
-  const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
-  const componentRef: any = useRef();
 
+
+///////States//////////
+
+  const [filteredQuote, setFilteredInvoice] = React.useState<any>()
+  const componentRef: any = useRef();
   const params = useParams()
 
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
+//////useEffect/////////
+
   React.useEffect(() => {
-    getInvoiceById()
-  }, [])
+    _getQuoteById(params.id, setFilteredInvoice)
+  }, [params.id])
+
+
+//////Events/////////
+
 
   const handlePrint = useReactToPrint({
     content: () => componentRef?.current,
   });
 
-  const getInvoiceById = async () => {
-    let { data: quotes, error } = await supabase
-      .from('quotes')
-      .select('*, detailQuote(*)')
-      .eq('id', params.id)
-      .single()
 
-    if (quotes) {
-      setFilteredInvoice(quotes)
-    }
-    if(error){
-      console.log(error)
-    }
-  }
-
-  const htAmount = filteredInvoice?.detailQuote?.reduce(
-    (acc: any, current: any) => acc + current.price * current.qty,
-    0
-  )
-
-  const totalTva_13 = filteredInvoice?.detailQuote
-    ?.filter((bill: any) => bill.tva === 0.13)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
-  const totalTva_16 = filteredInvoice?.detailQuote
-    ?.filter((bill: any) => bill.tva === 0.16)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
 
   return (
     <div className='row justify-content-center'>
       <div className='col-xxl-9 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
-            <HeaderDetail filteredInvoice={filteredInvoice} title='DEVIS' />
+            <HeaderDetail filteredInvoice={filteredQuote} title='DEVIS' />
             <div className='col-lg-12'>
               <div className='card-body px-4'>
                 <div className='table-responsive'>
@@ -75,23 +67,41 @@ const DetailQuote = () => {
                       </tr>
                     </thead>
                     <tbody id='products-list'>
-                      {filteredInvoice?.detailQuote?.map((prod: any, indx: any) => (
+                      {filteredQuote?.detailQuote?.map((prod: any, indx: any) => (
                         <ProductItemDetail key={prod.id} prod={prod} indx={indx} />
                       ))}
                     </tbody>
                   </table>
                 </div>
                 <BottomTable
-                  htAmount={htAmount}
-                  totalTva_13={totalTva_13}
-                  totalTva_16={totalTva_16}
+                  htAmount={_htAmount(filteredQuote?.detailQuote)}
+                  totalTva_13={_getTotalTva(filteredQuote?.detailQuote, 0.13)}
+                  totalTva_16={_getTotalTva(filteredQuote?.detailQuote, 0.16)}
                 />
-                <ButtonTable handlePrint={handlePrint} />
+                <ButtonTable handlePrint={handlePrint} handleShow={handleShow} />
               </div>
             </div>
           </div>
         </div>
       </div>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Modal title</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='w-75 p-5 m-auto'>
+
+         <QrCode orderNum={'http://localhost:3000/bfc48f44-4cdb-4fbb-858a-3eca595fc8a3/devis'} />
+        </Modal.Body>
+        <Modal.Footer>
+     
+          <Button variant="primary" onClick={handleClose}>Fermer</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   )
 }

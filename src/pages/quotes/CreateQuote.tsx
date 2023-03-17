@@ -8,11 +8,13 @@ import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { _getTotalTva, _htAmount } from '../../utils/function'
+import TableHeader from '../../components/ui/TableHeader'
 
 const CreateQuote = () => {
-
-  const [invoiceNum, setInvoiceNum] = React.useState<any>('')
-  const [invoiceCreatedAt, setInvoiceCreatedAt] = React.useState<any>('')
+  const navigate = useNavigate()
+  const [docNum, setDocNum] = React.useState<any>('')
+  const [docCreatedAt, setDocCreatedAt] = React.useState<any>('')
   const [status, setStatus] = React.useState<string>('')
 
   const [nameCustomer, setNameCustomer] = React.useState<string>('')
@@ -20,7 +22,6 @@ const CreateQuote = () => {
   const [phoneCustomer, setPhoneCustomer] = React.useState<string>('')
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
-  const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
 
   const [productList, setProductList] = React.useState([
     {
@@ -34,7 +35,7 @@ const CreateQuote = () => {
     },
   ])
 
-  const navigate = useNavigate()
+  /////////////// succes notification ////////////////
 
   const [api, contextHolder] = notification.useNotification()
 
@@ -46,10 +47,7 @@ const CreateQuote = () => {
     })
   }
 
-  const amountHT = productList.reduce(
-    (acc: any, current: any) => acc + current.price * current.qty,
-    0
-  )
+  /////////////// function mapped in productItem component ////////////////
 
   const handleAddProduct = () => {
     const newTab = [
@@ -77,7 +75,7 @@ const CreateQuote = () => {
     setProductList(newList)
   }
 
-  const createInvoice = async (e: any) => {
+  const createQuote = async (e: any) => {
     const invoiceId: any = uuidv4()
 
     e.preventDefault()
@@ -85,8 +83,8 @@ const CreateQuote = () => {
     const { data: dataz, error: errorz } = await supabase.from('quotes').insert([
       {
         id: invoiceId,
-        invoiceNum: invoiceNum,
-        createdAt: invoiceCreatedAt,
+        invoiceNum: docNum,
+        createdAt: docCreatedAt,
         status: status,
         name_customer: nameCustomer,
         email_customer: emailCustomer,
@@ -105,7 +103,7 @@ const CreateQuote = () => {
         ),
       },
     ])
-    if(dataz){
+    if (dataz) {
       console.log(dataz)
     }
 
@@ -130,8 +128,8 @@ const CreateQuote = () => {
       try {
         await Promise.all(promises)
         console.log('good aussi')
-        setInvoiceNum('')
-        setInvoiceCreatedAt('')
+        setDocNum('')
+        setDocCreatedAt('')
         setStatus('')
         setNameCustomer('')
         setEmailCustomer('')
@@ -141,7 +139,7 @@ const CreateQuote = () => {
         openNotification()
 
         setTimeout(() => {
-          navigate('/')
+          navigate('/list-devis')
         }, 2500)
       } catch (error) {
         console.log(error)
@@ -149,12 +147,9 @@ const CreateQuote = () => {
     }
   }
 
-  const totalTva_13 = productList
-    ?.filter((bill: any) => Number(bill.tva) === 0.13)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-  const totalTva_16 = productList
-    ?.filter((bill: any) => Number(bill.tva) === 0.16)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
+  const amountHT = _htAmount(productList)
+  const totalTva_13 = _getTotalTva(productList, 0.13)
+  const totalTva_16 = _getTotalTva(productList, 0.16)
 
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
@@ -170,6 +165,7 @@ const CreateQuote = () => {
     }
   }
 
+
   const headerProps = {
     nameCustomer,
     setNameCustomer,
@@ -181,10 +177,9 @@ const CreateQuote = () => {
     setAddressCustomer,
     phoneCustomer,
     setPhoneCustomer,
-    invoiceNum,
-    setInvoiceNum,
-    invoiceCreatedAt,
-    setInvoiceCreatedAt,
+    docNum,
+    setDocNum,
+    setDocCreatedAt,
     status,
     setStatus,
   }
@@ -196,45 +191,20 @@ const CreateQuote = () => {
     substQty,
     addQty,
   }
+
   const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
+
   return (
     <div className='row justify-content-center'>
       {contextHolder}
       <div className='col-xxl-9'>
         <div className='card'>
-          <form onSubmit={createInvoice} className='needs-validation' id='invoice_form'>
-            <Header headerProps={headerProps} title={'Devis'} />
+          <form onSubmit={createQuote} className='needs-validation' id='invoice_form'>
+            <Header headerProps={headerProps} title={'DEVIS'} />
             <div className='card-body p-4'>
               <div className='table-responsive mb-5'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
-                  <thead className='align-middle'>
-                    <tr className='table-active'>
-                      <th scope='col' style={{ width: '50px' }}>
-                        #
-                      </th>
-                      <th scope='col'>Désignations</th>
-                      <th scope='col' style={{ width: '80px' }}>
-                        <div className='d-flex currency-select input-light align-items-center '>
-                          Tva
-                        </div>
-                      </th>
-                      <th scope='col' style={{ width: '120px' }}>
-                        <div className='d-flex currency-select input-light align-items-center'>
-                          Prix
-                        </div>
-                      </th>
-                      <th scope='col' style={{ width: '105px' }}>
-                        Quantité
-                      </th>
-                      <th scope='col' style={{ width: '105px' }}>
-                        Montant Tva
-                      </th>
-                      <th scope='col' className='text-end' style={{ width: '150px' }}>
-                        Montant HT
-                      </th>
-                      <th scope='col' className='text-end' style={{ width: '105px' }}></th>
-                    </tr>
-                  </thead>
+                  <TableHeader />
                   <tbody id='newlink'>
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItem
@@ -249,23 +219,7 @@ const CreateQuote = () => {
                 </table>
               </div>
               <div className='my-4'>
-                 <p></p>
-                {/* <label
-                  htmlFor='exampleFormControlTextarea1'
-                  className='form-label text-muted text-uppercase fw-semibold'
-                >
-                  NOTES
-                </label>
-                <textarea
-                  className='form-control alert alert-info'
-                  id='exampleFormControlTextarea1'
-                  placeholder='Notes'
-                  rows={2}
-                  value={noteInvoice}
-                  onChange={(e) => setNoteInvoice(e.currentTarget.value)}
-                  
-                >
-                </textarea> */}
+                <p></p>
               </div>
               <ButtonTableCreate />
             </div>

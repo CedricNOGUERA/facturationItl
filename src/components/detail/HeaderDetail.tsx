@@ -15,7 +15,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title}) => 
           <div className='row g-3'>
             <div className='col-8'>
               <img
-                src='assets/images/logo-dark.png'
+                src={title=== 'DEVIS' ? '../assets/images/logo-dark.png' : 'assets/images/logo-dark.png'}
                 className='card-logo card-logo-dark'
                 alt='logo dark'
                 height='50'

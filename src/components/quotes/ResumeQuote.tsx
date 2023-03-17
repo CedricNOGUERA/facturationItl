@@ -1,8 +1,9 @@
 import React from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { supabase } from '../../utils/supabaseClient'
+import CountUp from 'react-countup'
 
-const ResumeInvoices = () => {
+const ResumeQuote = () => {
   const [globalData, setGlobalData] = React.useState<any>([])
   const [quotesData] = useOutletContext<any>()
 
@@ -10,22 +11,22 @@ const ResumeInvoices = () => {
     getInvoices()
   }, [quotesData])
 
-  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Payée')
+  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Validé')
 
   const paidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Payée')
+    ?.filter((bill: any) => bill.status === 'Validé')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Impayée')
+  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'En cours')
 
   const unpaidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Impayée')
+    ?.filter((bill: any) => bill.status === 'En cours')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Annulée')
+  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Annulé')
 
   const cancelInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Annulée')
+    ?.filter((bill: any) => bill.status === 'Annulé')
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
   const getInvoices = async () => {
@@ -39,27 +40,26 @@ const ResumeInvoices = () => {
     }
   }
 
-  const invoiceTab = [
+  const quoteTab = [
     {
-      title: 'Payées',
+      title: 'Validés',
       ca: paidInvoices,
       length: paidInvoicesNumber.length,
       image: 'ri-checkbox-line',
     },
     {
-      title: 'Impayées',
+      title: 'En cours',
       ca: unpaidInvoices,
       length: unpaidInvoicesNumber.length,
       image: 'ri-time-line',
     },
     {
-      title: 'Annulées',
+      title: 'Annulés',
       ca: cancelInvoices,
       length: cancelInvoicesNumber.length,
       image: 'ri-close-circle-line',
     },
   ]
-
 
   return (
     <div className='row'>
@@ -70,23 +70,21 @@ const ResumeInvoices = () => {
               <div className='flex-grow-1'>
                 <p className='text-uppercase fw-semibold text-muted mb-0'>Total devis</p>
               </div>
-              <div className='flex-shrink-0'>
-                <h5 className='text-success fs-14 mb-0'>
-                  <i className='ri-arrow-right-up-line fs-13 align-middle'></i> +89.24 %
-                </h5>
-              </div>
             </div>
             <div className='d-flex align-items-end justify-content-between mt-4'>
               <div>
                 <h4 className='fs-22 fw-semibold ff-secondary mb-4'>
-                  <span className='counter-value' data-target='559.25'>
-                    {globalData &&
-                      new Intl.NumberFormat().format(
-                        globalData.reduce(
+                  <span className='counter-value county' data-target='559.25'>
+                    {globalData && (
+                      <CountUp
+                        delay={1}
+                        separator=' '
+                        end={globalData.reduce(
                           (acc: any, current: any) => acc + current.amount_ttc,
                           0
-                        )
-                      )}
+                        )}
+                      />
+                    )}
                   </span>
                 </h4>
                 <span className='badge bg-warning me-1'>{globalData.length}</span>{' '}
@@ -101,8 +99,7 @@ const ResumeInvoices = () => {
           </div>
         </div>
       </div>
-
-      {invoiceTab?.map((bill: any) => (
+      {quoteTab?.map((bill: any) => (
         <div key={Math.random()} className='col-xl-3 col-md-6'>
           <div className='card card-animate'>
             <div className='card-body'>
@@ -110,11 +107,7 @@ const ResumeInvoices = () => {
                 <div className='flex-grow-1'>
                   <p className='text-uppercase fw-semibold text-muted mb-0'>{bill?.title}</p>
                 </div>
-                <div className='flex-shrink-0'>
-                  <h5 className='text-danger fs-14 mb-0'>
-                    <i className='ri-arrow-right-down-line fs-13 align-middle'></i> +8.09 %
-                  </h5>
-                </div>
+              
               </div>
               <div className='d-flex align-items-end justify-content-between mt-4'>
                 <div>
@@ -142,4 +135,4 @@ const ResumeInvoices = () => {
   )
 }
 
-export default ResumeInvoices
+export default ResumeQuote

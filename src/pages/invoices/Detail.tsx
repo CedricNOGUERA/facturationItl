@@ -10,6 +10,15 @@ import { supabase } from '../../utils/supabaseClient'
 
 const Detail = () => {
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
+
+
+
+  const [show, setShow] = React.useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
   const componentRef: any = useRef();
 
   const params = useParams()
@@ -86,7 +95,7 @@ const Detail = () => {
                   totalTva_13={totalTva_13}
                   totalTva_16={totalTva_16}
                 />
-                <ButtonTable handlePrint={handlePrint} />
+                <ButtonTable handlePrint={handlePrint} handleShow={handleShow} />
               </div>
             </div>
           </div>

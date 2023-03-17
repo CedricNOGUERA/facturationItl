@@ -8,11 +8,14 @@ import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { _getTotalTva, _htAmount } from '../../utils/function'
+import TableHeader from '../../components/ui/TableHeader'
 
 const Create = () => {
 
-  const [invoiceNum, setInvoiceNum] = React.useState<any>('')
-  const [invoiceCreatedAt, setInvoiceCreatedAt] = React.useState<any>('')
+  const navigate = useNavigate()
+  const [docNum, setDocNum] = React.useState<any>('')
+  const [docCreatedAt, setDocCreatedAt] = React.useState<any>('')
   const [status, setStatus] = React.useState<string>('')
 
   const [nameCustomer, setNameCustomer] = React.useState<string>('')
@@ -34,10 +37,9 @@ const Create = () => {
     },
   ])
 
-  const navigate = useNavigate()
+  /////////////// succes notification ////////////////
 
   const [api, contextHolder] = notification.useNotification()
-
   const openNotification = () => {
     api.open({
       message: 'Félicitation',
@@ -46,10 +48,7 @@ const Create = () => {
     })
   }
 
-  const amountHT = productList.reduce(
-    (acc: any, current: any) => acc + current.price * current.qty,
-    0
-  )
+  /////////////// function mapped in productItem component ////////////////
 
   const handleAddProduct = () => {
     const newTab = [
@@ -85,8 +84,8 @@ const Create = () => {
     const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
       {
         id: invoiceId,
-        invoiceNum: invoiceNum,
-        createdAt: invoiceCreatedAt,
+        invoiceNum: docNum,
+        createdAt: docCreatedAt,
         status: status,
         name_customer: nameCustomer,
         email_customer: emailCustomer,
@@ -130,8 +129,8 @@ const Create = () => {
       try {
         await Promise.all(promises)
         console.log('good aussi')
-        setInvoiceNum('')
-        setInvoiceCreatedAt('')
+        setDocNum('')
+        setDocCreatedAt('')
         setStatus('')
         setNameCustomer('')
         setEmailCustomer('')
@@ -149,13 +148,11 @@ const Create = () => {
     }
   }
 
-  const totalTva_13 = productList
-    ?.filter((bill: any) => bill.tva === 0.13)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-  const totalTva_16 = productList
-    ?.filter((bill: any) => bill.tva === 0.16)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-
+  
+  const amountHT = _htAmount(productList)
+  const totalTva_13 = _getTotalTva(productList, 0.13)
+  const totalTva_16 = _getTotalTva(productList, 0.16)
+  
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
     newProduits[indx][key] = qty + 1
@@ -170,6 +167,7 @@ const Create = () => {
     }
   }
 
+  
   const headerProps = {
     nameCustomer,
     setNameCustomer,
@@ -181,10 +179,9 @@ const Create = () => {
     setAddressCustomer,
     phoneCustomer,
     setPhoneCustomer,
-    invoiceNum,
-    setInvoiceNum,
-    invoiceCreatedAt,
-    setInvoiceCreatedAt,
+    docNum,
+    setDocNum,
+    setDocCreatedAt,
     status,
     setStatus,
   }
@@ -196,45 +193,20 @@ const Create = () => {
     substQty,
     addQty,
   }
+
   const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
+
   return (
     <div className='row justify-content-center'>
       {contextHolder}
       <div className='col-xxl-9'>
         <div className='card'>
           <form onSubmit={createInvoice} className='needs-validation' id='invoice_form'>
-            <Header headerProps={headerProps} title={'Facture'}/>
+            <Header headerProps={headerProps} title={'FACTURE'}/>
             <div className='card-body p-4'>
               <div className='table-responsive'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
-                  <thead className='align-middle'>
-                    <tr className='table-active'>
-                      <th scope='col' style={{ width: '50px' }}>
-                        #
-                      </th>
-                      <th scope='col'>Désignations</th>
-                      <th scope='col' style={{ width: '80px' }}>
-                        <div className='d-flex currency-select input-light align-items-center '>
-                          Tva
-                        </div>
-                      </th>
-                      <th scope='col' style={{ width: '120px' }}>
-                        <div className='d-flex currency-select input-light align-items-center'>
-                          Prix
-                        </div>
-                      </th>
-                      <th scope='col' style={{ width: '105px' }}>
-                        Quantité
-                      </th>
-                      <th scope='col' style={{ width: '105px' }}>
-                        Montant Tva
-                      </th>
-                      <th scope='col' className='text-end' style={{ width: '150px' }}>
-                        Montant HT
-                      </th>
-                      <th scope='col' className='text-end' style={{ width: '105px' }}></th>
-                    </tr>
-                  </thead>
+                 <TableHeader />
                   <tbody id='newlink'>
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItem

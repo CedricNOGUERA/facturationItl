@@ -223,10 +223,19 @@ const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
                     ? filteredInvoice?.status
                     : 'Sélectionner un status'}
                 </option>
-                <option value='Payée'>Payée</option>
-                <option value='Impayée'>Impayée</option>
-                <option value='Remboursée'>Remboursée</option>
-                <option value='Annulée'>Annulée</option>
+                {title === 'DEVIS' ? (
+                  <>
+                    <option value='En cours'>En cours</option>
+                    <option value='Validé'>Validé</option>
+                    <option value='Annulé'>Annulé</option>
+                  </>
+                ) : (
+                  <>
+                    <option value='Payée'>Payée</option>
+                    <option value='Impayée'>Impayée</option>
+                    <option value='Remboursement'>Remboursement</option>
+                  </>
+                )}
               </select>
             </div>
           </div>

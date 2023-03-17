@@ -7,6 +7,7 @@ import FilterList from "../../components/list/FilterList";
 import ItemList from "../../components/list/ItemList";
 import { Spinner } from "react-bootstrap";
 import TopTable from "../../components/list/TopTable";
+import { _getDocById, _handleCancel } from "../../utils/function";
 
 const List: React.FC = () => {
 
@@ -26,7 +27,8 @@ const List: React.FC = () => {
   const [statusFilter, setStatusFilter] = React.useState<string>('');
   const [dateFilter, setDateFilter] = React.useState<string>('');
   
-  const [deleteInvoiceId, setDeleteInvoiceId] = React.useState<string>('');
+  const [docId, setDocId] = React.useState<string>('');
+  const [selectedData, setSelectedData] = React.useState<any>([]);
   
 
 
@@ -151,7 +153,9 @@ const List: React.FC = () => {
   }
 
 
-  const handleCanelInvoice = async(id: any) => {
+
+
+  const handleCancel = async(id: any) => {
 
     const { data, error } = await supabase
   .from('invoices2')
@@ -182,14 +186,13 @@ const List: React.FC = () => {
 const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, invoiceSearchByDate, statusFilter, setStatusFilter, dateFilter, setDateFilter}
 const topTableProps = {setAsc, setSort, getInvoices2, asc}
 
-console.log(deleteInvoiceId)
 
   return (
     <div className='row'>
       <div className='col-lg-12'>
         <div className='card' id='invoiceList'>
-          <HeaderList />
-          <FilterList filterListProps={filterListProps} />
+          <HeaderList title='facture' />
+          <FilterList filterListProps={filterListProps} title='FACTURE' />
           <div className='card-body'>
             <div>
               <div className='table-responsive table-card'>
@@ -205,7 +208,7 @@ console.log(deleteInvoiceId)
                     ) : filteredInvoice.length > 0 ? (
                       filteredInvoice?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={Math.random()} bill={bill} setDeleteInvoiceId={setDeleteInvoiceId}  />
+                          <ItemList key={Math.random()} bill={bill} setDocId={setDocId} title='FACTURE' _getDocById={_getDocById} setSelectedData={setSelectedData} />
                         ) : null
                       )
                       ) : (filteredInvoice.length === 0 && searchTerm.length > 2) || (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
@@ -231,7 +234,7 @@ console.log(deleteInvoiceId)
                       ) : (
                         invoicesData?.map((bill: any) =>
                           !statusFilter || statusFilter === bill.status ? (
-                            <ItemList key={Math.random()} bill={bill} setDeleteInvoiceId={setDeleteInvoiceId} />
+                            <ItemList key={Math.random()} bill={bill} setDocId={setDocId} _getDocById={_getDocById} setSelectedData={setSelectedData} title='FACTURE' />
                           ) : null
                         )
                       )}
@@ -272,7 +275,7 @@ console.log(deleteInvoiceId)
               aria-labelledby='deleteOrderLabel'
               aria-hidden='true'
             >
-              <DeleteModal deleteInvoiceId={deleteInvoiceId} handleCanelInvoice={handleCanelInvoice} />
+              <DeleteModal deleteDocId={docId} handleCancel={handleCancel}  trigger='FACTURE' />
             </div>
           </div>
         </div>

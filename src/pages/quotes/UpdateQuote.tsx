@@ -60,12 +60,11 @@ const UpdateQuote = () => {
     )
   }, [productList])
 
-  // console.log(filteredInvoice)
 
   const openNotification = () => {
     api.open({
       message: 'Félicitation',
-      description: 'Votre facture est enregistrée.',
+      description: 'Votre devis est modifié.',
       icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
     })
   }
@@ -86,7 +85,6 @@ const UpdateQuote = () => {
       console.log(error)
     }
   }
-  console.log(filteredInvoice)
 
   const handleAddProduct = () => {
     const newTab = [
@@ -118,7 +116,7 @@ const UpdateQuote = () => {
     e.preventDefault()
 
     const { data, error } = await supabase
-      .from('quote')
+      .from('quotes')
       .update({
         invoiceNum: invoiceNum ? invoiceNum : filteredInvoice?.invoiceNum,
         createdAt: invoiceCreatedAt ? invoiceCreatedAt : filteredInvoice?.createdAt,
@@ -166,7 +164,7 @@ const UpdateQuote = () => {
       setAvatarCustomer('')
       setAddressCustomer('')
       setTimeout(() => {
-        navigate('/')
+        navigate('/list-devis')
       }, 2500)
     } catch (error) {
       console.log(error)
@@ -204,7 +202,7 @@ const UpdateQuote = () => {
         setAvatarCustomer('')
         setAddressCustomer('')
         setTimeout(() => {
-          navigate('/')
+          navigate('/list-devis')
         }, 2500)
       } catch (error) {
         console.log(error)

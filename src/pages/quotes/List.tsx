@@ -1,18 +1,24 @@
 import React from "react";
-import { useOutletContext } from "react-router-dom";
-import { supabase } from "../../utils/supabaseClient";
-import HeaderList from "../../components/quotes/list/HeaderList";
-import DeleteModal from "../../components/list/DeleteModal";
-import FilterList from "../../components/quotes/list/FilterList";
-import ItemList from "../../components/quotes/list/ItemList";
 import { Spinner } from "react-bootstrap";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { supabase } from "../../utils/supabaseClient";
+import HeaderList from "../../components/list/HeaderList";
+import FilterList from "../../components/list/FilterList";
+import ItemList from "../../components/list/ItemList";
 import TopTable from "../../components/quotes/list/TopTable";
+import DeleteModal from "../../components/list/DeleteModal";
+import ValidateModal from "../../components/quotes/ValidateModal";
+import { _getDocById, _getTotalTva, _htAmount } from "../../utils/function";
+import { v4 as uuidv4 } from 'uuid'
+import { notification } from "antd";
+import { CheckCircleTwoTone } from "@ant-design/icons";
+
+
 
 const List: React.FC = () => {
-
-
   
-  const [invoicesData, setInvoicesData] = useOutletContext<any>();
+  const navigate = useNavigate()
+  const [quoteData, setQuoteData] = useOutletContext<any>();
 
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -26,17 +32,27 @@ const List: React.FC = () => {
   const [statusFilter, setStatusFilter] = React.useState<string>('');
   const [dateFilter, setDateFilter] = React.useState<string>('');
 
-  const [deleteInvoiceId, setDeleteInvoiceId] = React.useState<string>('');
+  const [docId, setDocId] = React.useState<string>('');
+  const [selectedData, setSelectedData] = React.useState<any>([]);
 
+ /////////////// succes notification ////////////////
 
+ const [api, contextHolder] = notification.useNotification()
+ const openNotification = () => {
+   api.open({
+     message: 'Félicitation',
+     description: 'Votre facture est enregistrée.',
+     icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
+   })
+ }
 
   React.useEffect(() => {
-    getInvoices2()
+    getQuotes()
   }, []);
 
 
   React.useEffect(() => {
-    getInvoices2()
+    getQuotes()
   }, [startPagination]);
 
 
@@ -44,34 +60,29 @@ const List: React.FC = () => {
   React.useEffect(() => {
       
     if(searchTerm === ""){
-      getInvoices2()
+      getQuotes()
       setFilteredInvoice([])
     }
     invoiceSearch()
-
-   
-  
-    
-    
   }, [searchTerm]);
+
   React.useEffect(() => {
       
     if(dateFilter === ""){
-      getInvoices2()
+      getQuotes()
       setFilteredInvoice([])
     }
     invoiceSearch()
-
-   
-  
-    
-    
   }, [dateFilter]);
 
 
+ 
+  const amountHT = _htAmount(selectedData?.detailQuote)
+  const totalTva_13 = _getTotalTva(selectedData?.detailQuote, 0.13)
+  const totalTva_16 = _getTotalTva(selectedData?.detailQuote, 0.16)
+  
 
-
-  const getInvoices2 = async () => {
+  const getQuotes = async () => {
     let { data: invoices, error } = await supabase
       .from("quotes")
       .select("*, detailQuote(*)")
@@ -79,7 +90,7 @@ const List: React.FC = () => {
       .order(sort, { ascending: asc });
 
     if (invoices) {
-      setInvoicesData(invoices)
+      setQuoteData(invoices)
       setIsLoading(false)
     }
     if (error) {
@@ -91,20 +102,20 @@ const List: React.FC = () => {
   const nextPagination = () => {
     setStartPagination(startPagination + 10)
     setEndPagination(endPagination + 10)
-    getInvoices2()
+    getQuotes()
   }
 
   const previousPagination = () => {
     if(startPagination > 1)
     setStartPagination(startPagination - 10)
     setEndPagination(endPagination - 10)
-    // getInvoices2()
+    // getQuotes()
   }
 
   const pagination = (st: any, end: any) => {
     setStartPagination(st)
     setEndPagination(end)
-    // getInvoices2()
+    // getQuotes()
   }
 
   function escapeRegExp(str: string) {
@@ -116,7 +127,7 @@ const List: React.FC = () => {
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
-        invoicesData.filter((bill: any) => {
+        quoteData.filter((bill: any) => {
           return (
             bill.name_customer?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill?.email_customer?.match(new RegExp(escapedSearchOrder, 'i'))
@@ -132,7 +143,7 @@ const List: React.FC = () => {
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
-        invoicesData.filter((bill: any) => {
+        quoteData.filter((bill: any) => {
           return (
             bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
           )
@@ -140,21 +151,130 @@ const List: React.FC = () => {
       )
     }
     return undefined
+
+
+  }
+
+
+
+  const handleCancel = async (id: any) => {
+    const { data, error } = await supabase
+      .from('quotes')
+      .update({ status: 'Annulé' })
+      .eq('id', id)
+
+    if (!error) {
+      console.log('Devis annulé')
+      getQuotes()
+    }
+
+    if (data) {
+      console.log('Devis annulé')
+    }
+
+    if (error) {
+      console.log(error)
+    }
+  }
+
+
+
+  const handleValidate = async (id: any) => {
+
+ 
+    const { data, error } = await supabase
+      .from('quotes')
+      .update({ status: 'Validé' })
+      .eq('id', id)
+
+    if (!error) {
+      console.log('Devis validé')
+      getQuotes()
+
+      const invoiceId: any = uuidv4()
+
+
+    const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
+      {
+        id: invoiceId,
+        invoiceNum: selectedData?.invoiceNum,
+        createdAt: selectedData?.createdAt,
+        status: selectedData?.status,
+        name_customer: selectedData?.name_customer,
+        email_customer: selectedData?.email_customer,
+        customer_info: {
+          name: selectedData?.customer_info.name,
+          email: selectedData?.customer_info.email,
+          phone: selectedData?.customer_info.phone,
+          avatar: selectedData?.customer_info.avatar,
+          address: selectedData?.customer_info.address,
+        },
+
+        amount_ht: selectedData?.amount_ht,
+        amount_ttc: parseInt(
+          (amountHT + totalTva_13 + totalTva_16 + amountHT * 0.01).toFixed(2)
+        ),
+      },
+    ])
+    if(dataz){
+      console.log(dataz)
+    }
+
+    if (errorz) {
+      console.log(errorz)
+    } else {
+      const promises = selectedData?.detailQuote?.map((prod: any, indx: any) => {
+        return supabase.from('detailBill').insert([
+          {
+            designation: prod.designation,
+            detailDesignation: prod.detailDesignation,
+            qty: prod.qty,
+            price: prod.price,
+            amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
+            amount_ht: prod.qty * prod.price,
+            invoice_id: invoiceId,
+            tva: prod.tva,
+          },
+        ])
+      })
+
+      try {
+        await Promise.all(promises)
+        console.log('good aussi')
+   
+        openNotification()
+
+        setTimeout(() => {
+          navigate('/list-devis')
+        }, 2500)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    }
+
+    if (data) {
+      console.log('Devis validé')
+    }
+
+    if (error) {
+      console.log(error)
+    }
   }
 
 
 
 const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, invoiceSearchByDate, statusFilter, setStatusFilter, dateFilter, setDateFilter}
-const topTableProps = {setAsc, setSort, getInvoices2, asc}
-
-
+const topTableProps = {setAsc, setSort, getQuotes, asc}
 
   return (
     <div className='row'>
+      {contextHolder}
       <div className='col-lg-12'>
         <div className='card' id='invoiceList'>
-          <HeaderList />
-          <FilterList filterListProps={filterListProps} />
+          <HeaderList title='devis' />
+          <FilterList filterListProps={filterListProps} title='DEVIS' />
           <div className='card-body'>
             <div>
               <div className='table-responsive table-card'>
@@ -170,8 +290,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                     ) : filteredInvoice.length > 0 ? (
                       filteredInvoice?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={Math.random()} bill={bill} setDeleteInvoiceId={setDeleteInvoiceId} />
-
+                          <ItemList key={Math.random()} bill={bill} setDocId={setDocId} _getDocById={_getDocById} setSelectedData={setSelectedData}  title='DEVIS'/>
                         ) : null
                       )
                       ) : (filteredInvoice.length === 0 && searchTerm.length > 2) || (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
@@ -195,9 +314,9 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                           </td>
                         </tr>
                       ) : (
-                        invoicesData?.map((bill: any) =>
+                        quoteData?.map((bill: any) =>
                           !statusFilter || statusFilter === bill.status ? (
-                            <ItemList key={Math.random()} bill={bill} setDeleteInvoiceId={setDeleteInvoiceId} />
+                            <ItemList key={Math.random()} bill={bill} setDocId={setDocId} _getDocById={_getDocById} setSelectedData={setSelectedData}  title='DEVIS'/>
 
                           ) : null
                         )
@@ -215,7 +334,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
                   {Array.from({ length: 
-                    ((invoicesData.length / 10)+1)
+                    ((quoteData.length / 10)+1)
                     })?.map((list: any, indx: any) => (
 
                         <li key={Math.random()} onClick={() => pagination(indx*10, (indx*10)+9)} >
@@ -231,7 +350,6 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                 </div>
               </div>
             </div>
-
             <div
               className='modal fade flip'
               id='deleteOrder'
@@ -239,7 +357,15 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
               aria-labelledby='deleteOrderLabel'
               aria-hidden='true'
             >
-              {/* <DeleteModal  deleteInvoiceId={deleteInvoiceId} /> */}
+              <DeleteModal  deleteDocId={docId} handleCancel={handleCancel} trigger='DEVIS'  />
+            </div>
+            <div
+              className='modal fade flip'
+              id='validate'
+              tabIndex={-1}
+              aria-hidden='true'
+            >
+              <ValidateModal  validateDocId={docId} handleValidate={handleValidate} trigger='DEVIS'  />
             </div>
           </div>
         </div>

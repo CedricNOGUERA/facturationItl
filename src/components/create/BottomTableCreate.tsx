@@ -1,5 +1,4 @@
 import React from 'react'
-import Input from '../ui/Input'
 
 const BottomTableCreate = ({bottomTableProps}: any) => {
  
