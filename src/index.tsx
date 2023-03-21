@@ -1,23 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import Detail from './pages/invoices/Detail';
-import Auth from './pages/public/Auth';
-import Create from './pages/invoices/Create';
-import List from './pages/invoices/List';
-import DashBoard from './pages/invoices/DashBoard';
-import DashBoards from './pages/quotes/DashBoard';
-import Update from './pages/invoices/Update';
-import PageTitle from './components/layout/PageTitle';
-import ForgotPassword from './pages/public/ForgotPassword';
-import UpdateQuote from './pages/quotes/UpdateQuote';
-import CreateQuote from './pages/quotes/CreateQuote';
-import DetailQuote from './pages/quotes/DetailQuote';
-
-
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import App from './App'
+import reportWebVitals from './reportWebVitals'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Detail from './pages/invoices/Detail'
+import Auth from './pages/public/Auth'
+import Create from './pages/invoices/Create'
+import List from './pages/invoices/List'
+import DashBoard from './pages/invoices/DashBoard'
+import DashBoards from './pages/quotes/DashBoard'
+import Update from './pages/invoices/Update'
+import PageTitle from './components/layout/PageTitle'
+import ForgotPassword from './pages/public/ForgotPassword'
+import UpdateQuote from './pages/quotes/UpdateQuote'
+import CreateQuote from './pages/quotes/CreateQuote'
+import DetailQuote from './pages/quotes/DetailQuote'
+import Overview from './pages/public/Overview'
 
 const router = createBrowserRouter([
   {
@@ -34,7 +33,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: ':id/invoice',
+        path: ':id/facture',
         element: (
           <>
             <PageTitle title='Factures' breadcrumb='Détails' />
@@ -46,11 +45,10 @@ const router = createBrowserRouter([
         path: 'create-invoice',
         element: (
           <>
-          <PageTitle title='Factures' breadcrumb='Création de facture' />
-        <Create />
-        </>
-        )
-        ,
+            <PageTitle title='Factures' breadcrumb='Création de facture' />
+            <Create />
+          </>
+        ),
       },
       {
         path: 'invoices-list',
@@ -58,13 +56,13 @@ const router = createBrowserRouter([
       },
 
       {
-        path: ':id/update-invoice',
-        element:(
+        path: ':id/update-facture',
+        element: (
           <>
-          <PageTitle title='Factures' breadcrumb='Modification de facture' />
-          <Update />
+            <PageTitle title='Factures' breadcrumb='Modification de facture' />
+            <Update />
           </>
-          ),
+        ),
       },
       ///////////////////devis //////////////////////////
       {
@@ -80,29 +78,28 @@ const router = createBrowserRouter([
         path: 'create-devis',
         element: (
           <>
-          <PageTitle title='Devis' breadcrumb='Création de devis' />
-        <CreateQuote />
-        </>
-        )
-        ,
+            <PageTitle title='Devis' breadcrumb='Création de devis' />
+            <CreateQuote />
+          </>
+        ),
       },
       {
-          path: '/list-devis',
-          element: (
-            <>
-              <PageTitle title='Devis' breadcrumb='Listes des devis' />
-              <DashBoards />
-            </>
-          ),
+        path: '/list-devis',
+        element: (
+          <>
+            <PageTitle title='Devis' breadcrumb='Listes des devis' />
+            <DashBoards />
+          </>
+        ),
       },
       {
-          path: ':id/update-devis',
-          element: (
-            <>
-              <PageTitle title='Devis' breadcrumb='Listes des devis' />
-              <UpdateQuote />
-            </>
-          ),
+        path: ':id/update-devis',
+        element: (
+          <>
+            <PageTitle title='Devis' breadcrumb='Listes des devis' />
+            <UpdateQuote />
+          </>
+        ),
       },
     ],
   },
@@ -116,22 +113,17 @@ const router = createBrowserRouter([
     path: '/forgot-password',
     element: <ForgotPassword />,
   },
+  {
+    path: '/:id/overview/:name',
+    element: <Overview />,
+  },
 ])
 
-
-
-
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>
-);
+)
 
-
-reportWebVitals();
-
-
+reportWebVitals()

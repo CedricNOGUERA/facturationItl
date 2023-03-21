@@ -2,12 +2,11 @@ import React from 'react'
 
 interface headerDetailProps{
   filteredInvoice: any
-  title: string
+  title: string | undefined
+  overview: boolean
 }
 
-
-
-const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title}) => {
+const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, overview}) => {
   return (
     <>
       <div className='col-lg-12'>
@@ -15,7 +14,8 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title}) => 
           <div className='row g-3'>
             <div className='col-8'>
               <img
-                src={title=== 'DEVIS' ? '../assets/images/logo-dark.png' : 'assets/images/logo-dark.png'}
+                // src={'../assets/images/logo-dark.png'}
+                src={overview ? '../../assets/images/logo-dark.png' : '../assets/images/logo-dark.png'}
                 className='card-logo card-logo-dark'
                 alt='logo dark'
                 height='50'
@@ -57,7 +57,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title}) => 
         <div className='card-body p-4 '>
           <div className='row g-3'>
             <div className='col-12 text-center'>
-              <h2 className="teko">{title}</h2>
+              <h2 className="teko text-uppercase">{title}</h2>
             </div>
             <div className='col-8'>
               <h6 className='text-muted text-uppercase fw-semibold mb-3 fs-13'>

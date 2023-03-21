@@ -21,12 +21,13 @@
                 <div className='hstack gap-2 justify-content-center remove'>
                 <button
                     className='btn btn-link link-success fw-medium text-decoration-none'
-                    id='deleteRecord-close'
+                    id='deleteInvoice-close'
                     data-bs-dismiss='modal'
+                    aria-label="close"
                 >
                     <i className='ri-close-line me-1 align-middle'></i> Fermer
                 </button>
-                <button className='btn btn-danger' id='delete-record' onClick={() => handleCancel(deleteDocId)} data-bs-dismiss='modal'>
+                <button className='btn btn-danger' aria-label="delete" id='delete-invoice' onClick={() => handleCancel(deleteDocId)} data-bs-dismiss='modal'>
                     Oui, supprime
                 </button>
                 </div>

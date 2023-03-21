@@ -8,6 +8,7 @@ import ProductItemUpdate from '../../components/update/productItemUpdate'
 import HeaderUpdate from '../../components/update/HeaderUpdate'
 import BottomTableUpdate from '../../components/update/BottomTableUpdate'
 import TableHeader from '../../components/ui/TableHeader'
+import { _getTotalTva, _htAmount } from '../../utils/function'
 
 const Update = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
@@ -48,7 +49,7 @@ const Update = () => {
 
   React.useEffect(() => {
     getInvoiceById()
-  }, [])
+  }, [params.id])
 
   React.useEffect(() => {
     setProductList(filteredInvoice?.detailBill)
@@ -57,11 +58,10 @@ const Update = () => {
 
   React.useEffect(() => {
     setHtAmount(
-      productList?.reduce((acc: any, current: any) => acc + current.price * current.qty, 0)
+      _htAmount(productList)
     )
   }, [productList])
 
-  // console.log(filteredInvoice)
 
   const openNotification = () => {
     api.open({
@@ -130,6 +130,8 @@ const Update = () => {
           avatar: avatarCustomer ? avatarCustomer : filteredInvoice?.customer_info.avatar,
           address: addressCustomer ? addressCustomer : filteredInvoice?.customer_info.address,
         },
+        name_customer: nameCustomer ? nameCustomer : filteredInvoice?.name_customer,
+        email_customer: emailCustomer ? emailCustomer : filteredInvoice?.email_customer,
         amount_ht: htAmount ? htAmount : filteredInvoice?.customer_info.amount_ht,
         amount_ttc: htAmount
           ? parseInt((htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01).toFixed(2))
@@ -212,12 +214,9 @@ const Update = () => {
     }
   }
 
-  const totalTva_13 = productList
-    ?.filter((bill: any) => Number(bill.tva) === 0.13)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-  const totalTva_16 = productList
-    ?.filter((bill: any) => Number(bill.tva) === 0.16)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
+  const totalTva_13 = _getTotalTva(productList, 0.13)
+  const totalTva_16 = _getTotalTva(productList, 0.16)
+  
 
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
@@ -272,7 +271,6 @@ const Update = () => {
               <div className='table-responsive'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
                 <TableHeader />
-                 
                   <tbody id='newlink'>
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItemUpdate
@@ -283,7 +281,6 @@ const Update = () => {
                       />
                     ))}
                   </tbody>
-                 
                   <BottomTableUpdate bottomTableProps={bottomTableProps} />
                 </table>
               </div>

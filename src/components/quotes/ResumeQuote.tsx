@@ -11,22 +11,19 @@ const ResumeQuote = () => {
     getInvoices()
   }, [quotesData])
 
-  const paidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Validé')
+  const validateQuoteTotal = globalData?.filter((bill: any) => bill.status === 'Validé')
 
-  const paidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Validé')
+  const validateQuoteAmount = validateQuoteTotal
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const unpaidInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'En cours')
+  const pendingQuoteTotal = globalData?.filter((bill: any) => bill.status === 'En cours')
 
-  const unpaidInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'En cours')
+  const pendingQuoteAmount = pendingQuoteTotal
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
-  const cancelInvoicesNumber = globalData?.filter((bill: any) => bill.status === 'Annulé')
+  const cancelQuoteTotal = globalData?.filter((bill: any) => bill.status === 'Annulé')
 
-  const cancelInvoices = globalData
-    ?.filter((bill: any) => bill.status === 'Annulé')
+  const cancelQuoteAmount = cancelQuoteTotal
     .reduce((acc: any, current: any) => acc + current.amount_ttc, 0)
 
   const getInvoices = async () => {
@@ -43,20 +40,20 @@ const ResumeQuote = () => {
   const quoteTab = [
     {
       title: 'Validés',
-      ca: paidInvoices,
-      length: paidInvoicesNumber.length,
+      ca: validateQuoteAmount,
+      length: validateQuoteTotal.length,
       image: 'ri-checkbox-line',
     },
     {
       title: 'En cours',
-      ca: unpaidInvoices,
-      length: unpaidInvoicesNumber.length,
+      ca: pendingQuoteAmount,
+      length: pendingQuoteTotal.length,
       image: 'ri-time-line',
     },
     {
       title: 'Annulés',
-      ca: cancelInvoices,
-      length: cancelInvoicesNumber.length,
+      ca: cancelQuoteAmount,
+      length: cancelQuoteTotal.length,
       image: 'ri-close-circle-line',
     },
   ]

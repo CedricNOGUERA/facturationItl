@@ -66,7 +66,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
                   style={{ height: '50px', width: '256px' }}
                 >
                   <img
-                    src='assets/images/logo-dark.png'
+                    src='/assets/images/logo-dark.png'
                     className='card-logo card-logo-dark user-profile-image img-fluid'
                     alt='logo dark'
                   />

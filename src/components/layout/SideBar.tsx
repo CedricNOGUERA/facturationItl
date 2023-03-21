@@ -3,12 +3,10 @@ import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <div className='app-menu navbar-menu'>
+    <div className='app-menu navbar-menu fade-in-navbar w3-container w3-center w3-animate-top'>
       <div className='navbar-brand-box'>
-        <a href='index.html' className='logo logo-dark'>
-          <span className='logo-sm'>
-            <img src='assets/images/logo-sm.png' alt='' height='22' />
-          </span>
+        <a aria-label="home" href='index.html' className='logo logo-dark'>
+          
           <span className='logo-lg'>
             <img src='assets/images/logo-dark.png' alt='' height='45' />
           </span>
@@ -18,6 +16,7 @@ const SideBar = () => {
           type='button'
           className='btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover'
           id='vertical-hover'
+          aria-label="app"
         >
           <i className='ri-record-circle-line'></i>
         </button>
@@ -28,6 +27,7 @@ const SideBar = () => {
           <ul className='navbar-nav' id='navbar-nav'>
             <li className='nav-item'>
               <a
+              aria-label="app"
                 className='nav-link menu-link'
                 href='#sidebarApps'
                 data-bs-toggle='collapse'

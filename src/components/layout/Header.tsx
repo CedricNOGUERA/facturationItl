@@ -14,7 +14,7 @@ const Header = () => {
   const handleShow = () => setShow(true);
 
   return (
-    <header id='page-topbar'>
+    <header id='page-topbar' className='fade-in-navbar w3-container w3-center w3-animate-top'>
        <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title className='fw-bold fs-3'>Menu</Offcanvas.Title>
@@ -59,10 +59,8 @@ const Header = () => {
         <div className='navbar-header'>
           <div className='d-flex'>
             <div className='navbar-brand-box horizontal-logo'>
-              <a href='index.html' className='logo logo-dark'>
-                <span className='logo-sm'>
-                  <img src='assets/images/logo-sm.png' alt='' height='22' />
-                </span>
+              <a href='index.html' className='logo logo-dark'aria-label="home">
+             
                 <span className='logo-lg'>
                   <img src='assets/images/logo-dark.png' alt='' height='45' />
                 </span>
@@ -70,6 +68,7 @@ const Header = () => {
             </div>
             <button
               type='button'
+              aria-label="menu"
               className='btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger'
               id='topnav-hamburger-icon'
               onClick={handleShow}
@@ -106,10 +105,10 @@ const Header = () => {
                   </div>
 
                   <div className='dropdown-item bg-transparent text-wrap'>
-                    <a href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
+                    <a aria-label="setup" href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
                       how to setup <i className='mdi mdi-magnify ms-1'></i>
                     </a>
-                    <a href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
+                    <a aria-label="button" href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
                       buttons <i className='mdi mdi-magnify ms-1'></i>
                     </a>
                   </div>
@@ -118,17 +117,17 @@ const Header = () => {
                     <h6 className='text-overflow text-muted mb-1 text-uppercase'>Pages</h6>
                   </div>
 
-                  <a href='/' className='dropdown-item notify-item'>
+                  <a aria-label="analyse" href='/' className='dropdown-item notify-item'>
                     <i className='ri-bubble-chart-line align-middle fs-18 text-muted me-2'></i>
                     <span>Analytics Dashboard</span>
                   </a>
 
-                  <a href='/' className='dropdown-item notify-item'>
+                  <a aria-label="help" href='/' className='dropdown-item notify-item'>
                     <i className='ri-lifebuoy-line align-middle fs-18 text-muted me-2'></i>
                     <span>Help Center</span>
                   </a>
 
-                  <a href='/' className='dropdown-item notify-item'>
+                  <a aria-label="account setting" href='/' className='dropdown-item notify-item'>
                     <i className='ri-user-settings-line align-middle fs-18 text-muted me-2'></i>
                     <span>My account settings</span>
                   </a>
@@ -138,7 +137,7 @@ const Header = () => {
                   </div>
 
                   <div className='notification-list'>
-                    <a href='/' className='dropdown-item notify-item py-2'>
+                    <a aria-label="avatar" href='/' className='dropdown-item notify-item py-2'>
                       <div className='d-flex'>
                         <img
                           src='assets/images/users/avatar-2.jpg'
@@ -152,7 +151,7 @@ const Header = () => {
                       </div>
                     </a>
 
-                    <a href='/' className='dropdown-item notify-item py-2'>
+                    <a aria-label="avatar xs" href='/' className='dropdown-item notify-item py-2'>
                       <div className='d-flex'>
                         <img
                           src='assets/images/users/avatar-3.jpg'
@@ -166,7 +165,7 @@ const Header = () => {
                       </div>
                     </a>
 
-                    <a href='/' className='dropdown-item notify-item py-2'>
+                    <a aria-label="avatar xs2" href='/' className='dropdown-item notify-item py-2'>
                       <div className='d-flex'>
                         <img
                           src='assets/images/users/avatar-5.jpg'
@@ -183,7 +182,7 @@ const Header = () => {
                 </div>
 
                 <div className='text-center pt-3 pb-1'>
-                  <a href='pages-search-results.html' className='btn btn-primary btn-sm'>
+                  <a aria-label="all results" href='pages-search-results.html' className='btn btn-primary btn-sm'>
                     View All Results <i className='ri-arrow-right-line ms-1'></i>
                   </a>
                 </div>
@@ -199,6 +198,7 @@ const Header = () => {
                 data-bs-toggle='dropdown'
                 aria-haspopup='true'
                 aria-expanded='false'
+                aria-label="search"
               >
                 <i className='bx bx-search fs-22'></i>
               </button>
@@ -232,6 +232,7 @@ const Header = () => {
                 data-bs-toggle='dropdown'
                 aria-haspopup='true'
                 aria-expanded='false'
+                aria-label="avatar"
               >
                 <span className='d-flex align-items-center'>
                   <img
@@ -251,12 +252,12 @@ const Header = () => {
               </button>
               <div className='dropdown-menu dropdown-menu-end'>
                 <h6 className='dropdown-header'>Welcome {dataStore.firstname} !</h6>
-                <a className='dropdown-item' href='pages-profile.html'>
+                <a aria-label="profile" className='dropdown-item' href='pages-profile.html'>
                   <i className='mdi mdi-account-circle text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle'>Profile</span>
                 </a>
                 <div className='dropdown-divider'></div>
-                <a className='dropdown-item' href='pages-profile-settings.html'>
+                <a aria-label="new" className='dropdown-item' href='pages-profile-settings.html'>
                   <span className='badge bg-soft-success text-success mt-1 float-end'>
                     New
                   </span>

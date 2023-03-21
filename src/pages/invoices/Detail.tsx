@@ -1,15 +1,23 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-
 import { useParams } from 'react-router-dom'
 import BottomTable from '../../components/detail/BottomTableDetail'
 import ButtonTable from '../../components/detail/ButtonTableDetail'
 import HeaderDetail from '../../components/detail/HeaderDetail'
 import ProductItemDetail from '../../components/detail/ProductItemDetail'
 import { supabase } from '../../utils/supabaseClient'
+import QrCodeModal from '../../components/list/QrCodeModal';
+import { _getTotalTva, _htAmount } from '../../utils/function';
+import { Modal, Spinner } from 'react-bootstrap';
+import emailjs from '@emailjs/browser';
+import SendEmailModal from '../../components/ui/SendEmailModal';
+import TableTopDetail from '../../components/ui/TableTopDetail';
+
 
 const Detail = () => {
+
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
+  const [isMail, setIsMail] = React.useState<boolean>(false)
 
 
 
@@ -17,11 +25,21 @@ const Detail = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
+  const [showSendModal, setShowSendModal] = React.useState(false);
 
+  const handleCloseSendModal = () => setShowSendModal(false);
+  const handleShowSendModal = () => setShowSendModal(true);
 
   const componentRef: any = useRef();
 
   const params = useParams()
+
+  const numInvoice = filteredInvoice?.invoiceNum
+  const qrData = `${params.id}`
+  const form: any = useRef();
+
+
 
   React.useEffect(() => {
     getInvoiceById()
@@ -46,43 +64,41 @@ const Detail = () => {
     }
   }
 
-  const htAmount = filteredInvoice?.detailBill?.reduce(
-    (acc: any, current: any) => acc + current.price * current.qty,
-    0
-  )
+  const sendEmail = (e: any) => {
+    e.preventDefault();
+    console.log(form?.current.doc_type.value)
 
-  const totalTva_13 = filteredInvoice?.detailBill
-    ?.filter((bill: any) => bill.tva === 0.13)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
-  const totalTva_16 = filteredInvoice?.detailBill
-    ?.filter((bill: any) => bill.tva === 0.16)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
+    setIsMail(true)
+    // _popUpMail()
+    
+   
+    emailjs.sendForm('invoiceitl_service', 'template_pnr0mid', form?.current, 'GivYhKQYsq1vBus6G')
+      .then((result) => {
+          console.log(form?.current?.invoice_id.value);
+          handleClose()
+          setIsMail(false)
+    //       setIsMailOk(true)
+         
+        }, (error) => {
+          console.log(error.text);
+          alert(error.text)
+          setIsMail(false)
+        });
+    //     setIsMailOk(false)
+
+  };
 
   return (
     <div className='row justify-content-center'>
       <div className='col-xxl-9 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
-            <HeaderDetail filteredInvoice={filteredInvoice} title='FACTURE' />
+            <HeaderDetail filteredInvoice={filteredInvoice} title='facture' overview={false} />
             <div className='col-lg-12'>
               <div className='card-body px-4'>
                 <div className='table-responsive'>
-                  <table className='table  table-striped table-borderless text-center table-nowrap align-middle mb-0' >
-                    <thead>
-                      <tr className='table-active'>
-                        <th scope='col' style={{ width: '50px' }}>
-                          #
-                        </th>
-                        <th scope='col'>Désignations</th>
-                        <th scope='col'>Tva</th>
-                        <th scope='col'>Prix</th>
-                        <th scope='col'>Quantité</th>
-                        <th scope='col'>Montant Tva</th>
-                        <th scope='col' className='text-end'>
-                          Montant HT
-                        </th>
-                      </tr>
-                    </thead>
+                  <table className='table  table-striped table-borderless text-center table-nowrap align-middle mb-0'>
+                  <TableTopDetail />
                     <tbody id='products-list'>
                       {filteredInvoice?.detailBill?.map((prod: any, indx: any) => (
                         <ProductItemDetail key={prod.id} prod={prod} indx={indx} />
@@ -91,16 +107,39 @@ const Detail = () => {
                   </table>
                 </div>
                 <BottomTable
-                  htAmount={htAmount}
-                  totalTva_13={totalTva_13}
-                  totalTva_16={totalTva_16}
+                  htAmount={_htAmount(filteredInvoice?.detailBill)}
+                  totalTva_13={_getTotalTva(filteredInvoice?.detailBill, 0.13)}
+                  totalTva_16={_getTotalTva(filteredInvoice?.detailBill, 0.16)}
                 />
-                <ButtonTable handlePrint={handlePrint} handleShow={handleShow} />
+                <ButtonTable
+                  handlePrint={handlePrint}
+                  handleShow={handleShow}
+                  handleShowSendModal={handleShowSendModal}
+                  title='facture'
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <SendEmailModal
+        showSendModal={showSendModal}
+        handleCloseSendModal={handleCloseSendModal}
+        form={form}
+        sendEmail={sendEmail}
+        filteredData={filteredInvoice}
+        isMail={isMail}
+        docType={'facture'}
+      />
+      <QrCodeModal
+        title='Facture'
+        numDoc={numInvoice}
+        qrData={qrData}
+        show={show}
+        handleClose={handleClose}
+        handleShow={handleShow}
+      />
     </div>
   )
 }

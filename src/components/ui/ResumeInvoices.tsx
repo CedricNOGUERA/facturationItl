@@ -72,7 +72,6 @@ const ResumeInvoices = () => {
               </div>
               <div className='flex-shrink-0'>
                 <h5 className='text-success fs-14 mb-0'>
-                  <i className='ri-arrow-right-up-line fs-13 align-middle'></i> +89.24 %
                 </h5>
               </div>
             </div>
@@ -117,7 +116,6 @@ const ResumeInvoices = () => {
                 </div>
                 <div className='flex-shrink-0'>
                   <h5 className='text-danger fs-14 mb-0'>
-                    <i className='ri-arrow-right-down-line fs-13 align-middle'></i> +8.09 %
                   </h5>
                 </div>
               </div>

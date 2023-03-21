@@ -10,10 +10,9 @@ import TopTable from "../../components/list/TopTable";
 import { _getDocById, _handleCancel } from "../../utils/function";
 
 const List: React.FC = () => {
-
-
   
   const [invoicesData, setInvoicesData] = useOutletContext<any>();
+  const [globalData, setGlobalData] = React.useState<any>([]);
 
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -34,12 +33,13 @@ const List: React.FC = () => {
 
 
   React.useEffect(() => {
-    getInvoices2()
+    getInvoices()
+    getGlobalData()
   }, []);
 
 
   React.useEffect(() => {
-    getInvoices2()
+    getInvoices()
   }, [startPagination]);
 
 
@@ -49,16 +49,14 @@ const List: React.FC = () => {
     if(searchTerm === "" && searchTerm.length === 0){
       setFilteredInvoice([])
       setStartPagination(0)
-      setEndPagination(3)
-      getInvoices2()
+      setEndPagination(9)
     }
     
     if(searchTerm.length > 0){
       setStartPagination(0)
-      setEndPagination(100)
-      getInvoices2()
+      setEndPagination(9)
+      
     }
-    
     invoiceSearch()
   
   }, [searchTerm]);
@@ -67,21 +65,34 @@ const List: React.FC = () => {
   React.useEffect(() => {
       
     if(dateFilter === ""){
-      getInvoices2()
+      setFilteredInvoice([])
+    }
+    if(statusFilter === ""){
       setFilteredInvoice([])
     }
     invoiceSearch()
-
-   
-  
-    
-    
-  }, [dateFilter]);
+  }, [dateFilter, statusFilter]);
 
 
 
 
-  const getInvoices2 = async () => {
+
+  const getGlobalData = async () => {
+    let { data: invoices, error } = await supabase
+      .from("invoices2")
+      .select("*, detailBill(*)")
+
+    if (invoices) {
+      setGlobalData(invoices)
+      setIsLoading(false)
+    }
+    if (error) {
+      console.log(error)
+      setIsLoading(true)
+    }
+  };
+
+  const getInvoices = async () => {
     let { data: invoices, error } = await supabase
       .from("invoices2")
       .select("*, detailBill(*)")
@@ -101,20 +112,17 @@ const List: React.FC = () => {
   const nextPagination = () => {
     setStartPagination(startPagination + 10)
     setEndPagination(endPagination + 10)
-    // getInvoices2()
   }
 
   const previousPagination = () => {
     if(startPagination > 1)
     setStartPagination(startPagination - 10)
     setEndPagination(endPagination - 10)
-    // getInvoices2()
   }
 
   const pagination = (st: any, end: any) => {
     setStartPagination(st)
     setEndPagination(end)
-    // getInvoices2()
   }
 
   function escapeRegExp(str: string) {
@@ -126,8 +134,9 @@ const List: React.FC = () => {
   
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
-        invoicesData.filter((bill: any) => {
+        globalData.filter((bill: any) => {
           return (
+            bill.invoiceNum?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill.name_customer?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill?.email_customer?.match(new RegExp(escapedSearchOrder, 'i'))
           )
@@ -142,7 +151,7 @@ const List: React.FC = () => {
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
-        invoicesData.filter((bill: any) => {
+        globalData.filter((bill: any) => {
           return (
             bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
           )
@@ -151,6 +160,7 @@ const List: React.FC = () => {
     }
     return undefined
   }
+
 
 
 
@@ -165,7 +175,7 @@ const List: React.FC = () => {
   
   if(!error){
     console.log('Facture annuléeeeee')
-    getInvoices2()
+    getInvoices()
   }
 
 
@@ -184,8 +194,7 @@ const List: React.FC = () => {
 
 
 const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, invoiceSearchByDate, statusFilter, setStatusFilter, dateFilter, setDateFilter}
-const topTableProps = {setAsc, setSort, getInvoices2, asc}
-
+const topTableProps = {setAsc, setSort, getInvoices, asc}
 
   return (
     <div className='row'>
@@ -251,7 +260,7 @@ const topTableProps = {setAsc, setSort, getInvoices2, asc}
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
                       {Array.from({ length: 
-                    ((invoicesData.length / 10)+1)
+                        ((globalData.length / 10)  +1)
                     })?.map((list: any, indx: any) => (
 
                         <li key={Math.random()} onClick={() => pagination(indx*10, (indx*10)+9)} >

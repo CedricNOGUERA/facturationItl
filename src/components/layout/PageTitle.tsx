@@ -15,7 +15,7 @@ const PageTitle: React.FC<pageTitleProps> = ({title, breadcrumb}) => {
         <div className="page-title-right">
           <ol className="breadcrumb m-0">
             <li className="breadcrumb-item">
-              <a href="/">{title}</a>
+              <a aria-label="path" href="/">{title}</a>
             </li>
             <li className="breadcrumb-item active">
             {breadcrumb}

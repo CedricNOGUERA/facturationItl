@@ -1,4 +1,5 @@
 import React from 'react'
+import BankAccountData from '../ui/BankAccountData'
 
 interface bottomTableProps {
   htAmount: any
@@ -11,22 +12,7 @@ const BottomTable: React.FC<bottomTableProps> = ({ htAmount, totalTva_13, totalT
     <>
       <div className='row border-top border-top-dashed mt-2 mb-5 pt-5'>
         <div className='col-6 pt-5'>
-          <table className='table table-striped' style={{ width: '350px' }}>
-            <tbody>
-              <tr>
-                <td>Compte iTahiti Lab</td>
-                <td className='text-en'></td>
-              </tr>
-              <tr>
-                <td> BANQUE:</td>
-                <td className='text-ed'> 🍀SOCREDO</td>
-              </tr>
-              <tr>
-                <td className='border-0'>IBAN:</td>
-                <td className='text-en border-0'>FR654-6478-7894-8521 25</td>
-              </tr>
-            </tbody>
-          </table>
+         <BankAccountData />
         </div>
         <div className='col-6'>
           <table
@@ -66,14 +52,14 @@ const BottomTable: React.FC<bottomTableProps> = ({ htAmount, totalTva_13, totalT
         </div>
       </div>
       <div className='mt-4'>
-        {/* <div className='alert alert-info'>
+        <div className='alert alert-info'>
           <p className='mb-0'>
-            <span className='fw-semibold'>NOTES :</span>
+            <span className='fw-semibold'>NOTES : </span>
             <span id='note'>
             Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.
             </span>
           </p>
-        </div> */}
+        </div>
       </div>
     </>
   )

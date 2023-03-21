@@ -6,12 +6,12 @@ const Footer = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-sm-6">
-          <script>document.write(new Date().getFullYear())</script> ©
+          2023 ©
           iTahiti Lab.
         </div>
         <div className="col-sm-6">
           <div className="text-sm-end d-none d-sm-block">
-            Développé avec passion  par iTL
+            Développé avec 🔥   par iTL
           </div>
         </div>
       </div>

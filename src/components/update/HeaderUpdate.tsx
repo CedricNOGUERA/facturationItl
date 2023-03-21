@@ -233,7 +233,7 @@ const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
                   <>
                     <option value='Payée'>Payée</option>
                     <option value='Impayée'>Impayée</option>
-                    <option value='Remboursement'>Remboursement</option>
+                    <option value='Annulée'>Annulée</option>
                   </>
                 )}
               </select>

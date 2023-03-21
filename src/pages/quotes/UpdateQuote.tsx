@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import ProductItemUpdate from '../../components/update/productItemUpdate'
 import HeaderUpdate from '../../components/update/HeaderUpdate'
 import BottomTableUpdate from '../../components/update/BottomTableUpdate'
+import { _getTotalTva, _htAmount } from '../../utils/function'
 
 const UpdateQuote = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
@@ -55,11 +56,8 @@ const UpdateQuote = () => {
   }, [filteredInvoice])
 
   React.useEffect(() => {
-    setHtAmount(
-      productList?.reduce((acc: any, current: any) => acc + current.price * current.qty, 0)
-    )
+    setHtAmount(_htAmount(productList))
   }, [productList])
-
 
   const openNotification = () => {
     api.open({
@@ -68,7 +66,6 @@ const UpdateQuote = () => {
       icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
     })
   }
-
 
   const getInvoiceById = async () => {
     let { data: quotes, error } = await supabase
@@ -108,7 +105,6 @@ const UpdateQuote = () => {
   }
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
-
     setProductList(newList)
   }
 
@@ -210,12 +206,8 @@ const UpdateQuote = () => {
     }
   }
 
-  const totalTva_13 = productList
-    ?.filter((bill: any) => Number(bill.tva) === 0.13)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
-  const totalTva_16 = productList
-    ?.filter((bill: any) => Number(bill.tva) === 0.16)
-    ?.reduce((acc: any, current: any) => acc + current.price * current.qty * current.tva, 0)
+  const totalTva_13 = _getTotalTva(productList, 0.13)
+  const totalTva_16 = _getTotalTva(productList, 0.16)
 
   const addQty = (qty: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
@@ -307,7 +299,7 @@ const UpdateQuote = () => {
                       />
                     ))}
                   </tbody>
-                 
+
                   <BottomTableUpdate bottomTableProps={bottomTableProps} />
                 </table>
               </div>
@@ -335,6 +327,5 @@ const UpdateQuote = () => {
     </div>
   )
 }
-
 
 export default UpdateQuote

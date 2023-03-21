@@ -19,6 +19,8 @@ const List: React.FC = () => {
   
   const navigate = useNavigate()
   const [quoteData, setQuoteData] = useOutletContext<any>();
+  const [globalData, setGlobalData] = React.useState<any>([]);
+
 
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -47,6 +49,7 @@ const List: React.FC = () => {
  }
 
   React.useEffect(() => {
+    getGlobalData()
     getQuotes()
   }, []);
 
@@ -81,6 +84,21 @@ const List: React.FC = () => {
   const totalTva_13 = _getTotalTva(selectedData?.detailQuote, 0.13)
   const totalTva_16 = _getTotalTva(selectedData?.detailQuote, 0.16)
   
+  const getGlobalData = async () => {
+    let { data: quotes, error } = await supabase
+      .from("quotes")
+      .select("*, detailQuote(*)")
+
+    if (quotes) {
+      setGlobalData(quotes)
+      setIsLoading(false)
+    }
+    if (error) {
+      console.log(error)
+      setIsLoading(true)
+    }
+  };
+
 
   const getQuotes = async () => {
     let { data: invoices, error } = await supabase
@@ -115,7 +133,6 @@ const List: React.FC = () => {
   const pagination = (st: any, end: any) => {
     setStartPagination(st)
     setEndPagination(end)
-    // getQuotes()
   }
 
   function escapeRegExp(str: string) {
@@ -127,8 +144,10 @@ const List: React.FC = () => {
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
-        quoteData.filter((bill: any) => {
+        globalData.filter((bill: any) => {
           return (
+
+            bill.invoiceNum?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill.name_customer?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill?.email_customer?.match(new RegExp(escapedSearchOrder, 'i'))
           )
@@ -143,7 +162,7 @@ const List: React.FC = () => {
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
-        quoteData.filter((bill: any) => {
+        globalData.filter((bill: any) => {
           return (
             bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
           )
@@ -199,7 +218,7 @@ const List: React.FC = () => {
         id: invoiceId,
         invoiceNum: selectedData?.invoiceNum,
         createdAt: selectedData?.createdAt,
-        status: selectedData?.status,
+        status: 'Impayée',
         name_customer: selectedData?.name_customer,
         email_customer: selectedData?.email_customer,
         customer_info: {

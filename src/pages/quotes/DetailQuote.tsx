@@ -1,71 +1,89 @@
-import React, { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import React, { useRef } from 'react'
+import { useReactToPrint } from 'react-to-print'
 import { useParams } from 'react-router-dom'
 import BottomTable from '../../components/detail/BottomTableDetail'
 import ButtonTable from '../../components/detail/ButtonTableDetail'
 import HeaderDetail from '../../components/detail/HeaderDetail'
 import ProductItemDetail from '../../components/detail/ProductItemDetail'
-import { _getQuoteById } from '../../utils/quotes/function';
-import { _getTotalTva, _htAmount } from '../../utils/function';
-import { Button, Modal } from 'react-bootstrap';
-import QrCode from '../../components/ui/QrCode';
+import { _getQuoteById } from '../../utils/quotes/function'
+import { _getTotalTva, _htAmount } from '../../utils/function'
+import QrCodeModal from '../../components/list/QrCodeModal'
+import SendEmailModal from '../../components/ui/SendEmailModal'
+import emailjs from '@emailjs/browser'
+import TableTopDetail from '../../components/ui/TableTopDetail'
 
 const DetailQuote = () => {
+  ///////States//////////
 
+  const [filteredQuote, setFilteredQuote] = React.useState<any>()
+  const componentRef: any = useRef()
+  const form: any = useRef()
 
-///////States//////////
+  const [isMail, setIsMail] = React.useState<boolean>(false)
 
-  const [filteredQuote, setFilteredInvoice] = React.useState<any>()
-  const componentRef: any = useRef();
   const params = useParams()
 
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = React.useState(false)
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
+  const [showSendModal, setShowSendModal] = React.useState(false)
 
-//////useEffect/////////
+  const handleCloseSendModal = () => setShowSendModal(false)
+  const handleShowSendModal = () => setShowSendModal(true)
+
+  //////useEffect/////////
 
   React.useEffect(() => {
-    _getQuoteById(params.id, setFilteredInvoice)
+    _getQuoteById(params.id, setFilteredQuote)
   }, [params.id])
 
+  const numQuote = filteredQuote?.invoiceNum
+  const qrData = `${params.id}`
 
-//////Events/////////
-
+  //////Events/////////
 
   const handlePrint = useReactToPrint({
     content: () => componentRef?.current,
-  });
+  })
 
+  const sendEmail = (e: any) => {
+    e.preventDefault()
+    console.log(form?.current.doc_type.value)
 
+    setIsMail(true)
+    // _popUpMail()
+
+    emailjs
+      .sendForm('invoiceitl_service', 'template_pnr0mid', form?.current, 'GivYhKQYsq1vBus6G')
+      .then(
+        (result) => {
+          console.log(form?.current?.invoice_id.value)
+          handleClose()
+          setIsMail(false)
+          //       setIsMailOk(true)
+        },
+        (error) => {
+          console.log(error.text)
+          alert(error.text)
+          setIsMail(false)
+        }
+      )
+    //     setIsMailOk(false)
+  }
 
   return (
     <div className='row justify-content-center'>
       <div className='col-xxl-9 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
-            <HeaderDetail filteredInvoice={filteredQuote} title='DEVIS' />
+            <HeaderDetail filteredInvoice={filteredQuote} title='DEVIS' overview={false} />
             <div className='col-lg-12'>
               <div className='card-body px-4'>
                 <div className='table-responsive'>
-                  <table className='table  table-striped table-borderless text-center table-nowrap align-middle mb-0' >
-                    <thead>
-                      <tr className='table-active'>
-                        <th scope='col' style={{ width: '50px' }}>
-                          #
-                        </th>
-                        <th scope='col'>Désignations</th>
-                        <th scope='col'>Tva</th>
-                        <th scope='col'>Prix</th>
-                        <th scope='col'>Quantité</th>
-                        <th scope='col'>Montant Tva</th>
-                        <th scope='col' className='text-end'>
-                          Montant HT
-                        </th>
-                      </tr>
-                    </thead>
+                  <table className='table  table-striped table-borderless text-center table-nowrap align-middle mb-0'>
+                  <TableTopDetail />
                     <tbody id='products-list'>
                       {filteredQuote?.detailQuote?.map((prod: any, indx: any) => (
                         <ProductItemDetail key={prod.id} prod={prod} indx={indx} />
@@ -78,30 +96,35 @@ const DetailQuote = () => {
                   totalTva_13={_getTotalTva(filteredQuote?.detailQuote, 0.13)}
                   totalTva_16={_getTotalTva(filteredQuote?.detailQuote, 0.16)}
                 />
-                <ButtonTable handlePrint={handlePrint} handleShow={handleShow} />
+                <ButtonTable
+                  handlePrint={handlePrint}
+                  handleShow={handleShow}
+                  handleShowSendModal={handleShowSendModal}
+                  title='devis'
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='w-75 p-5 m-auto'>
+      <SendEmailModal
+        showSendModal={showSendModal}
+        handleCloseSendModal={handleCloseSendModal}
+        form={form}
+        sendEmail={sendEmail}
+        filteredData={filteredQuote}
+        isMail={isMail}
+        docType={'devis'}
+      />
 
-         <QrCode orderNum={'http://localhost:3000/bfc48f44-4cdb-4fbb-858a-3eca595fc8a3/devis'} />
-        </Modal.Body>
-        <Modal.Footer>
-     
-          <Button variant="primary" onClick={handleClose}>Fermer</Button>
-        </Modal.Footer>
-      </Modal>
+      <QrCodeModal
+        title={'devis'}
+        numDoc={numQuote}
+        qrData={qrData}
+        show={show}
+        handleClose={handleClose}
+        handleShow={handleShow}
+      />
     </div>
   )
 }

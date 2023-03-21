@@ -24,7 +24,7 @@ const Create = () => {
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
   const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
-
+  
   const [productList, setProductList] = React.useState([
     {
       id: 1,
@@ -37,7 +37,7 @@ const Create = () => {
     },
   ])
 
-  /////////////// succes notification ////////////////
+  /////////////// success notification ////////////////
 
   const [api, contextHolder] = notification.useNotification()
   const openNotification = () => {

@@ -65,6 +65,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
         <div className='input-step'>
           <button
             type='button'
+            aria-label="Substract"
             className='minus'
             onClick={() => substQty(prod.qty, indx, 'qty')}
           >
@@ -77,7 +78,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
             onChange={(e) => handleChangeProduct(e, indx, 'qty')}
             required
           />
-          <button type='button' className='plus' onClick={() => addQty(prod.qty, indx, 'qty')}>
+          <button type='button' aria-label="Plus" className='plus' onClick={() => addQty(prod.qty, indx, 'qty')}>
             +
           </button>
         </div>
@@ -100,6 +101,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
       <td className='product-removal'>
         {productList.length > 0 && (
           <button
+          aria-label={`${prod?.id}`}
             onClick={() => {
               productList.length > 1 && handleDeleteProduct(prod.id)
             }}

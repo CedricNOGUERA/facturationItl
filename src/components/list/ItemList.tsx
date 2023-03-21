@@ -13,7 +13,7 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
 
 
   const navigate = useNavigate()
-  const linkItem = title === 'DEVIS' ? 'devis' : 'invoice'
+  const linkItem = title === 'DEVIS' ? 'devis' : 'facture'
 
   return (
     <tr>
@@ -41,7 +41,7 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
           ) : (
             <img
               src={`assets/images/users/${bill?.customer_info?.avatar}.jpg`}
-              alt=''
+              alt='avatar'
               className='avatar-xs rounded-circle me-2'
             />
           )}
@@ -68,12 +68,13 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
             type='button'
             data-bs-toggle='dropdown'
             aria-expanded='false'
+            aria-label="dropper"
           >
             <i className='ri-more-fill align-middle'></i>
           </button>
           <ul className='dropdown-menu dropdown-menu-end'>
             <li>
-              <button className='dropdown-item' data-id='25000352'>
+              <button className='dropdown-item' data-id='25000352'aria-label="drop item">
                 <Link to={`/${bill.id}/${linkItem}`}>
                   <i className='ri-eye-fill align-bottom me-2 text-muted'></i>
                   Détail
@@ -81,7 +82,7 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
               </button>
             </li>
             <li>
-              <button className='dropdown-item' data-id='25000351'>
+              <button className='dropdown-item' data-id='25000351' aria-label="drop item">
                 <Link to={`/${bill.id}/update-${linkItem}`}>
                   <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
                   Modifier
@@ -89,11 +90,12 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
               </button>
             </li>
             <li className='dropdown-divider' ></li>
-            {title === 'DEVIS' && (
+            {title === 'DEVIS' && bill?.status !== 'Validé' && (
               <li onClick={() => {
-                _getDocById(bill.id, setSelectedData)
+                // _getDocById(bill.id, setSelectedData)
                 setDocId(bill.id)}}>
                 <a
+                aria-label="dropper"
                 className='dropdown-item remove-item-btn'
                 data-bs-toggle='modal'
                 href='#validate'
@@ -103,16 +105,20 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
                 </a>
               </li>
             )}
-            <li onClick={() => setDocId(bill.id)}>
-              <a
-                className='dropdown-item remove-item-btn'
-                data-bs-toggle='modal'
-                href='#deleteOrder'
+            {(bill?.status !== 'Annulée' && bill?.status !== 'Annulé') && (
+
+              <li onClick={() => setDocId(bill.id)} >
+              <Link
+              aria-label="drop"
+              className='dropdown-item remove-item-btn'
+              data-bs-toggle='modal'
+              to='#deleteOrder'
               >
                 <i className='ri-close-line align-bottom me-2 text-danger fs-5 m-auto'></i>
                 Annuler
-              </a>
+              </Link>
             </li>
+                )}
           </ul>
         </div>
       </td>
