@@ -35,7 +35,7 @@ const SideBar = () => {
                 aria-expanded='false'
                 aria-controls='sidebarApps'
               >
-                <i className='ri-apps-2-line'></i> <span data-key='t-apps'>Menuu</span>
+                <i className='ri-apps-2-line'></i> <span data-key='t-apps'>Menu</span>
               </a>
               <div className='collapse menu-dropdown' id='sidebarApps'>
                 <ul className='nav nav-sm flex-column'>
