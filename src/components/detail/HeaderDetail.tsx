@@ -9,12 +9,11 @@ interface headerDetailProps{
 const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, overview}) => {
   return (
     <>
-      <div className='col-lg-12'>
+      <div className='col-lg-12 col-sm-12'>
         <div className='card-header border-bottom-dashed'>
           <div className='row g-3'>
-            <div className='col-8'>
+            <div className='col-md-8'>
               <img
-                // src={'../assets/images/logo-dark.png'}
                 src={overview ? '../../assets/images/logo-dark.png' : '../assets/images/logo-dark.png'}
                 className='card-logo card-logo-dark'
                 alt='logo dark'
@@ -30,7 +29,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
                 </p>
               </div>
             </div>
-            <div className='col-4'>
+            <div className='col-md-4'>
               <h6>
                 <span className='text-muted fw-normal'>N°Tahiti : </span>
                 <span id='legal-register-no' style={{ fontSize: '0.8rem' }}>
@@ -59,7 +58,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
             <div className='col-12 text-center'>
               <h2 className="teko text-uppercase">{title}</h2>
             </div>
-            <div className='col-8'>
+            <div className='col-md-8 col-6'>
               <h6 className='text-muted text-uppercase fw-semibold mb-3 fs-13'>
                 A l'attention de
               </h6>
@@ -71,7 +70,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
               </p>
             </div>
 
-            <div className='col-4'>
+            <div className='col-md-4 col-6'>
               <p className='fw-medium mb-2' id='shipping-name'>
                 <span className=' text-muted'>
                   @ :{' '}

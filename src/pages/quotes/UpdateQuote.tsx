@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import ProductItemUpdate from '../../components/update/productItemUpdate'
 import HeaderUpdate from '../../components/update/HeaderUpdate'
 import BottomTableUpdate from '../../components/update/BottomTableUpdate'
-import { _getTotalTva, _htAmount } from '../../utils/function'
+import { _addItem, _deleteItem, _getTotalTva, _htAmount, _updateQty } from '../../utils/function'
 
 const UpdateQuote = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
@@ -22,6 +22,9 @@ const UpdateQuote = () => {
   const [noteInvoice, setNoteInvoice] = React.useState<string>(
     "Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé."
   )
+  const [unique, setUnique] = React.useState<any>([]);
+
+
   const [date, setDate] = React.useState<string>('')
 
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
@@ -105,7 +108,11 @@ const UpdateQuote = () => {
   }
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
+    const tab= [...unique]
+
+    tab.push(id)
     setProductList(newList)
+    setUnique(tab)
   }
 
   const handleUpdateInvoice = async (e: any) => {
@@ -124,6 +131,8 @@ const UpdateQuote = () => {
           avatar: avatarCustomer ? avatarCustomer : filteredInvoice?.customer_info.avatar,
           address: addressCustomer ? addressCustomer : filteredInvoice?.customer_info.address,
         },
+        name_customer: nameCustomer ? nameCustomer : filteredInvoice?.name_customer,
+        email_customer: emailCustomer ? emailCustomer : filteredInvoice?.email_customer,
         amount_ht: htAmount ? htAmount : filteredInvoice?.customer_info.amount_ht,
         amount_ttc: htAmount
           ? parseInt((htAmount + totalTva_13 + totalTva_16 + htAmount * 0.01).toFixed(2))
@@ -131,6 +140,7 @@ const UpdateQuote = () => {
       })
       .eq('id', params?.id)
 
+    
     const promises = productList?.map((prod: any, indx: any) => {
       return supabase
         .from('detailQuote')
@@ -166,62 +176,39 @@ const UpdateQuote = () => {
       console.log(error)
     }
 
+    ////insert/add new prod in list
     if (productList?.length - initProductList?.length > 0) {
       const newData = productList?.slice(initProductList?.length, productList?.length)
 
-      console.log(newData)
 
-      const promises = newData?.map((prod: any, indx: any) => {
-        return supabase.from('detailQuote').insert([
-          {
-            designation: prod.designation,
-            detailDesignation: prod.detailDesignation,
-            qty: prod.qty,
-            price: prod.price,
-            amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
-            amount_ht: prod.qty * prod.price,
-            invoice_id: filteredInvoice.id,
-            tva: prod.tva,
-          },
-        ])
-      })
+      _addItem(newData, filteredInvoice, navigate, 'detailQuote')
 
-      try {
-        await Promise.all(promises)
-        console.log('good aussi')
-        setInvoiceNum('')
-        setInvoiceCreatedAt('')
-        setStatus('')
-        setNameCustomer('')
-        setEmailCustomer('')
-        setPhoneCustomer('')
-        setAvatarCustomer('')
-        setAddressCustomer('')
-        setTimeout(() => {
-          navigate('/list-devis')
-        }, 2500)
-      } catch (error) {
-        console.log(error)
-      }
     }
+
+      ///When delete prod in list
+      if (unique && unique.length > 0) {
+
+      _deleteItem(unique, navigate, 'detailQuote')
+
+      }
   }
 
   const totalTva_13 = _getTotalTva(productList, 0.13)
   const totalTva_16 = _getTotalTva(productList, 0.16)
 
+
+
   const addQty = (qty: any, indx: any, key: any) => {
-    const newProduits: any = [...productList]
-    newProduits[indx][key] = qty + 1
-    setProductList(newProduits)
+    _updateQty(1, indx, key, productList, setProductList)
   }
 
   const substQty = (qty: any, indx: any, key: any) => {
     if (qty > 1) {
-      const newProduits: any = [...productList]
-      newProduits[indx][key] = qty - 1
-      setProductList(newProduits)
+      _updateQty(-1, indx, key, productList, setProductList)
     }
   }
+
+
 
   const headerUpdateProps = {
     nameCustomer,

@@ -10,11 +10,11 @@ interface bottomTableProps {
 const BottomTable: React.FC<bottomTableProps> = ({ htAmount, totalTva_13, totalTva_16 }) => {
   return (
     <>
-      <div className='row border-top border-top-dashed mt-2 mb-5 pt-5'>
-        <div className='col-6 pt-5'>
+      <div className='row bottom-doc border-top border-top-dashed mt-2 mb-5 pt-5'>
+        <div className='col-md-6 col-sm-12 pt-5'>
          <BankAccountData />
         </div>
-        <div className='col-6'>
+        <div className='col-lg-6 col-md-6 col-sm-12'>
           <table
             className='table table-borderless table-nowrap align-middle mb-0 ms-auto'
             style={{ width: '250px' }}
@@ -51,8 +51,8 @@ const BottomTable: React.FC<bottomTableProps> = ({ htAmount, totalTva_13, totalT
           </table>
         </div>
       </div>
-      <div className='mt-4'>
-        <div className='alert alert-info'>
+      <div className='note mt-4 bottom-relative d-none d-print-block'>
+        <div className='alert alert-info bottom-fix'>
           <p className='mb-0'>
             <span className='fw-semibold'>NOTES : </span>
             <span id='note'>

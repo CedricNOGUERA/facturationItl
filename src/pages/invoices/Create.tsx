@@ -8,7 +8,7 @@ import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { _getTotalTva, _htAmount } from '../../utils/function'
+import { _getTotalTva, _htAmount, _updateQty } from '../../utils/function'
 import TableHeader from '../../components/ui/TableHeader'
 
 const Create = () => {
@@ -153,19 +153,19 @@ const Create = () => {
   const totalTva_13 = _getTotalTva(productList, 0.13)
   const totalTva_16 = _getTotalTva(productList, 0.16)
   
+  
   const addQty = (qty: any, indx: any, key: any) => {
-    const newProduits: any = [...productList]
-    newProduits[indx][key] = qty + 1
-    setProductList(newProduits)
+
+    _updateQty(1, indx, key, productList, setProductList)
+
   }
 
   const substQty = (qty: any, indx: any, key: any) => {
     if (qty > 1) {
-      const newProduits: any = [...productList]
-      newProduits[indx][key] = qty - 1
-      setProductList(newProduits)
+      _updateQty(-1, indx, key, productList, setProductList)
     }
   }
+
 
   
   const headerProps = {

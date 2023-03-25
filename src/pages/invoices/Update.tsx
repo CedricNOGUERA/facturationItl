@@ -8,7 +8,7 @@ import ProductItemUpdate from '../../components/update/productItemUpdate'
 import HeaderUpdate from '../../components/update/HeaderUpdate'
 import BottomTableUpdate from '../../components/update/BottomTableUpdate'
 import TableHeader from '../../components/ui/TableHeader'
-import { _getTotalTva, _htAmount } from '../../utils/function'
+import { _addItem, _deleteItem, _getTotalTva, _htAmount, _updateQty } from '../../utils/function'
 
 const Update = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
@@ -23,6 +23,8 @@ const Update = () => {
   const [noteInvoice, setNoteInvoice] = React.useState<string>(
     "Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé."
   )
+  const [unique, setUnique] = React.useState<any>([]);
+
   const [date, setDate] = React.useState<string>('')
 
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
@@ -110,13 +112,18 @@ const Update = () => {
   }
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
+    const tab= [...unique]
 
+    tab.push(id)
     setProductList(newList)
+    setUnique(tab)
+
   }
 
   const handleUpdateInvoice = async (e: any) => {
     e.preventDefault()
 
+    /////Update header invoice data
     const { data, error } = await supabase
       .from('invoices2')
       .update({
@@ -139,6 +146,8 @@ const Update = () => {
       })
       .eq('id', params?.id)
 
+
+      /////Update prod existing in list
     const promises = productList?.map((prod: any, indx: any) => {
       return supabase
         .from('detailBill')
@@ -174,44 +183,22 @@ const Update = () => {
       console.log(error)
     }
 
+    //When add new prod
     if (productList?.length - initProductList?.length > 0) {
       const newData = productList?.slice(initProductList?.length, productList?.length)
 
       console.log(newData)
+       _addItem(newData, filteredInvoice, navigate, 'detailBill')
 
-      const promises = newData?.map((prod: any, indx: any) => {
-        return supabase.from('detailBill').insert([
-          {
-            designation: prod.designation,
-            detailDesignation: prod.detailDesignation,
-            qty: prod.qty,
-            price: prod.price,
-            amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
-            amount_ht: prod.qty * prod.price,
-            invoice_id: filteredInvoice.id,
-            tva: prod.tva,
-          },
-        ])
-      })
-
-      try {
-        await Promise.all(promises)
-        console.log('good aussi')
-        setInvoiceNum('')
-        setInvoiceCreatedAt('')
-        setStatus('')
-        setNameCustomer('')
-        setEmailCustomer('')
-        setPhoneCustomer('')
-        setAvatarCustomer('')
-        setAddressCustomer('')
-        setTimeout(() => {
-          navigate('/')
-        }, 2500)
-      } catch (error) {
-        console.log(error)
-      }
+    
     }
+      ///When delete prod in list
+    if (unique && unique.length > 0) {
+
+      _deleteItem(unique, navigate, 'detailBill')
+
+    }
+
   }
 
   const totalTva_13 = _getTotalTva(productList, 0.13)
@@ -219,16 +206,14 @@ const Update = () => {
   
 
   const addQty = (qty: any, indx: any, key: any) => {
-    const newProduits: any = [...productList]
-    newProduits[indx][key] = qty + 1
-    setProductList(newProduits)
+
+    _updateQty(1, indx, key, productList, setProductList)
+
   }
 
   const substQty = (qty: any, indx: any, key: any) => {
     if (qty > 1) {
-      const newProduits: any = [...productList]
-      newProduits[indx][key] = qty - 1
-      setProductList(newProduits)
+      _updateQty(-1, indx, key, productList, setProductList)
     }
   }
 
@@ -259,6 +244,9 @@ const Update = () => {
     addQty,
   }
   const bottomTableProps = { handleAddProduct, htAmount, totalTva_13, totalTva_16 }
+  
+
+
 
   return (
     <div className='row justify-content-center'>
@@ -305,6 +293,7 @@ const Update = () => {
           </form>
         </div>
       </div>
+
     </div>
   )
 }

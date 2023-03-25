@@ -20,6 +20,24 @@
     font-family: 'Bowlby One SC';
   }
   .teko{
-
+    letter-spacing: 0.11rem;
     font-family: 'teko';
   }
+
+  .item-list:hover{
+    background-color: #ecf2f3;
+    cursor: pointer;
+  }
+
+
+
+
+
+
+
+  @media (max-width: 769px) { 
+
+    .footer-auth{
+      font-size: smaller;
+    }
+ }

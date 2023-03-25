@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import BottomTable from '../../components/detail/BottomTableDetail'
 import ButtonTable from '../../components/detail/ButtonTableDetail'
 import HeaderDetail from '../../components/detail/HeaderDetail'
@@ -22,6 +22,7 @@ const DetailQuote = () => {
   const [isMail, setIsMail] = React.useState<boolean>(false)
 
   const params = useParams()
+  const navigate = useNavigate()
 
   const [show, setShow] = React.useState(false)
 
@@ -62,7 +63,7 @@ const DetailQuote = () => {
           console.log(form?.current?.invoice_id.value)
           handleClose()
           setIsMail(false)
-          //       setIsMailOk(true)
+          navigate('/list-devis')
         },
         (error) => {
           console.log(error.text)

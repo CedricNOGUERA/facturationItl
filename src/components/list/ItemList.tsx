@@ -16,7 +16,7 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
   const linkItem = title === 'DEVIS' ? 'devis' : 'facture'
 
   return (
-    <tr>
+    <tr className="item-list">
       <th scope='row'>
         <div className='form-check'>
           <input

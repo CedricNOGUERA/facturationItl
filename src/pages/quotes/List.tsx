@@ -353,7 +353,7 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
                   {Array.from({ length: 
-                    ((quoteData.length / 10)+1)
+                    ((globalData.length / 10)+1)
                     })?.map((list: any, indx: any) => (
 
                         <li key={Math.random()} onClick={() => pagination(indx*10, (indx*10)+9)} >
@@ -363,9 +363,21 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                  
 
                   </ul>
-                  <span className='page-item pagination-next' onClick={nextPagination}>
+                  {globalData.length > 10 ? 
+                  <span className='page-item pagination-next'
+                  
+                   onClick={nextPagination}
+                  
+                   >
                     Suivant
                   </span>
+                   :
+                    
+                    <span className='page-item pagination-next disabled'
+                   >
+                    Suivant
+                  </span> 
+                  }
                 </div>
               </div>
             </div>

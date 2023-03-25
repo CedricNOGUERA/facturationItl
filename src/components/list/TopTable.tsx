@@ -1,6 +1,6 @@
 
 const TopTable = ({ topTableProps }: any) => {
-  const { setAsc, setSort, getInvoices2, asc } = topTableProps
+  const { setAsc, setSort, getInvoices, asc } = topTableProps
 
   return (
     <thead className='text-muted'>
@@ -16,7 +16,7 @@ const TopTable = ({ topTableProps }: any) => {
           onClick={() => {
             setAsc(!asc)
             setSort('invoiceNum')
-            getInvoices2()
+            getInvoices()
           }}
         >
           N° Facture
@@ -27,7 +27,7 @@ const TopTable = ({ topTableProps }: any) => {
           onClick={() => {
             setAsc(!asc)
             setSort('name_customer')
-            getInvoices2()
+            getInvoices()
           }}
         >
           Client
@@ -38,7 +38,7 @@ const TopTable = ({ topTableProps }: any) => {
           onClick={() => {
             setAsc(!asc)
             setSort('email_customer')
-            getInvoices2()
+            getInvoices()
           }}
         >
           Email
@@ -50,7 +50,7 @@ const TopTable = ({ topTableProps }: any) => {
           onClick={() => {
             setAsc(!asc)
             setSort('created_at')
-            getInvoices2()
+            getInvoices()
           }}
         >
           Date
@@ -61,7 +61,7 @@ const TopTable = ({ topTableProps }: any) => {
           onClick={() => {
             setAsc(!asc)
             setSort('amount_ttc')
-            getInvoices2()
+            getInvoices()
           }}
         >
           Montant
@@ -72,7 +72,7 @@ const TopTable = ({ topTableProps }: any) => {
           onClick={() => {
             setAsc(!asc)
             setSort('status')
-            getInvoices2()
+            getInvoices()
           }}
         >
           Status

@@ -30,7 +30,7 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps, title }) => {
               <input
                 type='text'
                 className='form-control search bg-light border-light'
-                placeholder='Recherchez un client, un e-mail, un statut ou quelque chose...'
+                placeholder='Recherchez un document, par n°, un nom ou e-mail...'
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.currentTarget.value)

@@ -5,6 +5,7 @@ import BottomTable from '../../components/detail/BottomTableDetail';
 import ButtonTableDetail from '../../components/detail/ButtonTableDetail';
 import HeaderDetail from '../../components/detail/HeaderDetail';
 import ProductItemDetail from '../../components/detail/ProductItemDetail';
+import PrintModal from '../../components/ui/PrintModal';
 import TableTopDetail from '../../components/ui/TableTopDetail';
 import { _getTotalTva, _htAmount } from '../../utils/function';
 import { _getInvoiceById, _getQuoteById } from '../../utils/quotes/function';
@@ -20,6 +21,15 @@ const Overview = () => {
     content: () => componentRef?.current,
   });
   const dataFile = params.name === 'devis' ? filteredData?.detailQuote :  filteredData?.detailBill
+
+
+  const [showPrintModal, setShowPrintModal] = React.useState(false);
+
+  const handleClosePrintModal = () => setShowPrintModal(false);
+  const handleShowPrintModal = () => setShowPrintModal(true);
+
+
+
 
 
     //////useEffect/////////
@@ -41,8 +51,8 @@ const Overview = () => {
 
 
   return (
-    <div className='row justify-content-center my-5'>
-      <div className='col-xxl-9 '>
+    <div className='row justify-content-center my-lg-5 px-lg-5 my-md-3 px-md-3 px-xs-5 m-auto'>
+      <div className='col-xxl-9 col-xs-12 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
             <HeaderDetail
@@ -67,12 +77,16 @@ const Overview = () => {
                   totalTva_13={_getTotalTva(dataFile, 0.13)}
                   totalTva_16={_getTotalTva(dataFile, 0.16)}
                 />
-                <ButtonTableDetail handlePrint={handlePrint} handleShow='' handleShowSendModal='' title='overview' />
+                <ButtonTableDetail handlePrint={handleShowPrintModal} handleShow='' handleShowSendModal='' title='overview' />
               </div>
             </div>
           </div>
         </div>
       </div>
+      <PrintModal show={showPrintModal} handleClose={handleClosePrintModal}
+                  handlePrint={handlePrint}
+                  />
+
     </div>
   )
 }

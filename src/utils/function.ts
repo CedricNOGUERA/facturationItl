@@ -90,4 +90,73 @@ import { supabase } from "./supabaseClient";
 
   }
 
+  export const _updateQty = (qtyModifier: number, indx: number, key: string, productList: any, setProductList: any) => {
+    const newProduits: any = [...productList]
+    newProduits[indx][key] += qtyModifier
+    setProductList(newProduits)
+  }
 
+
+
+  export const _updateItem = (productList: any, db: any) =>{
+    productList?.map((prod: any, indx: any) => {
+      return supabase
+        .from(db)
+        .update({
+          designation: prod.designation,
+          detailDesignation: prod.detailDesignation,
+          qty: prod.qty,
+          price: prod.price,
+          tva: parseFloat(prod.tva),
+          amount_ttc: parseInt(
+            (prod.qty * prod.price * (1 + parseFloat(prod.tva) + 0.01)).toFixed(2)
+          ),
+          amount_ht: prod.qty * prod.price,
+        })
+        .eq('id', prod.id)
+    })
+  }
+
+  export const _addItem = async(newData: any, filteredInvoice: any, navigate: any, db: any ) => {
+    const promises = newData?.map((prod: any, indx: any) => {
+      return supabase.from(db).insert([
+        {
+          designation: prod.designation,
+          detailDesignation: prod.detailDesignation,
+          qty: prod.qty,
+          price: prod.price,
+          amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
+          amount_ht: prod.qty * prod.price,
+          invoice_id: filteredInvoice.id,
+          tva: prod.tva,
+        },
+      ])
+    })
+    try {
+      await Promise.all(promises)
+      setTimeout(() => {
+        navigate('/')
+      }, 2500)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+export const _deleteItem = async(unique: any, navigate: any, db: any) => {
+
+ const promises = unique?.map((prodId: any) => {
+    return supabase
+    .from(db)
+    .delete()
+    .eq('id', prodId)
+  })
+
+  try {
+  await Promise.all(promises)
+  setTimeout(() => {
+    navigate('/')
+  }, 2500)
+} catch (error) {
+  console.log(error)
+}
+}

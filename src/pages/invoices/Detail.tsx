@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import BottomTable from '../../components/detail/BottomTableDetail'
 import ButtonTable from '../../components/detail/ButtonTableDetail'
 import HeaderDetail from '../../components/detail/HeaderDetail'
@@ -8,10 +8,10 @@ import ProductItemDetail from '../../components/detail/ProductItemDetail'
 import { supabase } from '../../utils/supabaseClient'
 import QrCodeModal from '../../components/list/QrCodeModal';
 import { _getTotalTva, _htAmount } from '../../utils/function';
-import { Modal, Spinner } from 'react-bootstrap';
 import emailjs from '@emailjs/browser';
 import SendEmailModal from '../../components/ui/SendEmailModal';
 import TableTopDetail from '../../components/ui/TableTopDetail';
+import PrintModal from '../../components/ui/PrintModal';
 
 
 const Detail = () => {
@@ -31,9 +31,19 @@ const Detail = () => {
   const handleCloseSendModal = () => setShowSendModal(false);
   const handleShowSendModal = () => setShowSendModal(true);
 
+  const [showPrintModal, setShowPrintModal] = React.useState(false);
+
+  const handleClosePrintModal = () => setShowPrintModal(false);
+  const handleShowPrintModal = () => setShowPrintModal(true);
+
   const componentRef: any = useRef();
 
+
   const params = useParams()
+
+  const navigate = useNavigate()
+
+  
 
   const numInvoice = filteredInvoice?.invoiceNum
   const qrData = `${params.id}`
@@ -46,6 +56,7 @@ const Detail = () => {
   }, [])
 
   const handlePrint = useReactToPrint({
+    
     content: () => componentRef?.current,
   });
 
@@ -77,6 +88,7 @@ const Detail = () => {
           console.log(form?.current?.invoice_id.value);
           handleClose()
           setIsMail(false)
+          navigate('/')
     //       setIsMailOk(true)
          
         }, (error) => {
@@ -112,7 +124,7 @@ const Detail = () => {
                   totalTva_16={_getTotalTva(filteredInvoice?.detailBill, 0.16)}
                 />
                 <ButtonTable
-                  handlePrint={handlePrint}
+                  handlePrint={handleShowPrintModal}
                   handleShow={handleShow}
                   handleShowSendModal={handleShowSendModal}
                   title='facture'
@@ -122,6 +134,10 @@ const Detail = () => {
           </div>
         </div>
       </div>
+
+      <PrintModal show={showPrintModal} handleClose={handleClosePrintModal}
+                  handlePrint={handlePrint}
+                  />
 
       <SendEmailModal
         showSendModal={showSendModal}

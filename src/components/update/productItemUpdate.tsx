@@ -3,6 +3,7 @@ import React from 'react'
 const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
   const { productList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
     productItemProps
+    
 
   return (
     <tr id={prod?.id} key={prod?.id} className='product'>
@@ -21,8 +22,11 @@ const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
          
         <textarea
           className='form-control bg-light border-0'
-          value={prod?.detailDesignation ? prod?.detailDesignation : "Détail"}
-          onChange={(e) => handleChangeProduct(e, indx, 'detailDesignation')}
+          value={prod?.detailDesignation}
+          onChange={
+            (e) => handleChangeProduct(e, indx, 'detailDesignation')
+          }
+
         />
       </td>
       <td>

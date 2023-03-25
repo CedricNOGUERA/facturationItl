@@ -53,10 +53,10 @@ const Auth = () => {
   }
 
   return (
-    <div className='auth-page-wrapper pt-5'>
+    <div className='auth-page-wrapper pt-lg-5'>
       {isLogged && <Navigate to='/' />}
       <BgAuth />
-      <div className='auth-page-content mt-lg-5'>
+      <div className='auth-page-content mt-lg-2 mt-3'>
         <div className='container'>
           <HeaderAuth />
           <div className='row justify-content-center'>
@@ -132,7 +132,6 @@ const Auth = () => {
                           </p>
                         </>
                       )}
-
                       <div className='form-check'>
                         <input
                           className='form-check-input'
@@ -144,8 +143,7 @@ const Auth = () => {
                           Se souvenir de moi.
                         </label>
                       </div>
-
-                      <ButtonAuth text={"S'identifier"} />
+                      <ButtonAuth text={"S'identifier"} icon="ri-login-circle-line" />
                     </form>
                   </div>
                 </div>

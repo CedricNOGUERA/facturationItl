@@ -7,11 +7,12 @@ const FooterAuth = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="text-center">
-                <p className="mb-0 text-muted">
+                <p className="footer-auth mb-0 text-muted">
                   &copy;
                   2023 {' '}
-                  Invoice Manager. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger"></i> by ITL
+                  Invoice Manager. Développé avec{" "}
+                  🔥
+                  par ITL
                 </p>
               </div>
             </div>

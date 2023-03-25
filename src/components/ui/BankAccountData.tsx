@@ -2,7 +2,7 @@ import React from 'react'
 
 const BankAccountData = () => {
   return (
-    <table className='table table-striped' style={{ width: '350px' }}>
+    <table className='table table-striped banx-info' >
             <tbody>
               <tr>
                 <td>Compte iTahiti Lab</td>

@@ -7,11 +7,11 @@ const Footer = () => {
       <div className="row">
         <div className="col-sm-6">
           2023 ©
-          iTahiti Lab.
+          Invoice Manager.
         </div>
         <div className="col-sm-6">
           <div className="text-sm-end d-none d-sm-block">
-            Développé avec 🔥   par iTL
+            Développé avec 🔥  par iTL
           </div>
         </div>
       </div>

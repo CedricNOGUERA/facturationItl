@@ -1,86 +1,64 @@
-import React from "react";
-import { useOutletContext } from "react-router-dom";
-import { supabase } from "../../utils/supabaseClient";
-import HeaderList from "../../components/list/HeaderList";
-import DeleteModal from "../../components/list/DeleteModal";
-import FilterList from "../../components/list/FilterList";
-import ItemList from "../../components/list/ItemList";
-import { Spinner } from "react-bootstrap";
-import TopTable from "../../components/list/TopTable";
-import { _getDocById, _handleCancel } from "../../utils/function";
+import React from 'react'
+import { useOutletContext } from 'react-router-dom'
+import { supabase } from '../../utils/supabaseClient'
+import HeaderList from '../../components/list/HeaderList'
+import DeleteModal from '../../components/list/DeleteModal'
+import FilterList from '../../components/list/FilterList'
+import ItemList from '../../components/list/ItemList'
+import { Spinner } from 'react-bootstrap'
+import TopTable from '../../components/list/TopTable'
+import { _getDocById, _handleCancel } from '../../utils/function'
 
 const List: React.FC = () => {
-  
-  const [invoicesData, setInvoicesData] = useOutletContext<any>();
-  const [globalData, setGlobalData] = React.useState<any>([]);
+  const [invoicesData, setInvoicesData] = useOutletContext<any>()
+  const [globalData, setGlobalData] = React.useState<any>([])
 
-  const [filteredInvoice, setFilteredInvoice] = React.useState<any>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [filteredInvoice, setFilteredInvoice] = React.useState<any>([])
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
 
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [sort, setSort] = React.useState<string>("createdAt");
-  const [asc, setAsc] = React.useState<boolean>(false);
-  const [startPagination, setStartPagination] = React.useState<number>(0);
-  const [endPagination, setEndPagination] = React.useState<number>(9);
-  
-  const [statusFilter, setStatusFilter] = React.useState<string>('');
-  const [dateFilter, setDateFilter] = React.useState<string>('');
-  
-  const [docId, setDocId] = React.useState<string>('');
-  const [selectedData, setSelectedData] = React.useState<any>([]);
-  
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [sort, setSort] = React.useState<string>('createdAt')
+  const [asc, setAsc] = React.useState<boolean>(false)
+  const [startPagination, setStartPagination] = React.useState<number>(0)
+  const [endPagination, setEndPagination] = React.useState<number>(9)
 
+  const [statusFilter, setStatusFilter] = React.useState<string>('')
+  const [dateFilter, setDateFilter] = React.useState<string>('')
 
+  const [docId, setDocId] = React.useState<string>('')
+  const [selectedData, setSelectedData] = React.useState<any>([])
 
   React.useEffect(() => {
     getInvoices()
     getGlobalData()
-  }, []);
-
+  }, [])
 
   React.useEffect(() => {
     getInvoices()
-  }, [startPagination]);
-
-
+  }, [startPagination])
 
   React.useEffect(() => {
-      
-    if(searchTerm === "" && searchTerm.length === 0){
+    if (searchTerm === '' && searchTerm.length === 0) {
       setFilteredInvoice([])
       setStartPagination(0)
       setEndPagination(9)
     }
-    
-    if(searchTerm.length > 0){
+
+    if (searchTerm.length > 0) {
       setStartPagination(0)
       setEndPagination(9)
-      
     }
-    invoiceSearch()
-  
-  }, [searchTerm]);
-
-
-  React.useEffect(() => {
-      
-    if(dateFilter === ""){
+    if (dateFilter === '') {
       setFilteredInvoice([])
     }
-    if(statusFilter === ""){
+    if (statusFilter === '') {
       setFilteredInvoice([])
     }
     invoiceSearch()
-  }, [dateFilter, statusFilter]);
-
-
-
-
+  }, [searchTerm, dateFilter, statusFilter])
 
   const getGlobalData = async () => {
-    let { data: invoices, error } = await supabase
-      .from("invoices2")
-      .select("*, detailBill(*)")
+    let { data: invoices, error } = await supabase.from('invoices2').select('*, detailBill(*)')
 
     if (invoices) {
       setGlobalData(invoices)
@@ -90,14 +68,14 @@ const List: React.FC = () => {
       console.log(error)
       setIsLoading(true)
     }
-  };
+  }
 
   const getInvoices = async () => {
     let { data: invoices, error } = await supabase
-      .from("invoices2")
-      .select("*, detailBill(*)")
+      .from('invoices2')
+      .select('*, detailBill(*)')
       .range(startPagination, endPagination)
-      .order(sort, { ascending: asc });
+      .order(sort, { ascending: asc })
 
     if (invoices) {
       setInvoicesData(invoices)
@@ -107,7 +85,7 @@ const List: React.FC = () => {
       console.log(error)
       setIsLoading(true)
     }
-  };
+  }
 
   const nextPagination = () => {
     setStartPagination(startPagination + 10)
@@ -115,8 +93,7 @@ const List: React.FC = () => {
   }
 
   const previousPagination = () => {
-    if(startPagination > 1)
-    setStartPagination(startPagination - 10)
+    if (startPagination > 1) setStartPagination(startPagination - 10)
     setEndPagination(endPagination - 10)
   }
 
@@ -126,12 +103,12 @@ const List: React.FC = () => {
   }
 
   function escapeRegExp(str: string) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   }
 
   const invoiceSearch = () => {
     const escapedSearchOrder = escapeRegExp(searchTerm)
-  
+
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
         globalData.filter((bill: any) => {
@@ -145,56 +122,51 @@ const List: React.FC = () => {
     }
     return undefined
   }
-  
+
   const invoiceSearchByDate = () => {
     const escapedSearchOrder = escapeRegExp(dateFilter)
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
         globalData.filter((bill: any) => {
-          return (
-            bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
-          )
+          return bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
         })
       )
     }
     return undefined
   }
 
-
-
-
-
-  const handleCancel = async(id: any) => {
-
+  const handleCancel = async (id: any) => {
     const { data, error } = await supabase
-  .from('invoices2')
-  .update({ status: 'Annulée' })
-  .eq('id', id)
+      .from('invoices2')
+      .update({ status: 'Annulée' })
+      .eq('id', id)
 
-  
-  if(!error){
-    console.log('Facture annuléeeeee')
-    getInvoices()
+    if (!error) {
+      console.log('Facture annuléeeeee')
+      getInvoices()
+    }
+
+    if (data) {
+      console.log('Facture annulée')
+    }
+
+    if (error) {
+      console.log(error)
+    }
   }
 
-
-
-  if(data){
-    console.log('Facture annulée')
+  const filterListProps = {
+    searchTerm,
+    setSearchTerm,
+    invoiceSearch,
+    invoiceSearchByDate,
+    statusFilter,
+    setStatusFilter,
+    dateFilter,
+    setDateFilter,
   }
-
-  if(error){
-    console.log(error)
-  }
-
-
-  }
-
-
-
-const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, invoiceSearchByDate, statusFilter, setStatusFilter, dateFilter, setDateFilter}
-const topTableProps = {setAsc, setSort, getInvoices, asc}
+  const topTableProps = { setAsc, setSort, getInvoices, asc }
 
   return (
     <div className='row'>
@@ -217,36 +189,51 @@ const topTableProps = {setAsc, setSort, getInvoices, asc}
                     ) : filteredInvoice.length > 0 ? (
                       filteredInvoice?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={Math.random()} bill={bill} setDocId={setDocId} title='FACTURE' _getDocById={_getDocById} setSelectedData={setSelectedData} />
+                          <ItemList
+                            key={Math.random()}
+                            bill={bill}
+                            setDocId={setDocId}
+                            title='FACTURE'
+                            _getDocById={_getDocById}
+                            setSelectedData={setSelectedData}
+                          />
                         ) : null
                       )
-                      ) : (filteredInvoice.length === 0 && searchTerm.length > 2) || (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
-                        <tr>
-                          <td colSpan={8} className='text-center'>
-                            <div className='noresult' style={{ display: "block" }}>
-                              <div className='text-center'>
-                                <lord-icon
-                                  src='https://cdn.lordicon.com/msoeawqm.json'
-                                  trigger='loop'
-                                  colors='primary:#121331,secondary:#08a88a'
-                                  style={{ width: '75px', height: '75px' }}
-                                ></lord-icon>
-                                <h5 className='mt-2'>Désolé! Aucun résultat trouvé</h5>
-                                <p className='text-muted mb-0'>
-                                  Nous avons consulter plus de 150 factures, nous n'avons pas
-                                  trouver de correspondance à votre recherche
-                                </p>
-                              </div>
+                    ) : (filteredInvoice.length === 0 && searchTerm.length > 2) ||
+                      (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
+                      <tr>
+                        <td colSpan={8} className='text-center'>
+                          <div className='noresult' style={{ display: 'block' }}>
+                            <div className='text-center'>
+                              <lord-icon
+                                src='https://cdn.lordicon.com/msoeawqm.json'
+                                trigger='loop'
+                                colors='primary:#121331,secondary:#08a88a'
+                                style={{ width: '75px', height: '75px' }}
+                              ></lord-icon>
+                              <h5 className='mt-2'>Désolé! Aucun résultat trouvé</h5>
+                              <p className='text-muted mb-0'>
+                                Nous avons consulter plus de 150 factures, nous n'avons pas
+                                trouver de correspondance à votre recherche
+                              </p>
                             </div>
-                          </td>
-                        </tr>
-                      ) : (
-                        invoicesData?.map((bill: any) =>
-                          !statusFilter || statusFilter === bill.status ? (
-                            <ItemList key={Math.random()} bill={bill} setDocId={setDocId} _getDocById={_getDocById} setSelectedData={setSelectedData} title='FACTURE' />
-                          ) : null
-                        )
-                      )}
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      invoicesData?.map((bill: any) =>
+                        !statusFilter || statusFilter === bill.status ? (
+                          <ItemList
+                            key={Math.random()}
+                            bill={bill}
+                            setDocId={setDocId}
+                            _getDocById={_getDocById}
+                            setSelectedData={setSelectedData}
+                            title='FACTURE'
+                          />
+                        ) : null
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -259,20 +246,26 @@ const topTableProps = {setAsc, setSort, getInvoices, asc}
                     Précédent
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
-                      {Array.from({ length: 
-                        ((globalData.length / 10)  +1)
-                    })?.map((list: any, indx: any) => (
-
-                        <li key={Math.random()} onClick={() => pagination(indx*10, (indx*10)+9)} >
-                      <span className='page-item pagination-prev disabled m-auto'>{indx+1}</span>
-                    </li>
-                      ))}
-                 
-
+                    {Array.from({ length: globalData.length / 10 + 1 })?.map(
+                      (list: any, indx: any) => (
+                        <li
+                          key={Math.random()}
+                          onClick={() => pagination(indx * 10, indx * 10 + 9)}
+                        >
+                          <span className='page-item pagination-prev disabled m-auto'>
+                            {indx + 1}
+                          </span>
+                        </li>
+                      )
+                    )}
                   </ul>
-                  <span className='page-item pagination-next' onClick={nextPagination}>
-                    Suivant
-                  </span>
+                  {globalData.length > 10 ? (
+                    <span className='page-item pagination-next' onClick={nextPagination}>
+                      Suivant
+                    </span>
+                  ) : (
+                    <span className='page-item pagination-next disabled'>Suivant</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -284,13 +277,13 @@ const topTableProps = {setAsc, setSort, getInvoices, asc}
               aria-labelledby='deleteOrderLabel'
               aria-hidden='true'
             >
-              <DeleteModal deleteDocId={docId} handleCancel={handleCancel}  trigger='FACTURE' />
+              <DeleteModal deleteDocId={docId} handleCancel={handleCancel} trigger='FACTURE' />
             </div>
           </div>
         </div>
       </div>
     </div>
   )
-};
+}
 
-export default List;
+export default List

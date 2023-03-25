@@ -17,6 +17,7 @@ import UpdateQuote from './pages/quotes/UpdateQuote'
 import CreateQuote from './pages/quotes/CreateQuote'
 import DetailQuote from './pages/quotes/DetailQuote'
 import Overview from './pages/public/Overview'
+import ResetPassword from './pages/public/ResetPassword'
 
 const router = createBrowserRouter([
   {
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
   {
     path: '/forgot-password',
     element: <ForgotPassword />,
+  },
+  {
+    path: ':flag/reset-password',
+    element: <ResetPassword />,
   },
   {
     path: '/:id/overview/:name',

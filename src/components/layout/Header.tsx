@@ -24,16 +24,6 @@ const Header = () => {
           <div id='two-column-menu'></div>
           <ul className='navbar-nav' id='navbar-nav'>
             <li className='nav-item'>
-              {/* <a
-                className='nav-link menu-link'
-                href='#sidebarApps'
-                data-bs-toggle='collapse'
-                role='button'
-                aria-expanded='false'
-                aria-controls='sidebarApps'
-              >
-                <i className='ri-apps-2-line'></i> <span data-key='t-apps'>Apps</span>
-              </a> */}
               <div className=' menu-dropdown' id='sidebarApps'>
                 <ul className='nav nav-sm flex-column'>
                   <li className='nav-item' onClick={handleClose}>
@@ -59,12 +49,11 @@ const Header = () => {
         <div className='navbar-header'>
           <div className='d-flex'>
             <div className='navbar-brand-box horizontal-logo'>
-              <a href='index.html' className='logo logo-dark'aria-label="home">
-             
+              <span className='logo logo-dark'aria-label="home">
                 <span className='logo-lg'>
-                  <img src='assets/images/logo-dark.png' alt='' height='45' />
+                  <img src='/assets/images/logo-dark.png' alt='' height='45' />
                 </span>
-              </a>
+              </span>
             </div>
             <button
               type='button'
@@ -79,7 +68,7 @@ const Header = () => {
                 <span></span>
               </span>
             </button>
-            <form className='app-search d-none d-md-block'>
+            {/* <form className='app-search d-none d-md-block'>
               <div className='position-relative'>
                 <input
                   type='text'
@@ -103,7 +92,6 @@ const Header = () => {
                       Recent Searches
                     </h6>
                   </div>
-
                   <div className='dropdown-item bg-transparent text-wrap'>
                     <a aria-label="setup" href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
                       how to setup <i className='mdi mdi-magnify ms-1'></i>
@@ -131,11 +119,9 @@ const Header = () => {
                     <i className='ri-user-settings-line align-middle fs-18 text-muted me-2'></i>
                     <span>My account settings</span>
                   </a>
-
                   <div className='dropdown-header mt-2'>
                     <h6 className='text-overflow text-muted mb-2 text-uppercase'>Members</h6>
                   </div>
-
                   <div className='notification-list'>
                     <a aria-label="avatar" href='/' className='dropdown-item notify-item py-2'>
                       <div className='d-flex'>
@@ -150,7 +136,6 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
-
                     <a aria-label="avatar xs" href='/' className='dropdown-item notify-item py-2'>
                       <div className='d-flex'>
                         <img
@@ -164,7 +149,6 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
-
                     <a aria-label="avatar xs2" href='/' className='dropdown-item notify-item py-2'>
                       <div className='d-flex'>
                         <img
@@ -180,14 +164,13 @@ const Header = () => {
                     </a>
                   </div>
                 </div>
-
                 <div className='text-center pt-3 pb-1'>
                   <a aria-label="all results" href='pages-search-results.html' className='btn btn-primary btn-sm'>
                     View All Results <i className='ri-arrow-right-line ms-1'></i>
                   </a>
                 </div>
               </div>
-            </form>
+            </form> */}
           </div>
           <div className='d-flex align-items-center'>
             <div className='dropdown d-md-none topbar-head-dropdown header-item'>
@@ -252,18 +235,22 @@ const Header = () => {
               </button>
               <div className='dropdown-menu dropdown-menu-end'>
                 <h6 className='dropdown-header'>Welcome {dataStore.firstname} !</h6>
-                <a aria-label="profile" className='dropdown-item' href='pages-profile.html'>
+                <span aria-label="profile" className='dropdown-item' 
+                // href='pages-profile.html'
+                >
                   <i className='mdi mdi-account-circle text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle'>Profile</span>
-                </a>
+                </span>
                 <div className='dropdown-divider'></div>
-                <a aria-label="new" className='dropdown-item' href='pages-profile-settings.html'>
+                <span aria-label="new" className='dropdown-item' 
+                // href='pages-profile-settings.html'
+                >
                   <span className='badge bg-soft-success text-success mt-1 float-end'>
                     New
                   </span>
                   <i className='mdi mdi-cog-outline text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle'>Settings</span>
-                </a>
+                </span>
                 <span className='dropdown-item' onClick={authLogout} >
                   <i className='mdi mdi-logout text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle' data-key='t-logout'>
