@@ -77,7 +77,10 @@ const Overview = () => {
                   totalTva_13={_getTotalTva(dataFile, 0.13)}
                   totalTva_16={_getTotalTva(dataFile, 0.16)}
                 />
-                <ButtonTableDetail handlePrint={handleShowPrintModal} handleShow='' handleShowSendModal='' title='overview' />
+                <ButtonTableDetail handlePrint={handleShowPrintModal} handleShow='' handleShowSendModal=''
+                  docId={dataFile?.id}
+                
+                title='overview' />
               </div>
             </div>
           </div>

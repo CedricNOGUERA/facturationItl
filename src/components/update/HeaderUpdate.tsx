@@ -1,4 +1,6 @@
 import React from 'react'
+import HeaderOwner from '../ui/HeaderOwer'
+import Input from '../ui/Input'
 
 const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
   const {
@@ -8,6 +10,8 @@ const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
     setEmailCustomer,
     avatarCustomer,
     setAvatarCustomer,
+    subject,
+    setSubject,
     addressCustomer,
     setAddressCustomer,
     phoneCustomer,
@@ -23,59 +27,22 @@ const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
 
   return (
     <>
-      <div className='card-body border-bottom border-bottom-dashed p-4'>
-        <div className='row'>
-          <div className='col-lg-4'>
-            <div className='profile-user mx-auto  mb-3'>
-              <input
-                id='profile-img-file-input'
-                type='file'
-                className='profile-img-file-input'
-              />
-              <label htmlFor='profile-img-file-input' className='d-block' tabIndex={0}>
-                <span
-                  className='overflow-hidden border border-dashed d-flex align-items-center justify-content-center rounded'
-                  style={{ height: '60px', width: '256px' }}
-                >
-                  <img
-                    src='../assets/images/logo-dark.png'
-                    className='card-logo card-logo-dark user-profile-image img-fluid'
-                    alt='logo dark'
-                  />
-                </span>
-              </label>
-            </div>
-            <div>
-              <div>
-                <label htmlFor='companyAddress'>Adresse</label>
-              </div>
-              <div className='mb-2 text-muted'>Immeuble Mananui, Auae, Faa'a</div>
-              <div className='mb-2 text-muted'>BP 1904 - 98713 Papeete - Tahiti</div>
-            </div>
-          </div>
-
-          <div className='col-lg-4 ms-auto'>
-            <div className='mb-2'>
-              N°Tahiti :<div className='mb-2 text-muted'>RCS N°21 412 B - N°TAHITI E48924</div>
-            </div>
-            <div className='mb-2'>
-              Email
-              <div className='mb-2 text-muted'>itahitilab@lwane.com</div>
-            </div>
-
-            <div>
-              Téléphone
-              <div className='mb-2 text-muted'>87 77 58 67</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeaderOwner />
       <div className='card-body p-4'>
         <div className='row'>
           <div className='col-12 text-center'>
             <h3 className='text-uppercase teko fs-2'>{title}</h3>
           </div>
           <div className='col-lg-4 col-sm-6'>
+            <div className='mb-2'>
+              <Input
+                type='text'
+                placeholder={filteredInvoice?.subject ? filteredInvoice?.subject : 'Objet'}
+                data={subject}
+                setData={setSubject}
+                required={false}
+              />
+            </div>
             <div>
               <label htmlFor='billingName' className='text-muted text-uppercase fw-semibold'>
                 A l'attention de :
@@ -105,22 +72,7 @@ const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
                 value={emailCustomer}
                 onChange={(e) => setEmailCustomer(e.currentTarget.value)}
               />
-              <div className='invalid-feedback'>Saisissez un nom</div>
-            </div>
-            <div className='mb-2'>
-              <input
-                type='text'
-                className='form-control bg-light border-0'
-                id='billingAvatar'
-                placeholder={
-                  filteredInvoice?.customer_info?.avatar
-                    ? filteredInvoice?.customer_info?.avatar
-                    : 'Avatar'
-                }
-                value={avatarCustomer}
-                onChange={(e) => setAvatarCustomer(e.currentTarget.value)}
-              />
-              <div className='invalid-feedback'>Saisissez un nom</div>
+              <div className='invalid-feedback'>Saisissez un email</div>
             </div>
           </div>
           <div className='col-sm-6 ms-auto'>

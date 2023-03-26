@@ -19,9 +19,10 @@ const Update = () => {
   const [emailCustomer, setEmailCustomer] = React.useState<string>('')
   const [phoneCustomer, setPhoneCustomer] = React.useState<string>('')
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
+  const [subject, setSubject] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
   const [noteInvoice, setNoteInvoice] = React.useState<string>(
-    "Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé."
+    "Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne."
   )
   const [unique, setUnique] = React.useState<any>([]);
 
@@ -130,6 +131,7 @@ const Update = () => {
         invoiceNum: invoiceNum ? invoiceNum : filteredInvoice?.invoiceNum,
         createdAt: invoiceCreatedAt ? invoiceCreatedAt : filteredInvoice?.createdAt,
         status: status ? status : filteredInvoice?.status,
+        subject: subject ? subject : filteredInvoice?.subject,
         customer_info: {
           name: nameCustomer ? nameCustomer : filteredInvoice?.customer_info.name,
           email: emailCustomer ? emailCustomer : filteredInvoice?.customer_info.email,
@@ -224,6 +226,8 @@ const Update = () => {
     setEmailCustomer,
     avatarCustomer,
     setAvatarCustomer,
+    subject,
+    setSubject,
     addressCustomer,
     setAddressCustomer,
     phoneCustomer,

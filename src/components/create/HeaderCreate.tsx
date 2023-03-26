@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import Input from '../ui/Input'
 import TextArea from '../ui/TextArea'
+import HeaderOwner from '../ui/HeaderOwer'
 
 dayjs.extend(customParseFormat)
 /** Manually entering any of the following formats will perform date parsing */
@@ -17,8 +18,8 @@ const HeaderCreate = ({ headerProps, title }: any) => {
     setNameCustomer,
     emailCustomer,
     setEmailCustomer,
-    avatarCustomer,
-    setAvatarCustomer,
+    subject,
+    setSubject,
     addressCustomer,
     setAddressCustomer,
     phoneCustomer,
@@ -51,53 +52,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
 
   return (
     <>
-      <div className='card-body border-bottom border-bottom-dashed p-4'>
-        <div className='row'>
-          <div className='col-lg-4'>
-            <div className='profile-user mx-auto  mb-3'>
-              <input
-                id='profile-img-file-input'
-                type='file'
-                className='profile-img-file-input'
-              />
-              <label htmlFor='profile-img-file-input' className='d-block' tabIndex={0}>
-                <span
-                  className='overflow-hidden border border-dashed d-flex align-items-center justify-content-center rounded'
-                  style={{ height: '50px', width: '256px' }}
-                >
-                  <img
-                    src='/assets/images/logo-dark.png'
-                    className='card-logo card-logo-dark user-profile-image img-fluid'
-                    alt='logo dark'
-                  />
-                </span>
-              </label>
-            </div>
-            <div>
-              <div>
-                <label htmlFor='companyAddress'>Adresse</label>
-              </div>
-              <div className='mb-2 text-muted'>Immeuble Mananui, Auae, Faa'a</div>
-              <div className='mb-2 text-muted'>BP 1904 - 98713 Papeete - Tahiti</div>
-            </div>
-          </div>
-
-          <div className='col-lg-4 ms-auto'>
-            <div className='mb-2'>
-              N°Tahiti :<div className='mb-2 text-muted'>RCS N°21 412 B - N°TAHITI E48924</div>
-            </div>
-            <div className='mb-2'>
-              Email
-              <div className='mb-2 text-muted'>itahitilab@lwane.com</div>
-            </div>
-
-            <div>
-              Téléphone
-              <div className='mb-2 text-muted'>87 77 58 67</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeaderOwner />
 
       <div className='card-body p-4 '>
         <div className='row'>
@@ -105,6 +60,15 @@ const HeaderCreate = ({ headerProps, title }: any) => {
             <h3 className='text-uppercase teko fs-2'>{title}</h3>
           </div>
           <div className='col-lg-5 col-md-6 col-sm-6'>
+            <div className='mb-2'>
+              <Input
+                type='text'
+                placeholder='Objet'
+                data={subject}
+                setData={setSubject}
+                required={true}
+              />
+            </div>
             <div>
               <label htmlFor='billingName' className='text-muted text-uppercase fw-semibold'>
                 A l'attention de :
@@ -156,15 +120,6 @@ const HeaderCreate = ({ headerProps, title }: any) => {
               />
 
               <div className='invalid-feedback'>Saisissez un n° de téléphone</div>
-            </div>
-            <div className='mb-2'>
-              <Input
-                type='text'
-                placeholder='Avatar'
-                data={avatarCustomer}
-                setData={setAvatarCustomer}
-                required={false}
-              />
             </div>
           </div>
         </div>

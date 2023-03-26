@@ -1,14 +1,30 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 interface Props{
   handlePrint: () => void
   handleShow: any
   handleShowSendModal: any
   title: string
+  docId: string
 }
-const ButtonTableDetail: React.FC<Props> = ({handlePrint, handleShow , handleShowSendModal, title}) => {
+const ButtonTableDetail: React.FC<Props> = ({handlePrint, handleShow , handleShowSendModal, title, docId}) => {
   return (
     <div className='hstack gap-2 justify-content-end d-print-none mt-4'>
+      {title !== 'overview' && (
+     <>
+      <button className='btn btn-secondary' aria-label='update'>
+        <Link className='text-light' to={`/${docId}/update-${title}`}>
+       
+        <i className='ri-pencil-fill align-bottom me-1'></i>
+        
+        Modifier
+        </Link>
+      </button>
+      |
+     </>
+      )}
+      
       <button onClick={handlePrint} className='btn btn-success' aria-label='Print'>
         <i className='ri-printer-line align-bottom me-1'></i> Imprimer
       </button>

@@ -51,8 +51,8 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
       </td>
       <td>
         <InputItem
-          type='text'
-          placeholder='0.00'
+          type='number'
+          placeholder='0'
           data={prod.price}
           setData={handleChangeProduct}
           indx={indx}
@@ -88,14 +88,14 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
           <Input
             type='text'
             placeholder='0'
-            data={prod.price * prod.qty * prod.tva}
+            data={new Intl.NumberFormat().format(prod?.price * prod?.qty * prod?.tva)}
             readOnly={true}
           />
         </div>
       </td>
       <td className='text-end'>
         <div>
-          <Input type='text' placeholder='0' data={prod.price * prod.qty} readOnly={true} />
+          <Input type='text' placeholder='0' data={new Intl.NumberFormat().format(prod?.price * prod?.qty)} readOnly={true} />
         </div>
       </td>
       <td className='product-removal'>

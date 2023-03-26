@@ -22,6 +22,7 @@ const CreateQuote = () => {
   const [phoneCustomer, setPhoneCustomer] = React.useState<string>('')
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
+  const [subject, setSubject] = React.useState<string>('')
 
   const [productList, setProductList] = React.useState([
     {
@@ -66,7 +67,7 @@ const CreateQuote = () => {
   }
   const handleChangeProduct = (e: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
-    newProduits[indx][key] = e.target.value
+    newProduits[indx][key] = key === "qty" ? parseInt(e.target.value) : e.target.value
     setProductList(newProduits)
   }
   const handleDeleteProduct = (id: any) => {
@@ -86,6 +87,7 @@ const CreateQuote = () => {
         invoiceNum: docNum,
         createdAt: docCreatedAt,
         status: status,
+        subject: subject,
         name_customer: nameCustomer,
         email_customer: emailCustomer,
         customer_info: {
@@ -173,6 +175,8 @@ const CreateQuote = () => {
     setEmailCustomer,
     avatarCustomer,
     setAvatarCustomer,
+    subject,
+    setSubject,
     addressCustomer,
     setAddressCustomer,
     phoneCustomer,

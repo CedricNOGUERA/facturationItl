@@ -101,6 +101,7 @@ const DetailQuote = () => {
                   handlePrint={handlePrint}
                   handleShow={handleShow}
                   handleShowSendModal={handleShowSendModal}
+                  docId={filteredQuote?.id}
                   title='devis'
                 />
               </div>

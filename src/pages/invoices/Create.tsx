@@ -24,7 +24,9 @@ const Create = () => {
   const [avatarCustomer, setAvatarCustomer] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
   const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
+  const [subject, setSubject] = React.useState<string>('')
   
+
   const [productList, setProductList] = React.useState([
     {
       id: 1,
@@ -67,7 +69,7 @@ const Create = () => {
   }
   const handleChangeProduct = (e: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
-    newProduits[indx][key] = e.target.value
+    newProduits[indx][key] = key === "qty" ? parseInt(e.target.value) : e.target.value
     setProductList(newProduits)
   }
   const handleDeleteProduct = (id: any) => {
@@ -87,6 +89,7 @@ const Create = () => {
         invoiceNum: docNum,
         createdAt: docCreatedAt,
         status: status,
+        subject: subject,
         name_customer: nameCustomer,
         email_customer: emailCustomer,
         customer_info: {
@@ -140,7 +143,7 @@ const Create = () => {
         openNotification()
 
         setTimeout(() => {
-          navigate('/')
+          navigate("/" + invoiceId + "/facture")
         }, 2500)
       } catch (error) {
         console.log(error)
@@ -175,6 +178,8 @@ const Create = () => {
     setEmailCustomer,
     avatarCustomer,
     setAvatarCustomer,
+    subject,
+    setSubject,
     addressCustomer,
     setAddressCustomer,
     phoneCustomer,

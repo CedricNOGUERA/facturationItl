@@ -58,6 +58,9 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
             <div className='col-12 text-center'>
               <h2 className="teko text-uppercase">{title}</h2>
             </div>
+            <div><p className='mb-1' id='subject'>
+              <i className="ri-pushpin-line text-muted">Objet</i> : {filteredInvoice?.subject}
+              </p>  </div>
             <div className='col-md-8 col-6'>
               <h6 className='text-muted text-uppercase fw-semibold mb-3 fs-13'>
                 A l'attention de

@@ -34,7 +34,7 @@ import { supabase } from "./supabaseClient";
   export function _getTotalTva(filteredData: any, tva: number) {
     const totalTva = filteredData
       ?.filter((bill: any) => Number(bill.tva) === tva)
-      ?.reduce((acc: any, current: any) => acc + current.price * current.tva, 0)
+      ?.reduce((acc: any, current: any) => acc + current.price * current.tva * current?.qty, 0)
   
     return totalTva ?? 0
   }

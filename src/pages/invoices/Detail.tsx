@@ -102,7 +102,7 @@ const Detail = () => {
 
   return (
     <div className='row justify-content-center'>
-      <div className='col-xxl-9 '>
+      <div className='col-xxl-9 col-lg-10'>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>
             <HeaderDetail filteredInvoice={filteredInvoice} title='facture' overview={false} />
@@ -127,6 +127,7 @@ const Detail = () => {
                   handlePrint={handleShowPrintModal}
                   handleShow={handleShow}
                   handleShowSendModal={handleShowSendModal}
+                  docId={filteredInvoice?.id}
                   title='facture'
                 />
               </div>
