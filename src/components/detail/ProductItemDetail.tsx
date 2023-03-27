@@ -1,19 +1,17 @@
 import React from 'react'
 
-interface productItemDetailProps{
+interface productItemDetailProps {
   prod: any
   indx: number
 }
 
 const ProductItemDetail: React.FC<productItemDetailProps> = ({ prod, indx }) => {
-
-
   return (
     <tr key={prod.id}>
       <th scope='row'>{indx + 1}</th>
       <td className='text-start'>
         <span className='fw-medium'>{prod.designation}</span>
-        <p className='text-muted mb-0'>{prod.detailDesignation}</p>
+        <p className='text-muted mb-0 detail-area'>{prod.detailDesignation}</p>
       </td>
       <td>{prod.tva * 100} %</td>
       <td>{new Intl.NumberFormat().format(prod.price)}</td>

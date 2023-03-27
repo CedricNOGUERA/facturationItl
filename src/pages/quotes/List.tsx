@@ -8,7 +8,7 @@ import ItemList from "../../components/list/ItemList";
 import TopTable from "../../components/quotes/list/TopTable";
 import DeleteModal from "../../components/list/DeleteModal";
 import ValidateModal from "../../components/quotes/ValidateModal";
-import { _getDocById, _getTotalTva, _htAmount } from "../../utils/function";
+import { _getDocById, _getGlobalData, _getTotalTva, _htAmount } from "../../utils/function";
 import { v4 as uuidv4 } from 'uuid'
 import { notification } from "antd";
 import { CheckCircleTwoTone } from "@ant-design/icons";
@@ -49,7 +49,7 @@ const List: React.FC = () => {
  }
 
   React.useEffect(() => {
-    getGlobalData()
+    _getGlobalData('quotes', '*, detailQuote(*)', setGlobalData, isLoading)
     getQuotes()
   }, []);
 
@@ -84,20 +84,6 @@ const List: React.FC = () => {
   const totalTva_13 = _getTotalTva(selectedData?.detailQuote, 0.13)
   const totalTva_16 = _getTotalTva(selectedData?.detailQuote, 0.16)
   
-  const getGlobalData = async () => {
-    let { data: quotes, error } = await supabase
-      .from("quotes")
-      .select("*, detailQuote(*)")
-
-    if (quotes) {
-      setGlobalData(quotes)
-      setIsLoading(false)
-    }
-    if (error) {
-      console.log(error)
-      setIsLoading(true)
-    }
-  };
 
 
   const getQuotes = async () => {

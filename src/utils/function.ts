@@ -11,6 +11,20 @@ export const _getUserData = async (setUserdata: any) => {
   }
 }
 
+export const _getGlobalData = async (table: any, foreignTable: any, setData: any, setIsLoading: any) => {
+  let { data, error } = await supabase
+    .from(table)
+    .select(foreignTable)
+
+  if (data) {
+    setData(data)
+    setIsLoading(false)
+  }
+  if (error) {
+    console.log(error)
+    setIsLoading(true)
+  }
+}
 export const _getDocById = async (quoteId: any, setData: any) => {
   let { data: quotes, error } = await supabase
     .from('quotes')
@@ -22,6 +36,20 @@ export const _getDocById = async (quoteId: any, setData: any) => {
     setData(quotes)
   }
   if (error) {
+    console.log(error)
+  }
+}
+export const _getInvoiceById = async (id: any, setData: any, ) => {
+  let { data: invoices2, error } = await supabase
+    .from('invoices2')
+    .select('*, detailBill(*)')
+    .eq('id', id)
+    .single()
+
+  if (invoices2) {
+    setData(invoices2)
+  }
+  if(error){
     console.log(error)
   }
 }
@@ -87,6 +115,19 @@ export const _updateQty = (
   setProductList(newProduits)
 }
 
+export  const _addQty = (qty: any, indx: any, key: any, productList: any, setProductList: any) => {
+  _updateQty(1, indx, key, productList, setProductList)
+}
+
+
+export const _substQty = (qty: any, indx: any, key: any, productList: any, setProductList: any) => {
+  if (qty > 1) {
+    _updateQty(-1, indx, key, productList, setProductList)
+  }
+}
+
+
+
 export const _updateItem = (productList: any, db: any) => {
   productList?.map((prod: any, indx: any) => {
     return supabase
@@ -145,8 +186,8 @@ export const _deleteItem = async (unique: any, navigate: any, db: any) => {
   }
 }
 
-export const _handleChangeProduct = (e: any, indx: any, key: any, data: any, setData: any) => {
+export const _handleChangeProduct = (e: any, indx: any, key: any, data: any, setProductList: any) => {
   const newProduits: any = [...data]
-  newProduits[indx][key] = key === 'qty' ? parseInt(e.target.value) : e.target.value
-  setData(newProduits)
+  newProduits[indx][key] = key === 'qty' ? parseInt(e.target?.value) : e.target?.value
+  setProductList(newProduits)
 }

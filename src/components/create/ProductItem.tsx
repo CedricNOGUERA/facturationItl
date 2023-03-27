@@ -1,10 +1,9 @@
 import React from 'react'
+import { _addQty, _handleChangeProduct, _substQty } from '../../utils/function'
 import Input from '../ui/Input'
-import InputItem from '../ui/InputItem'
 
 const ProductItem = ({ productItemProps, prod, indx }: any) => {
-  const { productList, setProductList, handleDeleteProduct, _handleChangeProduct, handleChangeProduct, substQty, addQty } =
-    productItemProps
+  const { productList, setProductList, handleDeleteProduct } = productItemProps
 
   return (
     <tr id={prod?.id} key={prod.id} className='product'>
@@ -18,7 +17,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
           className='form-control bg-light border-0 mb-2'
           placeholder='Nom du produit ou du service'
           value={prod?.name}
-          onChange={(e) => handleChangeProduct(e, indx, 'name')}
+          onChange={(e) => _handleChangeProduct(e, indx, 'name',productList, setProductList)}
           required
         />
           <div className='invalid-feedback'>Saisissez le nom du produit</div>
@@ -29,7 +28,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
           rows={2}
           placeholder='Details'
           value={prod.detail}
-          onChange={(e) => _handleChangeProduct(e, indx, 'detail',productList, setProductList)}
+          onChange={(e) => _handleChangeProduct(e, indx, 'detail', productList, setProductList)}
         ></textarea>
       </td>
       <td>
@@ -38,7 +37,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
           data-choices
           data-choices-search-false
           value={prod.tva}
-          onChange={(e) => handleChangeProduct(e, indx, 'tva')}
+          onChange={(e) => _handleChangeProduct(e, indx, 'tva', productList, setProductList)}
           required
         >
           <option value=''>Tva</option>
@@ -55,7 +54,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
           className='form-control bg-light border-0 mb-2'
           placeholder='0'
           value={prod?.price}
-          onChange={(e) => handleChangeProduct(e, indx, 'price')}
+          onChange={(e) => _handleChangeProduct(e, indx, 'price', productList, setProductList)}
           required
         />
         <div className='invalid-feedback'>Saisissez un prix</div>
@@ -66,7 +65,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
             type='button'
             aria-label="Substract"
             className='minus'
-            onClick={() => substQty(prod.qty, indx, 'qty')}
+            onClick={() => _substQty(prod.qty, indx, 'qty', productList, setProductList)}
           >
             –
           </button>
@@ -74,10 +73,10 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
             type='number'
             className='product-quantity'
             value={prod.qty}
-            onChange={(e) => handleChangeProduct(e, indx, 'qty')}
+            onChange={(e) => _handleChangeProduct(e, indx, 'qty', productList, setProductList)}
             required
           />
-          <button type='button' aria-label="Plus" className='plus' onClick={() => addQty(prod.qty, indx, 'qty')}>
+          <button type='button' aria-label="Plus" className='plus' onClick={() => _addQty(prod.qty, indx, 'qty', productList, setProductList)}>
             +
           </button>
         </div>

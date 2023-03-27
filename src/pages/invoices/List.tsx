@@ -7,7 +7,7 @@ import FilterList from '../../components/list/FilterList'
 import ItemList from '../../components/list/ItemList'
 import { Spinner } from 'react-bootstrap'
 import TopTable from '../../components/list/TopTable'
-import { _getDocById, _handleCancel } from '../../utils/function'
+import { _getDocById, _getGlobalData, _handleCancel } from '../../utils/function'
 
 const List: React.FC = () => {
   const [invoicesData, setInvoicesData] = useOutletContext<any>()
@@ -30,7 +30,7 @@ const List: React.FC = () => {
 
   React.useEffect(() => {
     getInvoices()
-    getGlobalData()
+    _getGlobalData('invoices2', '*, detailBill(*)', setGlobalData, setIsLoading )
   }, [])
 
   React.useEffect(() => {
@@ -57,18 +57,6 @@ const List: React.FC = () => {
     invoiceSearch()
   }, [searchTerm, dateFilter, statusFilter])
 
-  const getGlobalData = async () => {
-    let { data: invoices, error } = await supabase.from('invoices2').select('*, detailBill(*)')
-
-    if (invoices) {
-      setGlobalData(invoices)
-      setIsLoading(false)
-    }
-    if (error) {
-      console.log(error)
-      setIsLoading(true)
-    }
-  }
 
   const getInvoices = async () => {
     let { data: invoices, error } = await supabase
@@ -93,8 +81,10 @@ const List: React.FC = () => {
   }
 
   const previousPagination = () => {
-    if (startPagination > 1) setStartPagination(startPagination - 10)
-    setEndPagination(endPagination - 10)
+    if (startPagination > 1) {
+      setStartPagination(startPagination - 10)
+      setEndPagination(endPagination - 10)
+    }
   }
 
   const pagination = (st: any, end: any) => {
@@ -143,12 +133,8 @@ const List: React.FC = () => {
       .eq('id', id)
 
     if (!error) {
-      console.log('Facture annuléeeeee')
-      getInvoices()
-    }
-
-    if (data) {
       console.log('Facture annulée')
+      getInvoices()
     }
 
     if (error) {

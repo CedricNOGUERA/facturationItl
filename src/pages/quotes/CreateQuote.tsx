@@ -65,11 +65,7 @@ const CreateQuote = () => {
     ]
     setProductList(newTab)
   }
-  const handleChangeProduct = (e: any, indx: any, key: any) => {
-    const newProduits: any = [...productList]
-    newProduits[indx][key] = key === "qty" ? parseInt(e.target.value) : e.target.value
-    setProductList(newProduits)
-  }
+  
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
 
@@ -154,17 +150,6 @@ const CreateQuote = () => {
   const totalTva_16 = _getTotalTva(productList, 0.16)
 
  
-  const addQty = (qty: any, indx: any, key: any) => {
-
-    _updateQty(1, indx, key, productList, setProductList)
-
-  }
-
-  const substQty = (qty: any, indx: any, key: any) => {
-    if (qty > 1) {
-      _updateQty(-1, indx, key, productList, setProductList)
-    }
-  }
 
 
 
@@ -192,10 +177,6 @@ const CreateQuote = () => {
     productList,
     setProductList,
     handleDeleteProduct,
-    _handleChangeProduct,
-    handleChangeProduct,
-    substQty,
-    addQty,
   }
 
   const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }

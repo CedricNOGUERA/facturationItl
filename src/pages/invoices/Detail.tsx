@@ -12,69 +12,47 @@ import emailjs from '@emailjs/browser';
 import SendEmailModal from '../../components/ui/SendEmailModal';
 import TableTopDetail from '../../components/ui/TableTopDetail';
 import PrintModal from '../../components/ui/PrintModal';
+import { _getInvoiceById } from '../../utils/quotes/function';
 
 
 const Detail = () => {
+
+  ///////States//////////
+  const componentRef: any = useRef();
+  const form: any = useRef();
+  const params = useParams()
+  const navigate = useNavigate()
 
   const [filteredInvoice, setFilteredInvoice] = React.useState<any>()
   const [isMail, setIsMail] = React.useState<boolean>(false)
 
 
-
   const [show, setShow] = React.useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   
   const [showSendModal, setShowSendModal] = React.useState(false);
-
   const handleCloseSendModal = () => setShowSendModal(false);
   const handleShowSendModal = () => setShowSendModal(true);
 
   const [showPrintModal, setShowPrintModal] = React.useState(false);
-
   const handleClosePrintModal = () => setShowPrintModal(false);
   const handleShowPrintModal = () => setShowPrintModal(true);
 
-  const componentRef: any = useRef();
-
-
-  const params = useParams()
-
-  const navigate = useNavigate()
-
-  
 
   const numInvoice = filteredInvoice?.invoiceNum
   const qrData = `${params.id}`
-  const form: any = useRef();
 
-
-
+  //////useEffect/////////
   React.useEffect(() => {
-    getInvoiceById()
-  }, [])
-
+    _getInvoiceById(params.id, setFilteredInvoice)
+  }, [params.id])
+  
+  //////Events/////////
   const handlePrint = useReactToPrint({
-    
     content: () => componentRef?.current,
   });
-
-  const getInvoiceById = async () => {
-    let { data: invoices2, error } = await supabase
-      .from('invoices2')
-      .select('*, detailBill(*)')
-      .eq('id', params.id)
-      .single()
-
-    if (invoices2) {
-      setFilteredInvoice(invoices2)
-    }
-    if(error){
-      console.log(error)
-    }
-  }
-
+  
   const sendEmail = (e: any) => {
     e.preventDefault();
     console.log(form?.current.doc_type.value)

@@ -1,7 +1,8 @@
 import React from 'react'
+import { _handleChangeProduct } from '../../utils/function';
 
 const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
-  const { productList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
+  const { productList, setProductList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
     productItemProps
     function numStr(a: any, b: any) {
       a = '' + a;
@@ -35,6 +36,7 @@ const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
          
         <textarea
           className='form-control bg-light border-0'
+          id='detail'
           value={prod?.detailDesignation}
           onChange={
             (e) => handleChangeProduct(e, indx, 'detailDesignation')
@@ -90,8 +92,8 @@ const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
           <input
             type='text'
             className='form-control bg-light border-0 product-line-price text-end'
-            value={numStr(prod?.price * prod?.qty * prod?.tva, '')}
-            // value={new Intl.NumberFormat().format(prod?.price * prod?.qty * prod?.tva)}
+            // value={numStr(prod?.price * prod?.qty * prod?.tva, '')}
+            value={new Intl.NumberFormat().format(prod?.price * prod?.qty * prod?.tva)}
             readOnly
           />
         </span>

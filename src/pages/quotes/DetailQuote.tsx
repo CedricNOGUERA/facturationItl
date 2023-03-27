@@ -16,14 +16,14 @@ import PrintModal from '../../components/ui/PrintModal'
 const DetailQuote = () => {
   ///////States//////////
 
-  const [filteredQuote, setFilteredQuote] = React.useState<any>()
   const componentRef: any = useRef()
   const form: any = useRef()
-
-  const [isMail, setIsMail] = React.useState<boolean>(false)
-
   const params = useParams()
   const navigate = useNavigate()
+  
+  const [filteredQuote, setFilteredQuote] = React.useState<any>()
+  const [isMail, setIsMail] = React.useState<boolean>(false)
+
 
   const [show, setShow] = React.useState(false)
   const handleClose = () => setShow(false)
@@ -37,14 +37,16 @@ const DetailQuote = () => {
   const handleClosePrintModal = () => setShowPrintModal(false);
   const handleShowPrintModal = () => setShowPrintModal(true);
 
+  const numQuote = filteredQuote?.invoiceNum
+  const qrData = `${params.id}`
+
+  
   //////useEffect/////////
 
   React.useEffect(() => {
     _getQuoteById(params.id, setFilteredQuote)
   }, [params.id])
 
-  const numQuote = filteredQuote?.invoiceNum
-  const qrData = `${params.id}`
 
   //////Events/////////
 

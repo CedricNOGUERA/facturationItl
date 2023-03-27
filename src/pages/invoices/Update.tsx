@@ -8,7 +8,13 @@ import ProductItemUpdate from '../../components/update/productItemUpdate'
 import HeaderUpdate from '../../components/update/HeaderUpdate'
 import BottomTableUpdate from '../../components/update/BottomTableUpdate'
 import TableHeader from '../../components/ui/TableHeader'
-import { _addItem, _deleteItem, _getTotalTva, _htAmount, _updateQty } from '../../utils/function'
+import {
+  _addItem,
+  _deleteItem,
+  _getTotalTva,
+  _htAmount,
+  _updateQty,
+} from '../../utils/function'
 
 const Update = () => {
   const [invoiceNum, setInvoiceNum] = React.useState<any>('')
@@ -22,9 +28,9 @@ const Update = () => {
   const [subject, setSubject] = React.useState<string>('')
   const [addressCustomer, setAddressCustomer] = React.useState<string>('')
   const [noteInvoice, setNoteInvoice] = React.useState<string>(
-    "Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne."
+    'Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne.'
   )
-  const [unique, setUnique] = React.useState<any>([]);
+  const [unique, setUnique] = React.useState<any>([])
 
   const [date, setDate] = React.useState<string>('')
 
@@ -60,11 +66,12 @@ const Update = () => {
   }, [filteredInvoice])
 
   React.useEffect(() => {
-    setHtAmount(
-      _htAmount(productList)
-    )
+    setHtAmount(_htAmount(productList))
   }, [productList])
 
+  function textRegExp(str: string) {
+    return str.replace(/\n/gi, '\n')
+  }
 
   const openNotification = () => {
     api.open({
@@ -73,7 +80,6 @@ const Update = () => {
       icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
     })
   }
-
 
   const getInvoiceById = async () => {
     let { data: invoices2, error } = await supabase
@@ -108,17 +114,16 @@ const Update = () => {
   }
   const handleChangeProduct = (e: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
-    newProduits[indx][key] = key === "qty" ? parseInt(e.target.value) : e.target.value
+    newProduits[indx][key] = key === 'qty' ? parseInt(e.target.value) : e.target.value
     setProductList(newProduits)
   }
   const handleDeleteProduct = (id: any) => {
     const newList = productList?.filter((prod: any) => prod.id !== id)
-    const tab= [...unique]
+    const tab = [...unique]
 
     tab.push(id)
     setProductList(newList)
     setUnique(tab)
-
   }
 
   const handleUpdateInvoice = async (e: any) => {
@@ -148,14 +153,13 @@ const Update = () => {
       })
       .eq('id', params?.id)
 
-
-      /////Update prod existing in list
+    /////Update prod existing in list
     const promises = productList?.map((prod: any, indx: any) => {
       return supabase
         .from('detailBill')
         .update({
           designation: prod.designation,
-          detailDesignation: prod.detailDesignation,
+          detailDesignation: textRegExp(prod.detailDesignation),
           qty: prod.qty,
           price: prod.price,
           tva: parseFloat(prod.tva),
@@ -190,27 +194,19 @@ const Update = () => {
       const newData = productList?.slice(initProductList?.length, productList?.length)
 
       console.log(newData)
-       _addItem(newData, filteredInvoice, navigate, 'detailBill')
-
-    
+      _addItem(newData, filteredInvoice, navigate, 'detailBill')
     }
-      ///When delete prod in list
+    ///When delete prod in list
     if (unique && unique.length > 0) {
-
       _deleteItem(unique, navigate, 'detailBill')
-
     }
-
   }
 
   const totalTva_13 = _getTotalTva(productList, 0.13)
   const totalTva_16 = _getTotalTva(productList, 0.16)
-  
 
   const addQty = (qty: any, indx: any, key: any) => {
-
     _updateQty(1, indx, key, productList, setProductList)
-
   }
 
   const substQty = (qty: any, indx: any, key: any) => {
@@ -242,15 +238,13 @@ const Update = () => {
 
   const productItemProps = {
     productList,
+    setProductList,
     handleDeleteProduct,
     handleChangeProduct,
     substQty,
     addQty,
   }
   const bottomTableProps = { handleAddProduct, htAmount, totalTva_13, totalTva_16 }
-  
-
-
 
   return (
     <div className='row justify-content-center'>
@@ -262,7 +256,7 @@ const Update = () => {
             <div className='card-body p-4'>
               <div className='table-responsive'>
                 <table className='invoice-table table table-borderless table-nowrap mb-0'>
-                <TableHeader />
+                  <TableHeader />
                   <tbody id='newlink'>
                     {productList?.map((prod: any, indx: any) => (
                       <ProductItemUpdate
@@ -297,7 +291,6 @@ const Update = () => {
           </form>
         </div>
       </div>
-
     </div>
   )
 }
