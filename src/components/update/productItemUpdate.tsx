@@ -58,7 +58,7 @@ const ProductItemUpdate = ({ productItemProps, prod, indx }: any) => {
         <input
           type='number'
           className='form-control product-price bg-light border-0'
-          placeholder='0.00'
+          placeholder='0'
           value={prod?.price}
           onChange={(e) => handleChangeProduct(e, indx, 'price')}
           required

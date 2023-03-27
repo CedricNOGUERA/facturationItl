@@ -13,8 +13,11 @@ const PrintModal = ({ show, handleClose, handlePrint }: any) => {
           ></lord-icon>
           <div className='mt-4 text-center'>
             <h4>Voulez-vous vraiement imprimer ce document ?</h4>
-            <p className='text-muted fs-15 mb-4'>
-            "Avant d'imprimer, pensez à l'impact environnemental et privilégiez la lecture en ligne ou l'utilisation de papier recyclé et l'impression recto-verso
+            <p className='text-muted fs-50 mb-4'>
+              <small>
+
+            "Pensez à l'impact environnemental et privilégiez la lecture en ligne ou l'utilisation de papier recyclé.
+              </small>
             </p>
             <div className='hstack gap-2 justify-content-center remove'>
               <button

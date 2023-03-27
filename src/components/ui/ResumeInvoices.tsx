@@ -43,18 +43,21 @@ const ResumeInvoices = () => {
   const invoiceTab = [
     {
       title: 'Payées',
+      defTitle: 'Payée',
       ca: paidInvoices,
       length: paidInvoicesNumber.length,
       image: 'ri-checkbox-line',
     },
     {
       title: 'Impayées',
+      defTitle: 'Impayée',
       ca: unpaidInvoices,
       length: unpaidInvoicesNumber.length,
       image: 'ri-time-line',
     },
     {
       title: 'Annulées',
+      defTitle: 'Annulée',
       ca: cancelInvoices,
       length: cancelInvoicesNumber.length,
       image: 'ri-close-circle-line',
@@ -121,7 +124,7 @@ const ResumeInvoices = () => {
                     </span>
                   </h4>
                   <span className='badge bg-warning me-1'>{bill?.length}</span>{' '}
-                  <span className='text-muted'>{bill?.title}</span>
+                  <span className='text-muted'>{bill?.length > 1 ? bill?.title : bill?.defTitle}</span>
                 </div>
                 <div className='avatar-sm flex-shrink-0'>
                   <span className='avatar-title bg-light rounded fs-3'>

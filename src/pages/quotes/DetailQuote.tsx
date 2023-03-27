@@ -11,6 +11,7 @@ import QrCodeModal from '../../components/list/QrCodeModal'
 import SendEmailModal from '../../components/ui/SendEmailModal'
 import emailjs from '@emailjs/browser'
 import TableTopDetail from '../../components/ui/TableTopDetail'
+import PrintModal from '../../components/ui/PrintModal'
 
 const DetailQuote = () => {
   ///////States//////////
@@ -25,14 +26,16 @@ const DetailQuote = () => {
   const navigate = useNavigate()
 
   const [show, setShow] = React.useState(false)
-
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   const [showSendModal, setShowSendModal] = React.useState(false)
-
   const handleCloseSendModal = () => setShowSendModal(false)
   const handleShowSendModal = () => setShowSendModal(true)
+
+  const [showPrintModal, setShowPrintModal] = React.useState(false);
+  const handleClosePrintModal = () => setShowPrintModal(false);
+  const handleShowPrintModal = () => setShowPrintModal(true);
 
   //////useEffect/////////
 
@@ -98,7 +101,7 @@ const DetailQuote = () => {
                   totalTva_16={_getTotalTva(filteredQuote?.detailQuote, 0.16)}
                 />
                 <ButtonTable
-                  handlePrint={handlePrint}
+                  handlePrint={handleShowPrintModal}
                   handleShow={handleShow}
                   handleShowSendModal={handleShowSendModal}
                   docId={filteredQuote?.id}
@@ -109,6 +112,13 @@ const DetailQuote = () => {
           </div>
         </div>
       </div>
+
+      <PrintModal show={showPrintModal} handleClose={handleClosePrintModal}
+                  handlePrint={handlePrint}
+                  />
+
+
+
       <SendEmailModal
         showSendModal={showSendModal}
         handleCloseSendModal={handleCloseSendModal}

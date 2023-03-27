@@ -8,7 +8,7 @@ const BottomTableCreate = ({ bottomTableProps }: any) => {
 
   const cps = (amountHT && amountHT * 0.01).toFixed(0)
   const total = amountHT + tva13 + tva16 + parseInt(cps)
-  console.log(total)
+  
   return (
     <tbody>
       <tr id='newForm' style={{ display: 'none' }}>
@@ -52,7 +52,7 @@ const BottomTableCreate = ({ bottomTableProps }: any) => {
                       type='text'
                       className='form-control bg-light border-0 text-end'
                       placeholder='0'
-                      value={new Intl.NumberFormat().format((tva13))}
+                      value={new Intl.NumberFormat().format(tva13)}
                       readOnly
                     />
                   </td>
@@ -79,7 +79,6 @@ const BottomTableCreate = ({ bottomTableProps }: any) => {
                     type='text'
                     className='form-control bg-light border-0 text-end'
                     placeholder='0'
-                    // value={new Intl.NumberFormat().format((amountHT * 0.01))}
                     value={new Intl.NumberFormat().format(
                       (amountHT && amountHT * 0.01).toFixed(0)
                     )}
@@ -87,7 +86,6 @@ const BottomTableCreate = ({ bottomTableProps }: any) => {
                   />
                 </td>
               </tr>
-
               <tr className='border-top border-top-dashed'>
                 <th scope='row'>Total</th>
                 <td>
@@ -95,8 +93,7 @@ const BottomTableCreate = ({ bottomTableProps }: any) => {
                     type='text'
                     className='form-control bg-light border-0 text-end'
                     placeholder='$0.00'
-                    // value={new Intl.NumberFormat().format((amountHT + tva13 + tva16  + cps))}
-                    value={total}
+                    value={new Intl.NumberFormat().format(total)}
                     readOnly
                   />
                 </td>

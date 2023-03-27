@@ -126,7 +126,8 @@ const HeaderCreate = ({ headerProps, title }: any) => {
       </div>
       <div className='card-body p-4 border-top border-top-dashed'>
         <div className='row g-3'>
-          <div className='col-lg-4 col-sm-6'>
+        <div className={title === 'DEVIS' ? 'col-lg-6 col-sm-6' : 'col-md-4'}>
+
             <label htmlFor='invoicenoInput'>N° Facture</label>
             <Input
               type='text'
@@ -137,7 +138,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
             />
           </div>
 
-          <div className='col-lg-4 col-sm-6'>
+          <div className={title === 'DEVIS' ? 'col-lg-6 col-sm-6' : 'col-md-4'}>
             <div>
               <label htmlFor='date-field'>Date</label>
               <DatePicker
@@ -149,7 +150,10 @@ const HeaderCreate = ({ headerProps, title }: any) => {
             </div>
           </div>
 
-          <div className='col-lg-4 col-sm-6'>
+         { title !== 'DEVIS' && (
+
+          <div className={title === 'DEVIS' ? 'col-lg-6 col-sm-6' : 'col-md-4'}>
+
             <label htmlFor='choices-payment-status'>Status du paiement</label>
             <div className='input-light'>
               <select
@@ -178,7 +182,9 @@ const HeaderCreate = ({ headerProps, title }: any) => {
               </select>
             </div>
           </div>
-        </div>
+         )}
+
+</div>
       </div>
     </>
   )

@@ -86,7 +86,7 @@ const CreateQuote = () => {
         id: invoiceId,
         invoiceNum: docNum,
         createdAt: docCreatedAt,
-        status: status,
+        status: "En cours",
         subject: subject,
         name_customer: nameCustomer,
         email_customer: emailCustomer,

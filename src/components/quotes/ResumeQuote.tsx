@@ -40,18 +40,24 @@ const ResumeQuote = () => {
   const quoteTab = [
     {
       title: 'Validés',
+      defTitles : 'Signés par client',
+      defTitle: 'Signé par client',
       ca: validateQuoteAmount,
       length: validateQuoteTotal.length,
       image: 'ri-checkbox-line',
     },
     {
       title: 'En cours',
+      defTiles: 'En attente de signature',
+      defTitle: 'En attente de signature',
       ca: pendingQuoteAmount,
       length: pendingQuoteTotal.length,
       image: 'ri-time-line',
     },
     {
       title: 'Annulés',
+      defTitles: 'Annulés',
+      defTitle: 'Annulé',
       ca: cancelQuoteAmount,
       length: cancelQuoteTotal.length,
       image: 'ri-close-circle-line',
@@ -85,7 +91,7 @@ const ResumeQuote = () => {
                   </span>
                 </h4>
                 <span className='badge bg-warning me-1'>{globalData.length}</span>{' '}
-                <span className='text-muted'>Devis envoyées</span>
+                <span className='text-muted'>Devis envoyés</span>
               </div>
               <div className='avatar-sm flex-shrink-0'>
                 <span className='avatar-title bg-light rounded fs-3'>
@@ -114,7 +120,7 @@ const ResumeQuote = () => {
                     </span>
                   </h4>
                   <span className='badge bg-warning me-1'>{bill?.length}</span>{' '}
-                  <span className='text-muted'>{bill?.title}</span>
+                  <span className='text-muted'>{bill?.length > 1 ? bill?.defTitles : bill?.defTitle}</span>
                 </div>
                 <div className='avatar-sm flex-shrink-0'>
                   <span className='avatar-title bg-light rounded fs-3'>
