@@ -80,12 +80,6 @@ const ResumeInvoices = () => {
                 <h4 className='fs-22 fw-semibold ff-secondary mb-4'>
                   <span className='counter-value' data-target='559.25'>
                     {globalData &&
-                      // new Intl.NumberFormat().format(
-                      //   globalData.reduce(
-                      //     (acc: any, current: any) => acc + current.amount_ttc,
-                      //     0
-                      //   )
-                      // )
                       <CountUp delay={1} separator=" " end={ globalData.reduce(
                         (acc: any, current: any) => acc + current.amount_ttc,
                         0

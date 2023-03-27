@@ -104,7 +104,8 @@ const UpdateQuote = () => {
   }
   const handleChangeProduct = (e: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
-    newProduits[indx][key] = e.target.value
+        newProduits[indx][key] = key === "qty" ? parseInt(e.target.value) : e.target.value
+
     setProductList(newProduits)
   }
   const handleDeleteProduct = (id: any) => {
@@ -172,7 +173,7 @@ const UpdateQuote = () => {
       setAvatarCustomer('')
       setAddressCustomer('')
       setTimeout(() => {
-        navigate('/list-devis')
+        navigate('/' + params.id + '/devis')
       }, 2500)
     } catch (error) {
       console.log(error)

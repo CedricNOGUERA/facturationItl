@@ -3,7 +3,7 @@ import Input from '../ui/Input'
 import InputItem from '../ui/InputItem'
 
 const ProductItem = ({ productItemProps, prod, indx }: any) => {
-  const { productList, handleDeleteProduct, handleChangeProduct, substQty, addQty } =
+  const { productList, setProductList, handleDeleteProduct, _handleChangeProduct, handleChangeProduct, substQty, addQty } =
     productItemProps
 
   return (
@@ -13,15 +13,14 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
       </th>
       <td className='text-start'>
         <div className='mb-2'>
-          <InputItem
-            type='text'
-            placeholder='Nom du produit ou du service'
-            data={prod.name}
-            setData={handleChangeProduct}
-            indx={indx}
-            inputName='name'
-            required={true}
-          />
+        <input
+          type='text'
+          className='form-control bg-light border-0 mb-2'
+          placeholder='Nom du produit ou du service'
+          value={prod?.name}
+          onChange={(e) => handleChangeProduct(e, indx, 'name')}
+          required
+        />
           <div className='invalid-feedback'>Saisissez le nom du produit</div>
         </div>
 
@@ -30,7 +29,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
           rows={2}
           placeholder='Details'
           value={prod.detail}
-          onChange={(e) => handleChangeProduct(e, indx, 'detail')}
+          onChange={(e) => _handleChangeProduct(e, indx, 'detail',productList, setProductList)}
         ></textarea>
       </td>
       <td>
@@ -50,14 +49,14 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
         <div className='invalid-feedback'>Saisissez un prix</div>
       </td>
       <td>
-        <InputItem
-          type='number'
+       
+         <input
+          type='text'
+          className='form-control bg-light border-0 mb-2'
           placeholder='0'
-          data={prod.price}
-          setData={handleChangeProduct}
-          indx={indx}
-          inputName='price'
-          required={true}
+          value={prod?.price}
+          onChange={(e) => handleChangeProduct(e, indx, 'price')}
+          required
         />
         <div className='invalid-feedback'>Saisissez un prix</div>
       </td>

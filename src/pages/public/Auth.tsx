@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link, Navigate } from 'react-router-dom'
-import BgAuth from '../../components/ui/BgAuth'
-import ButtonAuth from '../../components/ui/ButtonAuth'
-import FooterAuth from '../../components/ui/FooterAuth'
-import HeaderAuth from '../../components/ui/HeaderAuth'
+import BgAuth from '../../components/ui/Auth/BgAuth'
+import ButtonAuth from '../../components/ui/Auth/ButtonAuth'
+import FooterAuth from '../../components/ui/Auth/FooterAuth'
+import HeaderAuth from '../../components/ui/Auth/HeaderAuth'
 import userAuthStore from '../../store/userAuthStore'
 import { _getUserData } from '../../utils/function'
 const Auth = () => {
@@ -82,6 +82,8 @@ const Auth = () => {
                           value={formName}
                           onChange={(e) => {
                             setformName(e.currentTarget.value)
+                            setIsError(false)
+
                           }}
                         />
                       </div>
@@ -104,6 +106,7 @@ const Auth = () => {
                             value={formPass}
                             onChange={(e) => {
                               setformPass(e.currentTarget.value)
+                              setIsError(false)
                             }}
                           />
                           <button
@@ -122,18 +125,18 @@ const Auth = () => {
                       </div>
                       {isError && (
                         <>
-                          <p style={{ color: 'red' }}>
+                          <p className='text-danger text-center'>
                             <img
                               src='https://img.icons8.com/stickers/25/delete-shield.png'
                               alt='icon'
                               loading='lazy'
                             />{' '}
-                            <b>Erreur sur vos informations</b>
+                            <b>Erreur sur vos informations, réessayez</b>
                           </p>
                         </>
                       )}
                       <div className='form-check'>
-                        <input
+                        {/* <input
                           className='form-check-input'
                           type='checkbox'
                           value='rememberMe'
@@ -141,7 +144,7 @@ const Auth = () => {
                         />
                         <label className='form-check-label' htmlFor='auth-remember-check'>
                           Se souvenir de moi.
-                        </label>
+                        </label> */}
                       </div>
                       <ButtonAuth text={"S'identifier"} icon="ri-login-circle-line" />
                     </form>

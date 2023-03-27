@@ -8,7 +8,7 @@ import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { _getTotalTva, _htAmount, _updateQty } from '../../utils/function'
+import { _getTotalTva, _htAmount, _updateQty , _handleChangeProduct} from '../../utils/function'
 import TableHeader from '../../components/ui/TableHeader'
 
 const CreateQuote = () => {
@@ -141,7 +141,7 @@ const CreateQuote = () => {
         openNotification()
 
         setTimeout(() => {
-          navigate('/list-devis')
+          navigate('/' + invoiceId + '/devis')
         }, 2500)
       } catch (error) {
         console.log(error)
@@ -190,7 +190,9 @@ const CreateQuote = () => {
 
   const productItemProps = {
     productList,
+    setProductList,
     handleDeleteProduct,
+    _handleChangeProduct,
     handleChangeProduct,
     substQty,
     addQty,

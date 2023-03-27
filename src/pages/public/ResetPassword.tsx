@@ -1,10 +1,10 @@
 import React from 'react'
 import { Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
-import BgAuth from '../../components/ui/BgAuth'
-import ButtonAuth from '../../components/ui/ButtonAuth'
-import FooterAuth from '../../components/ui/FooterAuth'
-import HeaderAuth from '../../components/ui/HeaderAuth'
+import BgAuth from '../../components/ui/Auth/BgAuth'
+import ButtonAuth from '../../components/ui/Auth/ButtonAuth'
+import FooterAuth from '../../components/ui/Auth/FooterAuth'
+import HeaderAuth from '../../components/ui/Auth/HeaderAuth'
 import userAuthStore from '../../store/userAuthStore'
 import { supabase } from '../../utils/supabaseClient'
 
@@ -31,7 +31,7 @@ console.log(user_id)
 
   return (
     <div className='auth-page-wrapper pt-lg-5'>
-        {params.flag === "true" }
+      {params.flag === 'true'}
       {/* {contextHolder} */}
       <BgAuth />
       <div className='auth-page-content mt-lg-2 mt-3'>
@@ -59,9 +59,7 @@ console.log(user_id)
                       <div className='mb-4'>
                         <label className='form-label'>Nouveau mot de passe</label>
                         <div className='position-relative auth-pass-inputgroup mb-3'>
-
-                      
-                         <input
+                          <input
                             required
                             name='pass'
                             type={!eye ? 'password' : 'text'}
@@ -70,7 +68,7 @@ console.log(user_id)
                             id='pass'
                             value={pass}
                             onChange={(e) => {
-                                setPass(e.currentTarget.value)
+                              setPass(e.currentTarget.value)
                             }}
                           />
                           <button
@@ -85,35 +83,37 @@ console.log(user_id)
                               <i className='ri-eye-off-fill align-middle'></i>
                             )}
                           </button>
-                          </div>
+                        </div>
                       </div>
                       <div className='mb-4'>
                         <label className='form-label'>Confirmation</label>
                         <div className='position-relative auth-pass-inputgroup mb-3'>
+                          <input
+                            required
+                            type={!eye2 ? 'password' : 'text'}
+                            name='user_email'
+                            className='form-control'
+                            id='passConf'
+                            placeholder='Confirmez votre mot de passe'
+                            value={passConf}
+                            onChange={(e) => setPassConf(e.currentTarget.value)}
+                          />
 
-                        <input
-                        required
-                          type={!eye2 ? 'password' : 'text'}
-                          name='user_email'
-                          className='form-control'
-                          id='passConf'
-                          placeholder='Confirmez votre mot de passe'
-                          value={passConf}
-                          onChange={(e) => setPassConf(e.currentTarget.value)}
-                        />
-                        <button
+                          <button
                             className='btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon'
                             type='button'
                             id='password-addon'
                             onClick={() => setEye2(!eye2)}
                           >
-                            {!eye2 ? (
+                            {passConf?.length > 3 && pass === passConf ? (
+                              <i className='ri-shield-check-line align-middle text-info'></i>
+                            ) : !eye2 ? (
                               <i className='ri-eye-fill align-middle'></i>
                             ) : (
                               <i className='ri-eye-off-fill align-middle'></i>
                             )}
                           </button>
-                          </div>
+                        </div>
                         {passConf?.length > 3 && pass !== passConf && (
                           <>
                             <div className='text-danger text-center mt-2'>

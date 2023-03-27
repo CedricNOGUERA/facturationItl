@@ -108,7 +108,7 @@ const Update = () => {
   }
   const handleChangeProduct = (e: any, indx: any, key: any) => {
     const newProduits: any = [...productList]
-    newProduits[indx][key] = e.target.value
+    newProduits[indx][key] = key === "qty" ? parseInt(e.target.value) : e.target.value
     setProductList(newProduits)
   }
   const handleDeleteProduct = (id: any) => {
@@ -179,7 +179,7 @@ const Update = () => {
       setAvatarCustomer('')
       setAddressCustomer('')
       setTimeout(() => {
-        navigate('/')
+        navigate('/' + params.id + '/facture')
       }, 2500)
     } catch (error) {
       console.log(error)

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InputItem = ({type, placeholder, data, setData, indx, inputName, required}: any) => {
+const InputItem = ({type, placeholder, data, setData, indx, key, required}: any) => {
 
 
 
@@ -10,7 +10,7 @@ const InputItem = ({type, placeholder, data, setData, indx, inputName, required}
       className='form-control bg-light border-0'
       placeholder={placeholder}
       value={data}
-      onChange={(e) => setData(e, indx, inputName)}
+      onChange={(e) => setData(e, indx, key)}
       required={required}
     />
   )
