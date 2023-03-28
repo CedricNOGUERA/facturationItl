@@ -126,7 +126,7 @@ const Header = () => {
                       {dataStore.firstname}
                     </span>
                     <span className='d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text'>
-                      {/* Founder */}
+                     
                     </span>
                   </span>
                 </span>
@@ -134,14 +134,12 @@ const Header = () => {
               <div className='dropdown-menu dropdown-menu-end'>
                 <h6 className='dropdown-header'>Welcome {dataStore.firstname} !</h6>
                 <span aria-label="profile" className='dropdown-item' 
-                // href='pages-profile.html'
                 >
                   <i className='mdi mdi-account-circle text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle'>Profile</span>
                 </span>
                 <div className='dropdown-divider'></div>
                 <span aria-label="new" className='dropdown-item' 
-                // href='pages-profile-settings.html'
                 >
                   <span className='badge bg-soft-success text-success mt-1 float-end'>
                     New
