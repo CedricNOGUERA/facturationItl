@@ -92,7 +92,7 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
             <li className='dropdown-divider' ></li>
             {title === 'DEVIS' && bill?.status !== 'Validé' && (
               <li onClick={() => {
-                // _getDocById(bill.id, setSelectedData)
+                _getDocById(bill.id, setSelectedData)
                 setDocId(bill.id)}}>
                 <a
                 aria-label="dropper"

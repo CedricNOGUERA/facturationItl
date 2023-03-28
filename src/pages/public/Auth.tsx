@@ -44,7 +44,7 @@ const Auth = () => {
         userAuth[0].id,
         userAuth[0].first_name,
         userAuth[0].last_name,
-        userAuth[0].avatar,
+        '/' + userAuth[0].avatar,
         userAuth[0].company_id
       )
     } else {

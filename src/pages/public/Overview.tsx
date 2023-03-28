@@ -9,6 +9,7 @@ import PrintModal from '../../components/ui/PrintModal';
 import TableTopDetail from '../../components/ui/TableTopDetail';
 import { _getTotalTva, _htAmount } from '../../utils/function';
 import { _getInvoiceById, _getQuoteById } from '../../utils/quotes/function';
+import jsPDF from 'jspdf';
 
 const Overview = () => {
 
@@ -28,7 +29,7 @@ const Overview = () => {
   const handleClosePrintModal = () => setShowPrintModal(false);
   const handleShowPrintModal = () => setShowPrintModal(true);
 
-
+const doc = new jsPDF()
 
 
 
@@ -48,6 +49,14 @@ const Overview = () => {
 
 
 //////Events/////////
+
+const htmlToPdf = () => {
+  doc.html(componentRef, {
+    async callback(doc) {
+      await doc.save('pdf_name');
+    },
+  });
+}
 
 
   return (
@@ -77,7 +86,7 @@ const Overview = () => {
                   totalTva_13={_getTotalTva(dataFile, 0.13)}
                   totalTva_16={_getTotalTva(dataFile, 0.16)}
                 />
-                <ButtonTableDetail handlePrint={handleShowPrintModal} handleShow='' handleShowSendModal=''
+                <ButtonTableDetail handlePrint={handleShowPrintModal} htmlToPdf={htmlToPdf} handleShow='' handleShowSendModal=''
                   docId={dataFile?.id}
                 
                 title='overview' />

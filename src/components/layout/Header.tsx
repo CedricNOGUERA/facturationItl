@@ -51,7 +51,7 @@ const Header = () => {
             <div className='navbar-brand-box horizontal-logo'>
               <span className='logo logo-dark'aria-label="home">
                 <span className='logo-lg'>
-                  <img src='/assets/images/logo-dark.png' alt='' height='45' />
+                  <img src='/assets/images/logo-dark.png' alt='logo' width='194' height='45' />
                 </span>
               </span>
             </div>
@@ -68,109 +68,7 @@ const Header = () => {
                 <span></span>
               </span>
             </button>
-            {/* <form className='app-search d-none d-md-block'>
-              <div className='position-relative'>
-                <input
-                  type='text'
-                  className='form-control'
-                  placeholder='Search...'
-                  autoComplete='off'
-                  id='search-options'
-                  // value=""
-                  readOnly
-                />
-                <span className='mdi mdi-magnify search-widget-icon'></span>
-                <span
-                  className='mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none'
-                  id='search-close-options'
-                ></span>
-              </div>
-              <div className='dropdown-menu dropdown-menu-lg' id='search-dropdown'>
-                <div data-simplebar style={{ maxHeight: '320px' }}>
-                  <div className='dropdown-header'>
-                    <h6 className='text-overflow text-muted mb-0 text-uppercase'>
-                      Recent Searches
-                    </h6>
-                  </div>
-                  <div className='dropdown-item bg-transparent text-wrap'>
-                    <a aria-label="setup" href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
-                      how to setup <i className='mdi mdi-magnify ms-1'></i>
-                    </a>
-                    <a aria-label="button" href='index.html' className='btn btn-soft-secondary btn-sm btn-rounded'>
-                      buttons <i className='mdi mdi-magnify ms-1'></i>
-                    </a>
-                  </div>
-
-                  <div className='dropdown-header mt-2'>
-                    <h6 className='text-overflow text-muted mb-1 text-uppercase'>Pages</h6>
-                  </div>
-
-                  <a aria-label="analyse" href='/' className='dropdown-item notify-item'>
-                    <i className='ri-bubble-chart-line align-middle fs-18 text-muted me-2'></i>
-                    <span>Analytics Dashboard</span>
-                  </a>
-
-                  <a aria-label="help" href='/' className='dropdown-item notify-item'>
-                    <i className='ri-lifebuoy-line align-middle fs-18 text-muted me-2'></i>
-                    <span>Help Center</span>
-                  </a>
-
-                  <a aria-label="account setting" href='/' className='dropdown-item notify-item'>
-                    <i className='ri-user-settings-line align-middle fs-18 text-muted me-2'></i>
-                    <span>My account settings</span>
-                  </a>
-                  <div className='dropdown-header mt-2'>
-                    <h6 className='text-overflow text-muted mb-2 text-uppercase'>Members</h6>
-                  </div>
-                  <div className='notification-list'>
-                    <a aria-label="avatar" href='/' className='dropdown-item notify-item py-2'>
-                      <div className='d-flex'>
-                        <img
-                          src='assets/images/users/avatar-2.jpg'
-                          className='me-3 rounded-circle avatar-xs'
-                          alt='user-pic'
-                        />
-                        <div className='flex-1'>
-                          <h6 className='m-0'>Angela Bernier</h6>
-                          <span className='fs-11 mb-0 text-muted'>Manager</span>
-                        </div>
-                      </div>
-                    </a>
-                    <a aria-label="avatar xs" href='/' className='dropdown-item notify-item py-2'>
-                      <div className='d-flex'>
-                        <img
-                          src='assets/images/users/avatar-3.jpg'
-                          className='me-3 rounded-circle avatar-xs'
-                          alt='user-pic'
-                        />
-                        <div className='flex-1'>
-                          <h6 className='m-0'>David Grasso</h6>
-                          <span className='fs-11 mb-0 text-muted'>Web Designer</span>
-                        </div>
-                      </div>
-                    </a>
-                    <a aria-label="avatar xs2" href='/' className='dropdown-item notify-item py-2'>
-                      <div className='d-flex'>
-                        <img
-                          src='assets/images/users/avatar-5.jpg'
-                          className='me-3 rounded-circle avatar-xs'
-                          alt='user-pic'
-                        />
-                        <div className='flex-1'>
-                          <h6 className='m-0'>Mike Bunch</h6>
-                          <span className='fs-11 mb-0 text-muted'>React Developer</span>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className='text-center pt-3 pb-1'>
-                  <a aria-label="all results" href='pages-search-results.html' className='btn btn-primary btn-sm'>
-                    View All Results <i className='ri-arrow-right-line ms-1'></i>
-                  </a>
-                </div>
-              </div>
-            </form> */}
+            
           </div>
           <div className='d-flex align-items-center'>
             <div className='dropdown d-md-none topbar-head-dropdown header-item'>

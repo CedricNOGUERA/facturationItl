@@ -12,6 +12,8 @@ import SendEmailModal from '../../components/ui/SendEmailModal'
 import emailjs from '@emailjs/browser'
 import TableTopDetail from '../../components/ui/TableTopDetail'
 import PrintModal from '../../components/ui/PrintModal'
+import {jsPDF} from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const DetailQuote = () => {
   ///////States//////////
@@ -23,6 +25,7 @@ const DetailQuote = () => {
   
   const [filteredQuote, setFilteredQuote] = React.useState<any>()
   const [isMail, setIsMail] = React.useState<boolean>(false)
+  const [canvasss, setCanvasss] = React.useState<any>()
 
 
   const [show, setShow] = React.useState(false)
@@ -40,12 +43,21 @@ const DetailQuote = () => {
   const numQuote = filteredQuote?.invoiceNum
   const qrData = `${params.id}`
 
+
+
   
   //////useEffect/////////
 
   React.useEffect(() => {
     _getQuoteById(params.id, setFilteredQuote)
   }, [params.id])
+
+
+  // React.useEffect(() => {
+  //   setCanvasss(html2canvas(componentRef?.current).then((canvas: any) => {
+  //     document.body.appendChild(canvas)
+  // }))
+  // }, [componentRef])
 
 
   //////Events/////////
@@ -79,6 +91,46 @@ const DetailQuote = () => {
     //     setIsMailOk(false)
   }
 
+
+
+//   const canvass: any = html2canvas(componentRef).then((canvas: any) => {
+//     document.body.appendChild(canvas)
+// });
+
+// const element = document.getElementById('demo');
+// if (element instanceof HTMLElement) {
+
+// setCanvasss(html2canvas(componentRef?.current).then((canvas: any) => {
+//     document.body.appendChild(canvas)
+// }))
+// }
+
+  // const htmlToPdf = () => {
+  //   doc.text("<p>Hello</p>",10, 10)
+  //    doc.save('pdf_name')
+    
+  //   };
+  
+
+  // const htmlToPdf = () => {
+    // doc.html(element, {
+    //   async callback(doc) {
+    //     await doc.save('pdf_name');
+    //   },
+    // });
+  // }
+
+
+  const htmlToPdf = () => {
+    const doc = new jsPDF("p", "pt", "a4")
+    doc.html(componentRef?.current, {
+      async callback(doc) {
+        await doc.save('pdf_name');
+      },
+    });
+  }
+  
+
   return (
     <div className='row justify-content-center'>
       <div className='col-xxl-9 '>
@@ -104,6 +156,7 @@ const DetailQuote = () => {
                 />
                 <ButtonTable
                   handlePrint={handleShowPrintModal}
+                  htmlToPdf={htmlToPdf}
                   handleShow={handleShow}
                   handleShowSendModal={handleShowSendModal}
                   docId={filteredQuote?.id}

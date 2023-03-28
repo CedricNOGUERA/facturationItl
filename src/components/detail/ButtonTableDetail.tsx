@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom'
 
 interface Props{
   handlePrint: () => void
+  htmlToPdf: any
   handleShow: any
   handleShowSendModal: any
   title: string
   docId: string
 }
-const ButtonTableDetail: React.FC<Props> = ({handlePrint, handleShow , handleShowSendModal, title, docId}) => {
+const ButtonTableDetail: React.FC<Props> = ({handlePrint, htmlToPdf, handleShow , handleShowSendModal, title, docId}) => {
   return (
     <div className='hstack gap-2 justify-content-end d-print-none mt-4'>
       {title !== 'overview' && (
@@ -25,6 +26,9 @@ const ButtonTableDetail: React.FC<Props> = ({handlePrint, handleShow , handleSho
      </>
       )}
       
+      {/* <button onClick={htmlToPdf} className='btn btn-success' aria-label='Print'>
+        <i className='ri-printer-line align-bottom me-1'></i> PDF
+      </button> */}
       <button onClick={handlePrint} className='btn btn-success' aria-label='Print'>
         <i className='ri-printer-line align-bottom me-1'></i> Imprimer
       </button>
@@ -42,4 +46,4 @@ const ButtonTableDetail: React.FC<Props> = ({handlePrint, handleShow , handleSho
   )
 }
 
-export default ButtonTableDetail
+export default React.memo(ButtonTableDetail)

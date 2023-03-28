@@ -17,6 +17,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
                 src={overview ? '../../assets/images/logo-dark.png' : '../assets/images/logo-dark.png'}
                 className='card-logo card-logo-dark'
                 alt='logo dark'
+                width='216'
                 height='50'
               />
               

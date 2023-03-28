@@ -5,7 +5,6 @@ import BottomTable from '../../components/detail/BottomTableDetail'
 import ButtonTable from '../../components/detail/ButtonTableDetail'
 import HeaderDetail from '../../components/detail/HeaderDetail'
 import ProductItemDetail from '../../components/detail/ProductItemDetail'
-import { supabase } from '../../utils/supabaseClient'
 import QrCodeModal from '../../components/list/QrCodeModal';
 import { _getTotalTva, _htAmount } from '../../utils/function';
 import emailjs from '@emailjs/browser';
@@ -13,6 +12,9 @@ import SendEmailModal from '../../components/ui/SendEmailModal';
 import TableTopDetail from '../../components/ui/TableTopDetail';
 import PrintModal from '../../components/ui/PrintModal';
 import { _getInvoiceById } from '../../utils/quotes/function';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas'
+
 
 
 const Detail = () => {
@@ -42,6 +44,10 @@ const Detail = () => {
 
   const numInvoice = filteredInvoice?.invoiceNum
   const qrData = `${params.id}`
+
+
+
+
 
   //////useEffect/////////
   React.useEffect(() => {
@@ -78,10 +84,28 @@ const Detail = () => {
 
   };
 
+    const canvass: any = html2canvas(componentRef?.current).then((canvas: any) => {
+    return componentRef?.current;
+    
+});
+
+  const htmlToPdf =  () => {
+    const doc = new jsPDF("p", "pt", "a4")
+    console.log("gogo")
+    doc.html(componentRef?.current, {
+        callback(doc) {
+        doc.save('pdf_name');
+      },
+    });
+  }
+  
+console.log(canvass)
+ 
+
   return (
     <div className='row justify-content-center'>
-      <div className='col-xxl-9 col-lg-10'>
-        <div className='card ' id='demo' ref={componentRef}>
+      <div className='col-xxl-9 col-lg-10' >
+        <div className='card' ref={componentRef} >
           <div className='row '>
             <HeaderDetail filteredInvoice={filteredInvoice} title='facture' overview={false} />
             <div className='col-lg-12'>
@@ -103,6 +127,7 @@ const Detail = () => {
                 />
                 <ButtonTable
                   handlePrint={handleShowPrintModal}
+                  htmlToPdf={htmlToPdf}
                   handleShow={handleShow}
                   handleShowSendModal={handleShowSendModal}
                   docId={filteredInvoice?.id}
@@ -113,11 +138,9 @@ const Detail = () => {
           </div>
         </div>
       </div>
-
       <PrintModal show={showPrintModal} handleClose={handleClosePrintModal}
                   handlePrint={handlePrint}
                   />
-
       <SendEmailModal
         showSendModal={showSendModal}
         handleCloseSendModal={handleCloseSendModal}

@@ -49,7 +49,7 @@ const List: React.FC = () => {
  }
 
   React.useEffect(() => {
-    _getGlobalData('quotes', '*, detailQuote(*)', setGlobalData, isLoading)
+    _getGlobalData('quotes', '*, detailQuote(*)', setGlobalData)
     getQuotes()
   }, []);
 
@@ -75,7 +75,7 @@ const List: React.FC = () => {
       getQuotes()
       setFilteredInvoice([])
     }
-    invoiceSearch()
+
   }, [dateFilter]);
 
 
@@ -156,10 +156,9 @@ const List: React.FC = () => {
       )
     }
     return undefined
-
-
   }
 
+  console.log(filteredInvoice)
 
 
   const handleCancel = async (id: any) => {
@@ -270,7 +269,16 @@ const List: React.FC = () => {
 
 
 
-const filterListProps = {searchTerm, setSearchTerm, invoiceSearch, invoiceSearchByDate, statusFilter, setStatusFilter, dateFilter, setDateFilter}
+const filterListProps = {
+  searchTerm,
+  setSearchTerm,
+  invoiceSearch,
+  invoiceSearchByDate,
+  statusFilter,
+  setStatusFilter,
+  dateFilter,
+  setDateFilter,
+}
 const topTableProps = {setAsc, setSort, getQuotes, asc}
 
   return (
@@ -295,37 +303,51 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                     ) : filteredInvoice.length > 0 ? (
                       filteredInvoice?.map((bill: any) =>
                         !statusFilter || statusFilter === bill.status ? (
-                          <ItemList key={Math.random()} bill={bill} setDocId={setDocId} _getDocById={_getDocById} setSelectedData={setSelectedData}  title='DEVIS'/>
+                          <ItemList
+                            key={Math.random()}
+                            bill={bill}
+                            setDocId={setDocId}
+                            _getDocById={_getDocById}
+                            setSelectedData={setSelectedData}
+                            title='DEVIS'
+                          />
                         ) : null
                       )
-                      ) : (filteredInvoice.length === 0 && searchTerm.length > 2) || (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
-                        <tr>
-                          <td colSpan={8} className='text-center'>
-                            <div className='noresult' style={{ display: "block" }}>
-                              <div className='text-center'>
-                                <lord-icon
-                                  src='https://cdn.lordicon.com/msoeawqm.json'
-                                  trigger='loop'
-                                  colors='primary:#121331,secondary:#08a88a'
-                                  style={{ width: '75px', height: '75px' }}
-                                ></lord-icon>
-                                <h5 className='mt-2'>Désolé! Aucun résultat trouvé</h5>
-                                <p className='text-muted mb-0'>
-                                  Nous avons consulter plus de 150 factures, nous n'avons pas
-                                  trouver de correspondance à votre recherche
-                                </p>
-                              </div>
+                    ) : (filteredInvoice.length === 0 && searchTerm.length > 2) ||
+                      (filteredInvoice.length === 0 && dateFilter.length > 2) ? (
+                      <tr>
+                        <td colSpan={8} className='text-center'>
+                          <div className='noresult' style={{ display: 'block' }}>
+                            <div className='text-center'>
+                              <lord-icon
+                                src='https://cdn.lordicon.com/msoeawqm.json'
+                                trigger='loop'
+                                colors='primary:#121331,secondary:#08a88a'
+                                style={{ width: '75px', height: '75px' }}
+                              ></lord-icon>
+                              <h5 className='mt-2'>Désolé! Aucun résultat trouvé</h5>
+                              <p className='text-muted mb-0'>
+                                Nous avons consulter plus de 150 factures, nous n'avons pas
+                                trouver de correspondance à votre recherche
+                              </p>
                             </div>
-                          </td>
-                        </tr>
-                      ) : (
-                        quoteData?.map((bill: any) =>
-                          !statusFilter || statusFilter === bill.status ? (
-                            <ItemList key={Math.random()} bill={bill} setDocId={setDocId} _getDocById={_getDocById} setSelectedData={setSelectedData}  title='DEVIS'/>
-
-                          ) : null
-                        )
-                      )}
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      quoteData?.map((bill: any) =>
+                        !statusFilter || statusFilter === bill.status ? (
+                          <ItemList
+                            key={Math.random()}
+                            bill={bill}
+                            setDocId={setDocId}
+                            _getDocById={_getDocById}
+                            setSelectedData={setSelectedData}
+                            title='DEVIS'
+                          />
+                        ) : null
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -338,32 +360,26 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                     Précédent
                   </span>
                   <ul className='pagination listjs-pagination mb-0'>
-                  {Array.from({ length: 
-                    ((globalData.length / 10)+1)
-                    })?.map((list: any, indx: any) => (
-
-                        <li key={Math.random()} onClick={() => pagination(indx*10, (indx*10)+9)} >
-                      <span className='page-item pagination-prev disabled m-auto'>{indx+1}</span>
-                    </li>
-                      ))}
-                 
-
+                    {Array.from({ length: globalData.length / 10 + 1 })?.map(
+                      (list: any, indx: any) => (
+                        <li
+                          key={Math.random()}
+                          onClick={() => pagination(indx * 10, indx * 10 + 9)}
+                        >
+                          <span className='page-item pagination-prev disabled m-auto'>
+                            {indx + 1}
+                          </span>
+                        </li>
+                      )
+                    )}
                   </ul>
-                  {globalData.length > 10 ? 
-                  <span className='page-item pagination-next'
-                  
-                   onClick={nextPagination}
-                  
-                   >
-                    Suivant
-                  </span>
-                   :
-                    
-                    <span className='page-item pagination-next disabled'
-                   >
-                    Suivant
-                  </span> 
-                  }
+                  {globalData.length > 10 ? (
+                    <span className='page-item pagination-next' onClick={nextPagination}>
+                      Suivant
+                    </span>
+                  ) : (
+                    <span className='page-item pagination-next disabled'>Suivant</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -374,15 +390,14 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
               aria-labelledby='deleteOrderLabel'
               aria-hidden='true'
             >
-              <DeleteModal  deleteDocId={docId} handleCancel={handleCancel} trigger='DEVIS'  />
+              <DeleteModal deleteDocId={docId} handleCancel={handleCancel} trigger='DEVIS' />
             </div>
-            <div
-              className='modal fade flip'
-              id='validate'
-              tabIndex={-1}
-              aria-hidden='true'
-            >
-              <ValidateModal  validateDocId={docId} handleValidate={handleValidate} trigger='DEVIS'  />
+            <div className='modal fade flip' id='validate' tabIndex={-1} aria-hidden='true'>
+              <ValidateModal
+                validateDocId={docId}
+                handleValidate={handleValidate}
+                trigger='DEVIS'
+              />
             </div>
           </div>
         </div>

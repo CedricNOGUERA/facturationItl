@@ -30,7 +30,7 @@ const List: React.FC = () => {
 
   React.useEffect(() => {
     getInvoices()
-    _getGlobalData('invoices2', '*, detailBill(*)', setGlobalData, setIsLoading )
+    _getGlobalData('invoices2', '*, detailBill(*)', setGlobalData )
   }, [])
 
   React.useEffect(() => {
@@ -48,14 +48,21 @@ const List: React.FC = () => {
       setStartPagination(0)
       setEndPagination(9)
     }
-    if (dateFilter === '') {
-      setFilteredInvoice([])
-    }
+ 
     if (statusFilter === '') {
       setFilteredInvoice([])
     }
     invoiceSearch()
-  }, [searchTerm, dateFilter, statusFilter])
+  }, [searchTerm, statusFilter])
+
+  React.useEffect(() => {
+      
+    if(dateFilter === ""){
+      getInvoices()
+      setFilteredInvoice([])
+    }
+    invoiceSearchByDate()
+  }, [dateFilter]);
 
 
   const getInvoices = async () => {
@@ -93,7 +100,7 @@ const List: React.FC = () => {
   }
 
   function escapeRegExp(str: string) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   const invoiceSearch = () => {
@@ -112,14 +119,17 @@ const List: React.FC = () => {
     }
     return undefined
   }
+console.log(dateFilter)
 
   const invoiceSearchByDate = () => {
     const escapedSearchOrder = escapeRegExp(dateFilter)
 
-    if (escapedSearchOrder.length > 2) {
+    if (escapedSearchOrder.length > 1) {
       setFilteredInvoice(
         globalData.filter((bill: any) => {
-          return bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
+          return (
+            bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
+          )
         })
       )
     }
@@ -195,7 +205,7 @@ const List: React.FC = () => {
                                 src='https://cdn.lordicon.com/msoeawqm.json'
                                 trigger='loop'
                                 colors='primary:#121331,secondary:#08a88a'
-                                style={{ width: '75px', height: '75px' }}
+                                style={{ width: '175px', height: '75px' }}
                               ></lord-icon>
                               <h5 className='mt-2'>Désolé! Aucun résultat trouvé</h5>
                               <p className='text-muted mb-0'>

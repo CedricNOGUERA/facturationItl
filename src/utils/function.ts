@@ -11,18 +11,16 @@ export const _getUserData = async (setUserdata: any) => {
   }
 }
 
-export const _getGlobalData = async (table: any, foreignTable: any, setData: any, setIsLoading: any) => {
+export const _getGlobalData = async (table: any, foreignTable: any, setData: any) => {
   let { data, error } = await supabase
     .from(table)
     .select(foreignTable)
 
   if (data) {
     setData(data)
-    setIsLoading(false)
   }
   if (error) {
     console.log(error)
-    setIsLoading(true)
   }
 }
 export const _getDocById = async (quoteId: any, setData: any) => {
