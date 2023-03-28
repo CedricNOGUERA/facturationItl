@@ -36,6 +36,9 @@ const List: React.FC = () => {
 
   const [docId, setDocId] = React.useState<string>('');
   const [selectedData, setSelectedData] = React.useState<any>([]);
+  const [checkedState, setCheckedState] = React.useState<any>(new Array(globalData.length).fill(false));
+  const [allCheckedState, setAllCheckedState] = React.useState<boolean>(false);
+
 
  /////////////// succes notification ////////////////
 
@@ -51,7 +54,14 @@ const List: React.FC = () => {
   React.useEffect(() => {
     _getGlobalData('quotes', '*, detailQuote(*)', setGlobalData)
     getQuotes()
+
   }, []);
+  
+  React.useEffect(() => {
+  
+    setCheckedState(new Array(globalData.length).fill(false))
+
+  }, [globalData]);
 
 
   React.useEffect(() => {
@@ -84,6 +94,22 @@ const List: React.FC = () => {
   const totalTva_13 = _getTotalTva(selectedData?.detailQuote, 0.13)
   const totalTva_16 = _getTotalTva(selectedData?.detailQuote, 0.16)
   
+
+    
+  const handleOnChange = (position: any) => {
+    const updatedCheckedState = checkedState.map((item: any, index: any) =>
+      index === position ? !item : item
+    );
+
+    setCheckedState(updatedCheckedState);
+  };
+
+  const handleOnChangeAll = (position: any) => {
+  
+    setCheckedState(new Array(globalData.length).fill(!allCheckedState))
+
+   
+  };
 
 
   const getQuotes = async () => {
@@ -279,7 +305,7 @@ const filterListProps = {
   dateFilter,
   setDateFilter,
 }
-const topTableProps = {setAsc, setSort, getQuotes, asc}
+const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllCheckedState, handleOnChangeAll}
 
   return (
     <div className='row'>
@@ -301,7 +327,7 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                         </td>
                       </tr>
                     ) : filteredInvoice.length > 0 ? (
-                      filteredInvoice?.map((bill: any) =>
+                      filteredInvoice?.map((bill: any, index: any) =>
                         !statusFilter || statusFilter === bill.status ? (
                           <ItemList
                             key={Math.random()}
@@ -310,6 +336,9 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                             _getDocById={_getDocById}
                             setSelectedData={setSelectedData}
                             title='DEVIS'
+                            handleOnChange={handleOnChange} 
+                            checkedState={checkedState}
+                            index={index}
                           />
                         ) : null
                       )
@@ -335,7 +364,7 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                         </td>
                       </tr>
                     ) : (
-                      quoteData?.map((bill: any) =>
+                      quoteData?.map((bill: any, index: any) =>
                         !statusFilter || statusFilter === bill.status ? (
                           <ItemList
                             key={Math.random()}
@@ -344,6 +373,9 @@ const topTableProps = {setAsc, setSort, getQuotes, asc}
                             _getDocById={_getDocById}
                             setSelectedData={setSelectedData}
                             title='DEVIS'
+                            handleOnChange={handleOnChange} 
+                            checkedState={checkedState}
+                            index={index}
                           />
                         ) : null
                       )

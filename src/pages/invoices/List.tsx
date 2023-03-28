@@ -27,11 +27,20 @@ const List: React.FC = () => {
 
   const [docId, setDocId] = React.useState<string>('')
   const [selectedData, setSelectedData] = React.useState<any>([])
+  const [checkedState, setCheckedState] = React.useState<any>(new Array(globalData.length).fill(false));
+  const [allCheckedState, setAllCheckedState] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     getInvoices()
     _getGlobalData('invoices2', '*, detailBill(*)', setGlobalData )
+    // setCheckedState(new Array(globalData.length).fill(false))
   }, [])
+
+  React.useEffect(() => {
+
+    setCheckedState(new Array(globalData.length).fill(false))
+  }, [globalData])
+
 
   React.useEffect(() => {
     getInvoices()
@@ -63,6 +72,24 @@ const List: React.FC = () => {
     }
     invoiceSearchByDate()
   }, [dateFilter]);
+
+
+
+  
+  const handleOnChange = (position: any) => {
+    const updatedCheckedState = checkedState.map((item: any, index: any) =>
+      index === position ? !item : item
+    );
+
+    setCheckedState(updatedCheckedState);
+  };
+  const handleOnChangeAll = (position: any) => {
+  
+    setCheckedState(new Array(globalData.length).fill(!allCheckedState))
+
+   
+  };
+  
 
 
   const getInvoices = async () => {
@@ -119,7 +146,6 @@ const List: React.FC = () => {
     }
     return undefined
   }
-console.log(dateFilter)
 
   const invoiceSearchByDate = () => {
     const escapedSearchOrder = escapeRegExp(dateFilter)
@@ -162,7 +188,7 @@ console.log(dateFilter)
     dateFilter,
     setDateFilter,
   }
-  const topTableProps = { setAsc, setSort, getInvoices, asc }
+  const topTableProps = { setAsc, setSort, getInvoices, asc, allCheckedState, setAllCheckedState, handleOnChangeAll }
 
   return (
     <div className='row'>
@@ -183,7 +209,7 @@ console.log(dateFilter)
                         </td>
                       </tr>
                     ) : filteredInvoice.length > 0 ? (
-                      filteredInvoice?.map((bill: any) =>
+                      filteredInvoice?.map((bill: any, index: any) =>
                         !statusFilter || statusFilter === bill.status ? (
                           <ItemList
                             key={Math.random()}
@@ -192,6 +218,9 @@ console.log(dateFilter)
                             title='FACTURE'
                             _getDocById={_getDocById}
                             setSelectedData={setSelectedData}
+                            handleOnChange={handleOnChange} 
+                            checkedState={checkedState}
+                            index={index}
                           />
                         ) : null
                       )
@@ -217,7 +246,7 @@ console.log(dateFilter)
                         </td>
                       </tr>
                     ) : (
-                      invoicesData?.map((bill: any) =>
+                      invoicesData?.map((bill: any, index: any) =>
                         !statusFilter || statusFilter === bill.status ? (
                           <ItemList
                             key={Math.random()}
@@ -226,6 +255,9 @@ console.log(dateFilter)
                             _getDocById={_getDocById}
                             setSelectedData={setSelectedData}
                             title='FACTURE'
+                            handleOnChange={handleOnChange} 
+                            checkedState={checkedState}
+                            index={index}
                           />
                         ) : null
                       )
@@ -273,7 +305,7 @@ console.log(dateFilter)
               aria-labelledby='deleteOrderLabel'
               aria-hidden='true'
             >
-              <DeleteModal deleteDocId={docId} handleCancel={handleCancel} trigger='FACTURE' />
+              <DeleteModal deleteDocId={selectedData.id} handleCancel={handleCancel} trigger='FACTURE' />
             </div>
           </div>
         </div>

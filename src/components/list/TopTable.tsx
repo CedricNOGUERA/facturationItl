@@ -1,13 +1,23 @@
 
 const TopTable = ({ topTableProps }: any) => {
-  const { setAsc, setSort, getInvoices, asc } = topTableProps
+  const { setAsc, setSort, getInvoices, asc, allCheckedState, setAllCheckedState, handleOnChangeAll } = topTableProps
 
   return (
     <thead className='text-muted'>
       <tr>
         <th scope='col' style={{ width: '50px' }}>
           <div className='form-check'>
-            <input className='form-check-input' type='checkbox' id='checkAll' value='option' />
+            <input
+              className='form-check-input'
+              type='checkbox'
+              id='checkAll'
+              value='option'
+              checked={allCheckedState}
+              onChange={() => {
+                handleOnChangeAll()
+                setAllCheckedState(!allCheckedState)
+              }}
+            />
           </div>
         </th>
         <th

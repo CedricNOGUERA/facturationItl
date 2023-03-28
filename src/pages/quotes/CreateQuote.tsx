@@ -8,7 +8,7 @@ import ButtonTableCreate from '../../components/create/ButtonTableCreate'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { _getTotalTva, _htAmount, _updateQty , _handleChangeProduct} from '../../utils/function'
+import { _getTotalTva, _htAmount } from '../../utils/function'
 import TableHeader from '../../components/ui/TableHeader'
 
 const CreateQuote = () => {

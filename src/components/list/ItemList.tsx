@@ -7,10 +7,15 @@ interface ItemListProps {
     title: string
     _getDocById: any
     setSelectedData: Dispatch<SetStateAction<string>>
+    handleOnChange: any
+    checkedState: any
+    index: any
 }
 
-const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSelectedData, title}) => {
+const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSelectedData, title, handleOnChange, checkedState, index}) => {
 
+
+  // console.log(checkedStata)
 
   const navigate = useNavigate()
   const linkItem = title === 'DEVIS' ? 'devis' : 'facture'
@@ -24,6 +29,8 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
             type='checkbox'
             name='chk_child'
             value={bill.id}
+             checked={checkedState[index]}
+            onChange={() => handleOnChange(index)}
           />
         </div>
       </th>
