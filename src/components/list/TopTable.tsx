@@ -3,7 +3,7 @@ const TopTable = ({ topTableProps }: any) => {
   const { setAsc, setSort, getInvoices, asc, allCheckedState, setAllCheckedState, handleOnChangeAll } = topTableProps
 
   return (
-    <thead className='text-muted'>
+    <thead className='text-muted pointer'>
       <tr>
         <th scope='col' style={{ width: '50px' }}>
           <div className='form-check'>
@@ -87,7 +87,7 @@ const TopTable = ({ topTableProps }: any) => {
         >
           Status
         </th>
-        <th className='sort text-uppercase' data-sort='action'>
+        <th className='sort text-uppercase'>
           Action
         </th>
       </tr>

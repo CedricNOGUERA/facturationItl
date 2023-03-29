@@ -25,6 +25,10 @@
 
   .item-list:hover{
     background-color: #ecf2f3;
+  }
+
+
+  .item-list, .pointer{
     cursor: pointer;
   }
 

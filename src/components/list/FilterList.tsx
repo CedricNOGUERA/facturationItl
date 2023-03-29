@@ -63,7 +63,7 @@ const FilterList: React.FC<PropsFilterList> = ({ filterListProps, title }) => {
           <div className='col-xxl-3 col-sm-6'>
             <div className='input-light'>
               <select
-                className='form-control'
+                className='form-control pointer'
                 data-choices
                 data-choices-search-false
                 name='choices-single-default'

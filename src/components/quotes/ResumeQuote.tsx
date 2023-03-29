@@ -87,7 +87,8 @@ const ResumeQuote = () => {
                           0
                         )}
                       />
-                    )}
+                      )} {' '} <sup className='text-muted'><small className="fw-bold">XPF</small></sup>
+
                   </span>
                 </h4>
                 <span className='badge bg-warning me-1'>{globalData.length}</span>{' '}
@@ -117,6 +118,7 @@ const ResumeQuote = () => {
                   <h4 className='fs-22 fw-semibold ff-secondary mb-4'>
                     <span className='counter-value' data-target='409.66'>
                       {bill?.ca ? new Intl.NumberFormat().format(bill?.ca) : '0'}
+                      {' '} <sup className='text-muted'><small className="fw-bold">XPF</small></sup>
                     </span>
                   </h4>
                   <span className='badge bg-warning me-1'>{bill?.length}</span>{' '}

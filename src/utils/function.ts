@@ -189,3 +189,9 @@ export const _handleChangeProduct = (e: any, indx: any, key: any, data: any, set
   newProduits[indx][key] = key === 'qty' ? parseInt(e.target?.value) : e.target?.value
   setProductList(newProduits)
 }
+
+
+  
+export const _escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}

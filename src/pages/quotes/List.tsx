@@ -1,123 +1,109 @@
-import React from "react";
-import { Spinner } from "react-bootstrap";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import { supabase } from "../../utils/supabaseClient";
-import HeaderList from "../../components/list/HeaderList";
-import FilterList from "../../components/list/FilterList";
-import ItemList from "../../components/list/ItemList";
-import TopTable from "../../components/quotes/list/TopTable";
-import DeleteModal from "../../components/list/DeleteModal";
-import ValidateModal from "../../components/quotes/ValidateModal";
-import { _getDocById, _getGlobalData, _getTotalTva, _htAmount } from "../../utils/function";
+import React from 'react'
+import { Spinner } from 'react-bootstrap'
+import { useNavigate, useOutletContext } from 'react-router-dom'
+import { supabase } from '../../utils/supabaseClient'
+import HeaderList from '../../components/list/HeaderList'
+import FilterList from '../../components/list/FilterList'
+import ItemList from '../../components/list/ItemList'
+import TopTable from '../../components/quotes/list/TopTable'
+import DeleteModal from '../../components/list/DeleteModal'
+import ValidateModal from '../../components/quotes/ValidateModal'
+import {
+  _escapeRegExp,
+  _getDocById,
+  _getGlobalData,
+  _getTotalTva,
+  _htAmount,
+} from '../../utils/function'
 import { v4 as uuidv4 } from 'uuid'
-import { notification } from "antd";
-import { CheckCircleTwoTone } from "@ant-design/icons";
-
-
+import { notification } from 'antd'
+import { CheckCircleTwoTone } from '@ant-design/icons'
+import { _nextPagination, _pagination, _previousPagination } from '../../utils/pagination'
 
 const List: React.FC = () => {
-  
   const navigate = useNavigate()
-  const [quoteData, setQuoteData] = useOutletContext<any>();
-  const [globalData, setGlobalData] = React.useState<any>([]);
+  const [quoteData, setQuoteData] = useOutletContext<any>()
+  const [globalData, setGlobalData] = React.useState<any>([])
 
+  const [filteredInvoice, setFilteredInvoice] = React.useState<any>([])
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
 
-  const [filteredInvoice, setFilteredInvoice] = React.useState<any>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [sort, setSort] = React.useState<string>('createdAt')
+  const [asc, setAsc] = React.useState<boolean>(false)
+  const [startPagination, setStartPagination] = React.useState<number>(0)
+  const [endPagination, setEndPagination] = React.useState<number>(10)
 
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [sort, setSort] = React.useState<string>("createdAt");
-  const [asc, setAsc] = React.useState<boolean>(false);
-  const [startPagination, setStartPagination] = React.useState<number>(0);
-  const [endPagination, setEndPagination] = React.useState<number>(10);
-  
-  const [statusFilter, setStatusFilter] = React.useState<string>('');
-  const [dateFilter, setDateFilter] = React.useState<string>('');
+  const [statusFilter, setStatusFilter] = React.useState<string>('')
+  const [dateFilter, setDateFilter] = React.useState<string>('')
 
-  const [docId, setDocId] = React.useState<string>('');
-  const [selectedData, setSelectedData] = React.useState<any>([]);
-  const [checkedState, setCheckedState] = React.useState<any>(new Array(globalData.length).fill(false));
-  const [allCheckedState, setAllCheckedState] = React.useState<boolean>(false);
+  const [docId, setDocId] = React.useState<string>('')
+  const [selectedData, setSelectedData] = React.useState<any>([])
+  const [checkedState, setCheckedState] = React.useState<any>(
+    new Array(globalData.length).fill(false)
+  )
+  const [allCheckedState, setAllCheckedState] = React.useState<boolean>(false)
 
+  /////////////// succes notification ////////////////
 
- /////////////// succes notification ////////////////
-
- const [api, contextHolder] = notification.useNotification()
- const openNotification = () => {
-   api.open({
-     message: 'Félicitation',
-     description: 'Votre facture est enregistrée.',
-     icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
-   })
- }
+  const [api, contextHolder] = notification.useNotification()
+  const openNotification = () => {
+    api.open({
+      message: 'Félicitation',
+      description: 'Votre facture est enregistrée.',
+      icon: <CheckCircleTwoTone twoToneColor='#52c41a' />,
+    })
+  }
 
   React.useEffect(() => {
     _getGlobalData('quotes', '*, detailQuote(*)', setGlobalData)
     getQuotes()
+  }, [])
 
-  }, []);
-  
   React.useEffect(() => {
-  
     setCheckedState(new Array(globalData.length).fill(false))
-
-  }, [globalData]);
-
+  }, [globalData])
 
   React.useEffect(() => {
     getQuotes()
-  }, [startPagination]);
-
-
+  }, [startPagination])
 
   React.useEffect(() => {
-      
-    if(searchTerm === ""){
+    if (searchTerm === '') {
       getQuotes()
       setFilteredInvoice([])
     }
     invoiceSearch()
-  }, [searchTerm]);
+  }, [searchTerm])
 
   React.useEffect(() => {
-      
-    if(dateFilter === ""){
+    if (dateFilter === '') {
       getQuotes()
       setFilteredInvoice([])
     }
+  }, [dateFilter])
 
-  }, [dateFilter]);
-
-
- 
   const amountHT = _htAmount(selectedData?.detailQuote)
   const totalTva_13 = _getTotalTva(selectedData?.detailQuote, 0.13)
   const totalTva_16 = _getTotalTva(selectedData?.detailQuote, 0.16)
-  
 
-    
   const handleOnChange = (position: any) => {
     const updatedCheckedState = checkedState.map((item: any, index: any) =>
       index === position ? !item : item
-    );
+    )
+    setCheckedState(updatedCheckedState)
+  }
 
-    setCheckedState(updatedCheckedState);
-  };
-
-  const handleOnChangeAll = (position: any) => {
-  
+  const handleOnChangeAll = () => {
     setCheckedState(new Array(globalData.length).fill(!allCheckedState))
-
-   
-  };
-
+  }
 
   const getQuotes = async () => {
     let { data: invoices, error } = await supabase
-      .from("quotes")
-      .select("*, detailQuote(*)")
+      .from('quotes')
+      .select('*, detailQuote(*)')
       .range(startPagination, endPagination)
-      .order(sort, { ascending: asc });
+      .order(sort, { ascending: asc })
 
     if (invoices) {
       setQuoteData(invoices)
@@ -127,38 +113,15 @@ const List: React.FC = () => {
       console.log(error)
       setIsLoading(true)
     }
-  };
-
-  const nextPagination = () => {
-    setStartPagination(startPagination + 10)
-    setEndPagination(endPagination + 10)
-    getQuotes()
-  }
-
-  const previousPagination = () => {
-    if(startPagination > 1)
-    setStartPagination(startPagination - 10)
-    setEndPagination(endPagination - 10)
-    // getQuotes()
-  }
-
-  const pagination = (st: any, end: any) => {
-    setStartPagination(st)
-    setEndPagination(end)
-  }
-
-  function escapeRegExp(str: string) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   const invoiceSearch = () => {
-    const escapedSearchOrder = escapeRegExp(searchTerm)
+    const escapedSearchOrder = _escapeRegExp(searchTerm)
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
         globalData.filter((bill: any) => {
           return (
-
             bill.invoiceNum?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill.name_customer?.match(new RegExp(escapedSearchOrder, 'i')) ||
             bill?.email_customer?.match(new RegExp(escapedSearchOrder, 'i'))
@@ -168,24 +131,19 @@ const List: React.FC = () => {
     }
     return undefined
   }
-  
+
   const invoiceSearchByDate = () => {
-    const escapedSearchOrder = escapeRegExp(dateFilter)
+    const escapedSearchOrder = _escapeRegExp(dateFilter)
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
         globalData.filter((bill: any) => {
-          return (
-            bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i')) 
-          )
+          return bill.createdAt?.match(new RegExp(escapedSearchOrder, 'i'))
         })
       )
     }
     return undefined
   }
-
-  console.log(filteredInvoice)
-
 
   const handleCancel = async (id: any) => {
     const { data, error } = await supabase
@@ -207,11 +165,7 @@ const List: React.FC = () => {
     }
   }
 
-
-
   const handleValidate = async (id: any) => {
-
- 
     const { data, error } = await supabase
       .from('quotes')
       .update({ status: 'Validé' })
@@ -223,65 +177,63 @@ const List: React.FC = () => {
 
       const invoiceId: any = uuidv4()
 
-
-    const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
-      {
-        id: invoiceId,
-        invoiceNum: selectedData?.invoiceNum,
-        createdAt: selectedData?.createdAt,
-        status: 'Impayée',
-        name_customer: selectedData?.name_customer,
-        email_customer: selectedData?.email_customer,
-        customer_info: {
-          name: selectedData?.customer_info.name,
-          email: selectedData?.customer_info.email,
-          phone: selectedData?.customer_info.phone,
-          avatar: selectedData?.customer_info.avatar,
-          address: selectedData?.customer_info.address,
-        },
-
-        amount_ht: selectedData?.amount_ht,
-        amount_ttc: parseInt(
-          (amountHT + totalTva_13 + totalTva_16 + amountHT * 0.01).toFixed(2)
-        ),
-      },
-    ])
-    if(dataz){
-      console.log(dataz)
-    }
-
-    if (errorz) {
-      console.log(errorz)
-    } else {
-      const promises = selectedData?.detailQuote?.map((prod: any, indx: any) => {
-        return supabase.from('detailBill').insert([
-          {
-            designation: prod.designation,
-            detailDesignation: prod.detailDesignation,
-            qty: prod.qty,
-            price: prod.price,
-            amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
-            amount_ht: prod.qty * prod.price,
-            invoice_id: invoiceId,
-            tva: prod.tva,
+      const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
+        {
+          id: invoiceId,
+          invoiceNum: selectedData?.invoiceNum,
+          createdAt: selectedData?.createdAt,
+          status: 'Impayée',
+          name_customer: selectedData?.name_customer,
+          email_customer: selectedData?.email_customer,
+          customer_info: {
+            name: selectedData?.customer_info.name,
+            email: selectedData?.customer_info.email,
+            phone: selectedData?.customer_info.phone,
+            avatar: selectedData?.customer_info.avatar,
+            address: selectedData?.customer_info.address,
           },
-        ])
-      })
 
-      try {
-        await Promise.all(promises)
-        console.log('good aussi')
-   
-        openNotification()
-
-        setTimeout(() => {
-          navigate('/list-devis')
-        }, 2500)
-      } catch (error) {
-        console.log(error)
+          amount_ht: selectedData?.amount_ht,
+          amount_ttc: parseInt(
+            (amountHT + totalTva_13 + totalTva_16 + amountHT * 0.01).toFixed(2)
+          ),
+        },
+      ])
+      if (dataz) {
+        console.log(dataz)
       }
-    }
 
+      if (errorz) {
+        console.log(errorz)
+      } else {
+        const promises = selectedData?.detailQuote?.map((prod: any, indx: any) => {
+          return supabase.from('detailBill').insert([
+            {
+              designation: prod.designation,
+              detailDesignation: prod.detailDesignation,
+              qty: prod.qty,
+              price: prod.price,
+              amount_ttc: parseInt((prod.qty * prod.price * (1 + prod.tva + 0.01)).toFixed(2)),
+              amount_ht: prod.qty * prod.price,
+              invoice_id: invoiceId,
+              tva: prod.tva,
+            },
+          ])
+        })
+
+        try {
+          await Promise.all(promises)
+          console.log('good aussi')
+
+          openNotification()
+
+          setTimeout(() => {
+            navigate('/list-devis')
+          }, 2500)
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
 
     if (data) {
@@ -293,19 +245,26 @@ const List: React.FC = () => {
     }
   }
 
-
-
-const filterListProps = {
-  searchTerm,
-  setSearchTerm,
-  invoiceSearch,
-  invoiceSearchByDate,
-  statusFilter,
-  setStatusFilter,
-  dateFilter,
-  setDateFilter,
-}
-const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllCheckedState, handleOnChangeAll}
+  const filterListProps = {
+    searchTerm,
+    setSearchTerm,
+    invoiceSearch,
+    invoiceSearchByDate,
+    statusFilter,
+    setStatusFilter,
+    dateFilter,
+    setDateFilter,
+    
+  }
+  const topTableProps = {
+    setAsc,
+    setSort,
+    getQuotes,
+    asc,
+    allCheckedState,
+    setAllCheckedState,
+    handleOnChangeAll,
+  }
 
   return (
     <div className='row'>
@@ -336,7 +295,7 @@ const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllC
                             _getDocById={_getDocById}
                             setSelectedData={setSelectedData}
                             title='DEVIS'
-                            handleOnChange={handleOnChange} 
+                            handleOnChange={handleOnChange}
                             checkedState={checkedState}
                             index={index}
                           />
@@ -373,7 +332,7 @@ const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllC
                             _getDocById={_getDocById}
                             setSelectedData={setSelectedData}
                             title='DEVIS'
-                            handleOnChange={handleOnChange} 
+                            handleOnChange={handleOnChange}
                             checkedState={checkedState}
                             index={index}
                           />
@@ -387,7 +346,14 @@ const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllC
                 <div className='pagination-wrap hstack gap-2'>
                   <span
                     className='page-item pagination-prev disabled m-auto'
-                    onClick={previousPagination}
+                    onClick={() =>
+                      _previousPagination(
+                        startPagination,
+                        setStartPagination,
+                        endPagination,
+                        setEndPagination
+                      )
+                    }
                   >
                     Précédent
                   </span>
@@ -396,7 +362,14 @@ const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllC
                       (list: any, indx: any) => (
                         <li
                           key={Math.random()}
-                          onClick={() => pagination(indx * 10, indx * 10 + 9)}
+                          onClick={() =>
+                            _pagination(
+                              indx * 10,
+                              indx * 10 + 9,
+                              setStartPagination,
+                              setEndPagination
+                            )
+                          }
                         >
                           <span className='page-item pagination-prev disabled m-auto'>
                             {indx + 1}
@@ -406,7 +379,17 @@ const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllC
                     )}
                   </ul>
                   {globalData.length > 10 ? (
-                    <span className='page-item pagination-next' onClick={nextPagination}>
+                    <span
+                      className='page-item pagination-next'
+                      onClick={() =>
+                        _nextPagination(
+                          startPagination,
+                          setStartPagination,
+                          endPagination,
+                          setEndPagination
+                        )
+                      }
+                    >
                       Suivant
                     </span>
                   ) : (
@@ -436,6 +419,6 @@ const topTableProps = {setAsc, setSort, getQuotes, asc, allCheckedState, setAllC
       </div>
     </div>
   )
-};
+}
 
-export default List;
+export default List

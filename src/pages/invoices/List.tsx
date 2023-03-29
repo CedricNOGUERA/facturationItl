@@ -7,7 +7,8 @@ import FilterList from '../../components/list/FilterList'
 import ItemList from '../../components/list/ItemList'
 import { Spinner } from 'react-bootstrap'
 import TopTable from '../../components/list/TopTable'
-import { _getDocById, _getGlobalData, _handleCancel } from '../../utils/function'
+import { _escapeRegExp, _getDocById, _getGlobalData, _handleCancel } from '../../utils/function'
+import { _nextPagination, _pagination, _previousPagination } from '../../utils/pagination'
 
 const List: React.FC = () => {
   const [invoicesData, setInvoicesData] = useOutletContext<any>()
@@ -80,17 +81,11 @@ const List: React.FC = () => {
     const updatedCheckedState = checkedState.map((item: any, index: any) =>
       index === position ? !item : item
     );
-
     setCheckedState(updatedCheckedState);
   };
-  const handleOnChangeAll = (position: any) => {
-  
+  const handleOnChangeAll = () => {
     setCheckedState(new Array(globalData.length).fill(!allCheckedState))
-
-   
   };
-  
-
 
   const getInvoices = async () => {
     let { data: invoices, error } = await supabase
@@ -109,29 +104,8 @@ const List: React.FC = () => {
     }
   }
 
-  const nextPagination = () => {
-    setStartPagination(startPagination + 10)
-    setEndPagination(endPagination + 10)
-  }
-
-  const previousPagination = () => {
-    if (startPagination > 1) {
-      setStartPagination(startPagination - 10)
-      setEndPagination(endPagination - 10)
-    }
-  }
-
-  const pagination = (st: any, end: any) => {
-    setStartPagination(st)
-    setEndPagination(end)
-  }
-
-  function escapeRegExp(str: string) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
   const invoiceSearch = () => {
-    const escapedSearchOrder = escapeRegExp(searchTerm)
+    const escapedSearchOrder = _escapeRegExp(searchTerm)
 
     if (escapedSearchOrder.length > 2) {
       setFilteredInvoice(
@@ -148,7 +122,7 @@ const List: React.FC = () => {
   }
 
   const invoiceSearchByDate = () => {
-    const escapedSearchOrder = escapeRegExp(dateFilter)
+    const escapedSearchOrder = _escapeRegExp(dateFilter)
 
     if (escapedSearchOrder.length > 1) {
       setFilteredInvoice(
@@ -188,6 +162,7 @@ const List: React.FC = () => {
     dateFilter,
     setDateFilter,
   }
+
   const topTableProps = { setAsc, setSort, getInvoices, asc, allCheckedState, setAllCheckedState, handleOnChangeAll }
 
   return (
@@ -269,7 +244,8 @@ const List: React.FC = () => {
                 <div className='pagination-wrap hstack gap-2'>
                   <span
                     className='page-item pagination-prev disabled m-auto'
-                    onClick={previousPagination}
+                    onClick={() => _previousPagination(startPagination, setStartPagination, endPagination, setEndPagination)}
+
                   >
                     Précédent
                   </span>
@@ -278,7 +254,7 @@ const List: React.FC = () => {
                       (list: any, indx: any) => (
                         <li
                           key={Math.random()}
-                          onClick={() => pagination(indx * 10, indx * 10 + 9)}
+                          onClick={() => _pagination(indx * 10, indx * 10 + 9, setStartPagination, setEndPagination)}
                         >
                           <span className='page-item pagination-prev disabled m-auto'>
                             {indx + 1}
@@ -288,7 +264,8 @@ const List: React.FC = () => {
                     )}
                   </ul>
                   {globalData.length > 10 ? (
-                    <span className='page-item pagination-next' onClick={nextPagination}>
+                    <span className='page-item pagination-next' onClick={() => _nextPagination(startPagination, setStartPagination, endPagination, setEndPagination)}>
+
                       Suivant
                     </span>
                   ) : (

@@ -80,22 +80,22 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
             <i className='ri-more-fill align-middle'></i>
           </button>
           <ul className='dropdown-menu dropdown-menu-end'>
+                <Link to={`/${bill.id}/${linkItem}`}>
             <li>
               <button className='dropdown-item' data-id='25000352'aria-label="drop item">
-                <Link to={`/${bill.id}/${linkItem}`}>
                   <i className='ri-eye-fill align-bottom me-2 text-muted'></i>
                   Détail
-                </Link>
               </button>
             </li>
+                </Link>
+                <Link to={`/${bill.id}/update-${linkItem}`}>
             <li>
               <button className='dropdown-item' data-id='25000351' aria-label="drop item">
-                <Link to={`/${bill.id}/update-${linkItem}`}>
                   <i className='ri-pencil-fill align-bottom me-2 text-muted'></i>
                   Modifier
-                </Link>
               </button>
             </li>
+                </Link>
             <li className='dropdown-divider' ></li>
             {title === 'DEVIS' && bill?.status !== 'Validé' && (
               <li onClick={() => {
