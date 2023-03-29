@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-interface Props{
+interface Props {
   handlePrint: () => void
   htmlToPdf: any
   handleShow: any
@@ -9,26 +9,27 @@ interface Props{
   title: string
   docId: string
 }
-const ButtonTableDetail: React.FC<Props> = ({handlePrint, htmlToPdf, handleShow , handleShowSendModal, title, docId}) => {
+const ButtonTableDetail: React.FC<Props> = ({
+  handlePrint,
+  htmlToPdf,
+  handleShow,
+  handleShowSendModal,
+  title,
+  docId,
+}) => {
   return (
     <div className='hstack gap-2 justify-content-end d-print-none mt-4'>
       {title !== 'overview' && (
-     <>
-      <button className='btn btn-secondary' aria-label='update'>
-        <Link className='text-light' to={`/${docId}/update-${title}`}>
-       
-        <i className='ri-pencil-fill align-bottom me-1'></i>
-        
-        Modifier
-        </Link>
-      </button>
-      |
-     </>
+        <>
+          <Link className='text-light' to={`/${docId}/update-${title}`}>
+            <button className='btn btn-secondary' aria-label='update'>
+              <i className='ri-pencil-fill align-bottom me-1'></i>
+              Modifier
+            </button>
+          </Link>
+          |
+        </>
       )}
-      
-      {/* <button onClick={htmlToPdf} className='btn btn-success' aria-label='Print'>
-        <i className='ri-printer-line align-bottom me-1'></i> PDF
-      </button> */}
       <button onClick={handlePrint} className='btn btn-success' aria-label='Print'>
         <i className='ri-printer-line align-bottom me-1'></i> Imprimer
       </button>

@@ -87,7 +87,7 @@ const TopTable = ({ topTableProps }: any) => {
         >
           Status
         </th>
-        <th className='sort text-uppercase'>
+        <th className='text-uppercase'data-sort='action' >
           Action
         </th>
       </tr>
