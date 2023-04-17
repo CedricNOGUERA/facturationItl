@@ -16,7 +16,7 @@ const ProductItemDetail: React.FC<productItemDetailProps> = ({ prod, indx }) => 
       <td>{prod.tva * 100} %</td>
       <td>{new Intl.NumberFormat().format(prod.price)}</td>
       <td>{prod.qty}</td>
-      <td>{new Intl.NumberFormat().format(prod.price * prod.tva)}</td>
+      {/* <td>{new Intl.NumberFormat().format(prod.price * prod.tva)}</td> */}
       <td className='text-end'>{new Intl.NumberFormat().format(prod.price * prod.qty)}</td>
     </tr>
   )

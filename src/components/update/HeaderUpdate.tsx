@@ -63,7 +63,7 @@ const HeaderUpdate = ({ headerUpdateProps, title }: any) => {
             </div>
             <div className='mb-2'>
               <input
-                type='text'
+                type='email'
                 className='form-control bg-light border-0'
                 id='billingEmail'
                 placeholder={

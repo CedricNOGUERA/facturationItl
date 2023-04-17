@@ -8,7 +8,6 @@ const HeaderAuth: React.FC = () => {
           <div className='logo-chat'>
             <div className='text-logo'>
               <img
-                className=''
                 alt='Facture icon'
                 src='https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/256/external-bill-ecommerce-kiranshastry-lineal-color-kiranshastry.png'
                 style={{ width: '64px', height: '64px' }}

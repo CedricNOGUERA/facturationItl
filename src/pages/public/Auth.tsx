@@ -66,8 +66,8 @@ const Auth = () => {
                   <div className='text-center mt-2'>
                     <h5 className='text-primary'>Bienvenu !</h5>
                     <p className='text-muted'>
-                      Identifiez-vous pour continue vers{' '}
-                      <span className='invoice-auth'>Invoice manager</span>.
+                      Identifiez-vous pour continuer
+                      .
                     </p>
                   </div>
                   <div className='p-2 mt-4'>

@@ -254,7 +254,6 @@ const List: React.FC = () => {
     setStatusFilter,
     dateFilter,
     setDateFilter,
-    
   }
   const topTableProps = {
     setAsc,

@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { _getDateLocal } from '../../utils/function'
 
 interface ItemListProps {
     bill: any
@@ -15,7 +16,6 @@ interface ItemListProps {
 const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSelectedData, title, handleOnChange, checkedState, index}) => {
 
 
-  // console.log(checkedStata)
 
   const navigate = useNavigate()
   const linkItem = title === 'DEVIS' ? 'devis' : 'facture'
@@ -39,19 +39,12 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
       </td>
       <td className='customer_name' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         <div className='d-flex align-items-center'>
-          {bill?.customer_info?.avatar === '' ? (
             <div className='flex-shrink-0 avatar-xs me-2'>
               <div className='avatar-title bg-soft-success text-success text-uppercase rounded-circle fs-13'>
                 {bill?.customer_info?.name?.slice(0, 2)}
               </div>
             </div>
-          ) : (
-            <img
-              src={`assets/images/users/${bill?.customer_info?.avatar}.jpg`}
-              alt='avatar'
-              className='avatar-xs rounded-circle me-2'
-            />
-          )}
+          
           {bill.customer_info?.name}
         </div>
       </td>
@@ -60,13 +53,13 @@ const ItemList: React.FC<ItemListProps> = ({bill, setDocId, _getDocById, setSele
       </td>
 
       <td className='date' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
-        {bill?.createdAt}
+        {_getDateLocal(bill?.created_at)}
       </td>
       <td className='invoice_amount text-end' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
         {new Intl.NumberFormat().format(bill.amount_ttc)}
       </td>
       <td className='status' onClick={() => navigate(`/${bill.id}/${linkItem}`)}>
-        <span className='badge badge-soft-success text-uppercase'>{bill.status}</span>
+        <span className={(bill?.status === "En cours" || bill?.status === "Impayée") ? 'badge-soft-warning badge  text-uppercase' : (bill?.status === "Validé"  || bill?.status === "Payée") ?  'badge-soft-success badge  text-uppercase'  : 'badge-soft-danger badge  text-uppercase'}>{bill.status}</span>
       </td>
       <td>
         <div className='dropdown'>

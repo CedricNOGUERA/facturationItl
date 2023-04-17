@@ -50,7 +50,7 @@ const ProductItem = ({ productItemProps, prod, indx }: any) => {
       <td>
        
          <input
-          type='text'
+          type='number'
           className='form-control bg-light border-0 mb-2'
           placeholder='0'
           value={prod?.price}

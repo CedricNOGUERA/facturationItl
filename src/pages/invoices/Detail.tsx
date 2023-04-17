@@ -103,7 +103,7 @@ console.log(canvass)
  
 
   return (
-    <div className='row justify-content-center'>
+    <div className='row justify-content-center general-font'>
       <div className='col-xxl-9 col-lg-10' >
         <div className='card' ref={componentRef} >
           <div className='row '>

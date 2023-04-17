@@ -9,11 +9,11 @@ const TableTopDetail = () => {
         </th>
         <th scope='col'>Désignations</th>
         <th scope='col'>Tva</th>
-        <th scope='col'>Prix</th>
+        <th scope='col'>Montant unitaire (XPF)</th>
         <th scope='col'>Quantité</th>
-        <th scope='col'>Montant Tva</th>
+        {/* <th scope='col'>Montant Tva</th> */}
         <th scope='col' className='text-end'>
-          Montant HT
+          Montant HT (XPF)
         </th>
       </tr>
     </thead>

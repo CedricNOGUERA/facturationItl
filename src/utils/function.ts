@@ -195,3 +195,15 @@ export const _handleChangeProduct = (e: any, indx: any, key: any, data: any, set
 export const _escapeRegExp = (str: string) => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+
+
+//format date
+
+export const _getDateLocal = (dateToFormat: any) => {
+
+  let date = new Date(dateToFormat);
+  
+  return date.toLocaleString("fr-FR", { timeZone: "Pacific/Tahiti" });
+  
+  };

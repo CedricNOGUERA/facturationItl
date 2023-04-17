@@ -2,7 +2,7 @@ import React from 'react'
 
 const HeaderOwner = () => {
   return (
-    <div className='card-body border-bottom border-bottom-dashed p-4'>
+    <div className='  card-body border-bottom border-bottom-dashed p-4'>
         <div className='row'>
           <div className='col-lg-4'>
             <div className='profile-user mx-auto  mb-3'>

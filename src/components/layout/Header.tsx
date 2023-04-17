@@ -123,11 +123,6 @@ const Header = () => {
                 aria-label='avatar'
               >
                 <span className='d-flex align-items-center'>
-                  <img
-                    className='rounded-circle header-profile-user'
-                    src={dataStore.avatar}
-                    alt='Header Avatar'
-                  />
                   <span className='text-start ms-xl-2'>
                     <span className='d-none d-xl-inline-block ms-1 fw-medium user-name-text'>
                       {dataStore.firstname}
@@ -137,23 +132,19 @@ const Header = () => {
                 </span>
               </button>
               <div className='dropdown-menu dropdown-menu-end'>
-                <h6 className='dropdown-header'>Welcome {dataStore.firstname} !</h6>
                 <span aria-label='profile' className='dropdown-item'>
                   <i className='mdi mdi-account-circle text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle'>Profile</span>
                 </span>
                 <div className='dropdown-divider'></div>
                 <span aria-label='new' className='dropdown-item'>
-                  <span className='badge bg-soft-success text-success mt-1 float-end'>
-                    New
-                  </span>
                   <i className='mdi mdi-cog-outline text-muted fs-16 align-middle me-1'></i>{' '}
-                  <span className='align-middle'>Settings</span>
+                  <span className='align-middle'>Paramètres</span>
                 </span>
                 <span className='dropdown-item' onClick={authLogout}>
                   <i className='mdi mdi-logout text-muted fs-16 align-middle me-1'></i>{' '}
                   <span className='align-middle' data-key='t-logout'>
-                    Logout
+                    Déconnexion
                   </span>
                 </span>
               </div>

@@ -49,7 +49,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     setDocCreatedAt(dateString)
   }
-
+  
   return (
     <>
       <HeaderOwner />
@@ -102,7 +102,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
             </div>
             <div className='mb-2'>
               <Input
-                type='text'
+                type='email'
                 placeholder='Email'
                 data={emailCustomer}
                 setData={setEmailCustomer}
@@ -112,7 +112,7 @@ const HeaderCreate = ({ headerProps, title }: any) => {
 
             <div className='mb-2'>
               <Input
-                type='text'
+                type='number'
                 placeholder='Téléphone'
                 data={phoneCustomer}
                 setData={setPhoneCustomer}
@@ -128,10 +128,10 @@ const HeaderCreate = ({ headerProps, title }: any) => {
         <div className='row g-3'>
         <div className={title === 'DEVIS' ? 'col-lg-6 col-sm-6' : 'col-md-4'}>
 
-            <label htmlFor='invoicenoInput'>N° Facture</label>
+            <label htmlFor='invoicenoInput'>N° {title}</label>
             <Input
               type='text'
-              placeholder='N° facture'
+              placeholder={`N° ${title}`}
               data={docNum}
               setData={setDocNum}
               required={true}

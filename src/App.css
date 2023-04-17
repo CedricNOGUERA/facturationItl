@@ -36,7 +36,17 @@
     white-space: pre-wrap;
   }
 
+  .bank-info, .note{
+    font-size: 0.7rem;
+  }
+
   
+
+  .table>:not(caption)>*>* {
+
+    padding: 0.4rem 0.6rem !important;
+    
+    }
 
   @media (max-width: 769px) { 
 
@@ -44,3 +54,14 @@
       font-size: smaller;
     }
  }
+ 
+
+ @media print { 
+  .general-font{
+    font-size: 0.8rem;
+  }
+  #products-list{
+    font-size: 0.8rem;
+  }
+  
+}

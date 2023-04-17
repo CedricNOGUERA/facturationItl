@@ -10,6 +10,7 @@ import { notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { _getTotalTva, _htAmount, _updateQty } from '../../utils/function'
 import TableHeader from '../../components/ui/TableHeader'
+import { Col, Row } from 'react-bootstrap'
 
 const Create = () => {
 
@@ -26,6 +27,7 @@ const Create = () => {
   const [noteInvoice, setNoteInvoice] = React.useState<string>('Tous les comptes doivent être payés dans les 45 jours suivant la réception de facture. A régler par chèque ou carte bancaire ou paiement direct en ligne. Si le compte n\'est pas payé dans les 45 jours, une majoration du total de la facture vous sera imputé.')
   const [subject, setSubject] = React.useState<string>('')
   
+  const [isLoadingCreate, setIsLoadingCreate] = React.useState<boolean>(false)
 
   const [productList, setProductList] = React.useState([
     {
@@ -76,14 +78,14 @@ const Create = () => {
 
   const createInvoice = async (e: any) => {
     const invoiceId: any = uuidv4()
-
+setIsLoadingCreate(true)
     e.preventDefault()
 
     const { data: dataz, error: errorz } = await supabase.from('invoices2').insert([
       {
         id: invoiceId,
         invoiceNum: docNum,
-        createdAt: docCreatedAt,
+        createdAt: docCreatedAt.toLocaleString("fr-FR", { timeZone: "Pacific/Tahiti" }),
         status: status,
         subject: subject,
         name_customer: nameCustomer,
@@ -137,16 +139,19 @@ const Create = () => {
         setAvatarCustomer('')
         setAddressCustomer('')
         openNotification()
-
+        setIsLoadingCreate(false)
         setTimeout(() => {
           navigate("/" + invoiceId + "/facture")
         }, 2500)
       } catch (error) {
         console.log(error)
+        setIsLoadingCreate(false)
       }
     }
   }
 
+
+  console.log( docCreatedAt.toLocaleString("fr-FR", { timeZone: "Pacific/Tahiti" }))
   
   const amountHT = _htAmount(productList)
   const totalTva_13 = _getTotalTva(productList, 0.13)
@@ -183,11 +188,15 @@ const Create = () => {
   }
 
   const bottomTableProps = { handleAddProduct, amountHT, totalTva_13, totalTva_16 }
+  let date = new Date(Date.now());
+
+  console.log(date.toLocaleString("fr-FR", { timeZone: "Pacific/Tahiti" }))
+  console.log(docCreatedAt)
 
   return (
-    <div className='row justify-content-center'>
+    <div className='row justify-content-center '>
       {contextHolder}
-      <div className='col-xxl-9'>
+      <div className='col-xxl-9 '>
         <div className='card'>
           <form onSubmit={createInvoice} className='needs-validation' id='invoice_form'>
             <Header headerProps={headerProps} title={'FACTURE'}/>
@@ -208,14 +217,31 @@ const Create = () => {
                   <BottomTableCreate bottomTableProps={bottomTableProps} />
                 </table>
               </div>
-              <div className='mt-4'>
+              <div className='mt-4 border-top pt-3'>
                 <label
                   htmlFor='exampleFormControlTextarea1'
                   className='form-label text-muted text-uppercase fw-semibold'
                 >
-                  NOTES
+                  Bon pour accord
                 </label>
-                <textarea
+               <p className='mb-5'>
+                Signature (précédée de la mention "Bon pour accord")
+                </p>
+               
+                <Row>
+                  <Col>
+                  Nom: 
+                  </Col>
+                  <Col>
+                  A:
+              
+                  </Col>
+                  <Col>
+                  Le:
+                  </Col>
+
+                </Row>
+                {/* <textarea
                   className='form-control alert alert-info'
                   id='exampleFormControlTextarea1'
                   placeholder='Notes'
@@ -224,9 +250,9 @@ const Create = () => {
                   onChange={(e) => setNoteInvoice(e.currentTarget.value)}
                   
                 >
-                </textarea>
+                </textarea> */}
               </div>
-              <ButtonTableCreate />
+              <ButtonTableCreate isLoadingCreate={isLoadingCreate} />
             </div>
           </form>
         </div>

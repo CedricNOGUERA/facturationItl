@@ -1,4 +1,5 @@
 import React from 'react'
+import { _getDateLocal } from '../../utils/function'
 
 interface headerDetailProps{
   filteredInvoice: any
@@ -7,9 +8,12 @@ interface headerDetailProps{
 }
 
 const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, overview}) => {
+ 
+
+ 
   return (
     <>
-      <div className='col-lg-12 col-sm-12'>
+      <div className=' col-lg-12 col-sm-12'>
         <div className='card-header border-bottom-dashed'>
           <div className='row g-3'>
             <div className='col-md-8'>
@@ -21,7 +25,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
                 height='50'
               />
               
-              <div className=' mt-4'>
+              <div className=' mt-1'>
                 <p className='text-muted mb-1' id='address-details'>
                   Immeuble Mananui, Auae, Faa'a
                 </p>
@@ -54,7 +58,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
       </div>
 
       <div className='col-lg-12'>
-        <div className='card-body p-4 '>
+        <div className='card-body ps-4 '>
           <div className='row g-3'>
             <div className='col-12 text-center'>
               <h2 className="teko text-uppercase">{title}</h2>
@@ -64,10 +68,10 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
               <i className="ri-pushpin-line text-muted"> Objet</i> : {filteredInvoice?.subject}
               </p>  </div>
             <div className='col-md-8 col-6'>
-              <h6 className='text-muted text-uppercase fw-semibold mb-3 fs-13'>
+              <h6 className='text-muted text-uppercase fw-semibold mb-1 fs-13'>
                 A l'attention de
               </h6>
-              <p className='fw-medium mb-2' id='billing-name'>
+              <p className='fw-medium mb-1' id='billing-name'>
               <i className="ri-user-line text-muted"></i> : {filteredInvoice?.customer_info.name}
               </p>
               <p className='mb-1' id='billing-address-line-1'>
@@ -98,7 +102,7 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
         <div className='card-body p-4 border-top border-top-dashed'>
           <div className='row justify-content-between'>
             <div className='col-lg-4 col-sm-4 col-4'>
-              <p className='text-muted mb-2 text-uppercase fw-semibold fs-13'>N° Facture</p>
+              <p className='text-muted mb-2 text-uppercase fw-semibold fs-13'>N° {title}</p>
               <h5 className='fs-15 mb-0'>
                 <span id='invoice-no'>{filteredInvoice?.invoiceNum}</span>
               </h5>
@@ -106,14 +110,14 @@ const HeaderDetail: React.FC<headerDetailProps> = ({filteredInvoice, title, over
             <div className='col-lg-4 col-sm-4 col-4'>
               <p className='text-muted mb-2 text-uppercase fw-semibold fs-13'>Date</p>
               <h5 className='fs-15 mb-0'>
-                <span id='invoice-date'>{filteredInvoice?.createdAt}</span>{' '}
+                <span id='invoice-date'>{(filteredInvoice?.createdAt)}</span>{' '}
               </h5>
             </div>
             <div className='col-lg-4 col-sm-4 col-4 '>
               <p className='text-muted mb-2 text-uppercase fw-semibold fs-13'>
                 Status du paiement
               </p>
-              <span className='badge badge-soft-success fs-12' id='payment-status'>
+              <span className={(filteredInvoice?.status === "En cours" || filteredInvoice?.status === "Impayée") ? 'badge-soft-warning badge  fs-12' : (filteredInvoice?.status === "Validé"  || filteredInvoice?.status === "Payée") ?  'badge-soft-success badge  fs-12'  : 'badge-soft-danger badge  fs-12'} id='payment-status'>
                 {filteredInvoice?.status}
               </span>
             </div>

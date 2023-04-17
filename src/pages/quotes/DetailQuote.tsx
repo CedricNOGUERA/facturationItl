@@ -132,7 +132,7 @@ const DetailQuote = () => {
   
 
   return (
-    <div className='row justify-content-center'>
+    <div className='row justify-content-center general-font'>
       <div className='col-xxl-9 '>
         <div className='card ' id='demo' ref={componentRef}>
           <div className='row '>

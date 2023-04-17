@@ -277,14 +277,14 @@ const Update = () => {
                 >
                   NOTES
                 </label>
-                <textarea
+                {/* <textarea
                   className='form-control alert alert-info'
                   id='exampleFormControlTextarea1'
                   placeholder='Notes'
                   rows={2}
                   value={noteInvoice}
                   onChange={(e) => setNoteInvoice(e.currentTarget.value)}
-                ></textarea>
+                ></textarea> */}
               </div>
               <ButtonTableCreate />
             </div>
